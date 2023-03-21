@@ -1,0 +1,252 @@
+//EXPRESIONES Y TIPOS:
+
+/*
+1.                                      Mis primeras expresiones
+EN PAPEL Indicar el valor y el tipo que representan las expresiones dadas en los ítems en cada uno de
+los tableros A , B y C, suponiendo definido un procedimiento con el contrato dado al final.
+a. nroBolitas(Negro) + nroBolitas(Azul)
+Tipo: Numerico. Valor: En el caso del a:3, b:8, c:0
+
+b. opuesto(opuesto(Este))
+Tipo: Direccion. Valor: Este en todos los tableros.
+
+c. nroBolitas(siguiente(Azul))
+Tipo: Numerico. Valor: En el caso del a: 0, b: 4, c: 4.
+
+d. 2 * nroBolitas(colorAImitar)
+Tipo: Numerico. Valor: El doble de bolitas del color a imitar.
+
+Para este último supondremos que la expresión aparece dentro del cuerpo del procedimiento
+con el siguiente contrato:
+procedure PonerElDobleDe_QueDe_(colorAPoner, colorAImitar)
+    ****
+    PROPÓSITO: Poner bolitas del color **colorAPoner** en
+    una cantidad que sea el doble de las que hay del
+    color **colorAImitar** en la celda actual.
+    PARÁMETROS:
+    * colorAPoner : Color - color del que se
+    pondrán bolitas.
+    * colorAImitar : Color - color del que se
+    mirará cuántas bolitas hay en la
+    celda actual.
+    PRECONDICIONES:
+    * Ninguna.
+****
+Y del cual sabemos fue invocado como:
+PonerElDobleDe_QueDe_(Rojo, Verde)
+Reflexionamos: 
+-¿Podemos saber a priori el valor de una expresión si desconocemos el 
+estado del tablero? No podemos saber, sin conocer un poco del estado del tablero.
+-¿Podemos conocer su tipo? Si, por el contrato o su invocacion.
+-¿Puede variar el tipo de una expresión si varía el tablero? No, solo podria variar su valor.
+*/
+
+/*
+2.                      Moviendo según me indican las bolitas
+Escribir el procedimiento Mover_SegúnColor_(dirección,color), que mueve el cabezal en la
+dirección dada tantas celdas como bolitas de color dado hay en la celda actual. Como ejemplos se
+ofrecen los resultados de evaluar el comando Mover_SegúnColor_(Este, Negro), en diferentes
+tableros iniciales.
+*/
+
+procedure Mover_SegúnColor_(dirección,color){
+    /*
+    PROPOSITO: Mueve el cabezal en direccion **dirección** tantas celdas como bolitas
+    de color **color** que haya en la celda actual.
+    PARAMETROS: *dirección: Direccion - Direccion a la que se moverá el cabezal.
+                *color: Color -  Color del que se mirará cuántas bolitas hay en la
+                 celda actual.
+    PRECONDICIONES: *Debe haber al menos tantas celdas como bolitas de color **color**
+    en direccion **direccion**.
+    */
+    repeat(nroBolitas(color)){
+        Mover(dirección)
+    }
+}
+
+/*
+3.                      El bosque, parte 3
+En este ejercicio continuaremos con nuestro bosque, esta vez colocando semillas y 
+árboles en la celda lindante hacia alguna dirección, y dejando el cabezal en la celda inicial.
+Cada bolita verde representa un árbol. Cada bolita roja representa una semilla. Una bolita negra
+representa una bomba. Una bolita azul representa una unidad de nutrientes.
+a.
+Poner_SemillasAl_(cantidadDeSemillas, direcciónAPoner)
+// deja el cabezal en la celda inicial
+b.
+Sacar_ÁrbolesAl_(cantidadDeÁrboles, direcciónASacar)
+// deja el cabezal en la celda inicial
+c.
+Sacar_SemillasEnDiagonalAl_Y_(cantidadDeSemillas, primeraDirDiagonal, segundaDirDiagonal)
+// deja el cabezal en la celda inicial
+d.
+Sacar_ÁrbolesEnDiagonalHorariaAl_(cantidadDeÁrboles, direcciónDiagonal)
+// la diagonal horaria de una dirección es aquella dada por la dirección y su dirección siguiente.
+// Ej. la diagonal horaria de Norte es Norte-Este, la de Sur es Sur-Oeste.
+// deja el cabezal en la celda inicial
+*/
+
+procedure Poner_SemillasAl_(cantidadDeSemillas, direcciónAPoner){
+    /*
+    PROPOSITO: Pone **cantidadDeSemillas** semillas en la celda lindante al **direcciónAPoner**
+    de la celda actual.
+    PARAMETROS: *cantidadDeSemillas: Numerico - La cantidad de semillas a poner.
+                *direcciónAPoner: Direccion - La direccion a la que se movera el cabezal.
+    PRECONDICIONES: *Debe haber al menos una celda lindante al **direcciónAPoner** de la
+    celda actual.
+    */
+    Mover(direcciónAPoner)
+    repeat(cantidadDeSemillas){
+        Poner(Rojo)
+    }
+    VolverACeldaInicial(direcciónAPoner)
+}
+
+procedure Sacar_ÁrbolesAl_(cantidadDeÁrboles, direcciónASacar){
+    /*
+    PROPOSITO: Saca **cantidadDeArboles** arboles en la celda lindante al **direcciónASacar**
+    de la celda actual.
+    PARAMETROS: *cantidadDeÁrboles: Numerico - La cantidad de arboles a sacar.
+                *direcciónASacar: Direccion - La direccion a la que se movera el cabezal.
+    PRECONDICIONES: *Debe haber al menos una celda lindante al **direcciónASacar** de la celda
+                    actual.
+                    *Debe haber al menos **cantidadDeArboles** arboles en la celda lindante 
+                    al **direcciónASacar** de la celda actual.
+    */
+    Mover(direcciónASacar)
+    repeat(cantidadDeÁrboles){
+        Sacar(Verde)
+    }
+    VolverACeldaInicial(direcciónASacar)
+}
+
+procedure Sacar_SemillasEnDiagonalAl_Y_(cantidadDeSemillas, primeraDirDiagonal, segundaDirDiagonal){
+    /*
+    PROPOSITO: Saca **cantidadDeSemillas** semillas en diagonal hacia el **primeraDirDiagonal**,
+    **segundaDirDiagonal** de la celda actual.
+    PARAMETROS: *cantidadDeSemillas: Numerico - La cantidad de semillas a sacar.
+                *primeraDirDiagonal: Direccion - La primera direccion a la que se movera el cabezal.
+                *segundaDirDiagonal: Direccion - La segunda direccion a la que se movera el cabezal.
+    PRECONDICIONES: *Debe haber al menos una celda lindante al **primeraDirDiagonal** y dos celdas
+                    *Debe haber al menos **cantidadDeSemillas** semillas en la celda diagonal desde
+                    la celda actual.
+    */
+    Mover(primeraDirDiagonal)
+    Mover(segundaDirDiagonal)
+    repeat(cantidadDeSemillas){ //corregir despues con las capturas
+        Sacar(Rojo)
+    }
+    VolverACeldaInicialEnDiagonalAl_Y_(primeraDirDiagonal, segundaDirDiagonal)
+}
+
+procedure VolverACeldaInicialEnDiagonalAl_Y_(primeraDirDiagonal, segundaDirDiagonal){
+    /*
+    PROPOSITO: Volver a la celda inicial.
+    PARAMETROS: *primeraDirDiagonal: Direccion - La direccion a la que se movera el cabezal.
+                *segundaDirDiagonal: Direccion - La direccion a la que se movera el cabezal.
+    PRECONDICIONES: PREGUNTAR
+    */
+    Mover(opuesto(primeraDirDiagonal))
+    Mover(opuesto(segundaDirDiagonal))
+}
+
+procedure Sacar_ÁrbolesEnDiagonalHorariaAl_(cantidadDeÁrboles, direcciónDiagonal){
+    /*
+    PROPOSITO: Saca **cantidadDeArboles** de la celda diagonal horaria dada por la direccion
+    **direccionDiagonal** desde la celda actual.
+    PARAMETROS: *cantidadDeÁrboles: Numerico - La cantidad de arboles a sacar.
+                *direcciónDiagonal: Direccion - La direccion a la que se movera el cabezal.
+    PRECONDICIONES: *Debe haber al menos una celda PREGUNTAR
+                    *Debe haber al menos **cantidadDeÁrboles** arboles en la celda PREGUNTAR
+    */
+    Mover(direcciónDiagonal)
+    Mover(siguiente(direcciónDiagonal))
+    repeat(cantidadDeÁrboles){
+        Sacar(Verde)
+    }
+    VolverALaCeldaInicialEnDiagonalHorariaAl_(direcciónDiagonal)
+}
+
+procedure VolverALaCeldaInicialEnDiagonalHorariaAl_(direcciónDiagonal){
+    /*
+    PROPOSITO: Volver a la celda inicial.
+    PARAMETRO: *direcciónDiagonal: Direccion - La direccion a la que se movera el cabezal.
+    PRECONDICIONES: PREGUNTAR
+    */
+    Mover(opuesto(direcciónDiagonal))
+    Mover(opuesto(siguiente(direcciónDiagonal)))
+}
+
+procedure VolverACeldaInicial(direcciónAPoner){
+    /*
+    PROPOSITO: Vuelve a la celda inicial.
+    PRECONDICIONES: *Debe haber al menos una celda lindante al **direcciónAPoner**
+    de la celda actual.
+    */
+    Mover(opuesto(direcciónAPoner))
+}
+
+procedure Mover_VecesAl_(cantidadAMover, direcciónAPoner){
+    /*
+    PROPOSITO: Mueve el cabezal *cantidadAMover* posiciones en direccion *direccionAMover*
+    de la celda actual. El cabezal termina en dicha celda.
+    PARAMETROS: *cantidadAMover: Numero - La cantidad de celdas a mover.
+                *direcciónAMover: Direccion - El sentido a mover del cabezal.
+    PRECONDICIONES: *Debe haber al menos *cantidadAMover* celdas hacia *direccionAMover*
+    de la celda actual.
+    */
+    repeat(cantidadAMover){
+        Mover(direcciónAPoner)
+    }
+}
+
+/*
+8.                      Aprendiendo a leer y escribir
+Hacer el procedimiento PasarPalabraActualAMayúsculas() que suponiendo que en la fila actual
+se codifica una palabra en minúsculas usando bolitas, ponga la misma palabra en mayúsculas en la
+fila al Norte.
+- Cada letra se representa con una cantidad diferente de bolitas negras, según un código
+numérico llamado ASCII.
+- En la celda más al Oeste de la fila actual se codifica la cantidad de letras de la palabra, usando
+bolitas rojas.
+- La primera letra de la palabra está en la celda lindante al Este de la que contiene la cantidad de
+letras.
+- En el código ASCII si las letras mayúsculas se codifican con un número N entonces la misma
+letra minúscula se representa con N+32 (ej. la ‘a’ minúsculas se representa con el número 97 y
+la ‘A’ mayúsculas, con el 65).
+- El cabezal se encuentra en la celda más al Oeste de una fila donde hay una palabra
+representada.
+*/
+
+procedure PasarPalabraActualAMayúsculas(){
+    /*
+    PROPOSITO: Pasar la palabra en minuscula de la fila actual a mayusculas en la fila lindante
+    al Norte de la fila actual.
+    PRECONDICIONES: *Debe haber al menos tantas celdas al Este como bolitas rojas hay en 
+                    la celda actual.
+                    *Debe haber al menos una celda al Norte de la celda actual.
+                    *Debe haber una palabra representada en codigo ASCII al Este de la celda actual.
+                    *Las celdas al Norte de la palabra representada al Este deben estar vacias.
+    */
+    repeat(nroBolitas(Rojo)){
+        Mover(Este)
+        PasarLetraAMayuscula()
+    }
+    IrAlBorde(Oeste)
+}
+
+procedure PasarLetraAMayuscula(){
+    /*
+    PROPOSITO: Pasa la letra actual de minúsculas a mayúsculas en la celda lindante al Norte de 
+    la celda actual.
+    PRECONDICIONES:
+        *Debe haber una letra representada en codigo ASCII en la celda actual.
+        *La celda 
+    */
+    PasarLetra_MayusculaAl_(nroBolitas(Negro), Norte)
+}
+
+procedure PasarLetra_MayusculaAl_(codigoDeLetra, direccion)
+
+
+

@@ -1,0 +1,323 @@
+//REPETICIÓN SIMPLE Y PARÁMETROS
+/*
+1.                                      Moviendo tres veces a donde quieras
+Escribir un procedimiento Mover3VecesAl_(direcciónAMover) que dada una dirección
+direcciónAMover mueva el cabezal tres posiciones en dicha dirección.
+a. ¿Qué hay que hacer ahora para mover el cabezal tres veces al Norte?
+Indicar como argumento Norte en el procedimiento.
+
+b. ¿Qué beneficios trae el uso de parámetros?
+Poder abstraerce mas y generalizar.
+
+c. ¿Cuántos procedimientos puedo ahorrarme haciendo un único procedimiento con un
+parámetros?
+Podes ahorrarte al menos 3.
+
+¡Recordar! No olvidar escribir el contrato del procedimiento ANTES de realizar el código (y que los parámetros
+son parte del mismo); también discutir la precondición escrita con sus compañeros para verificar que la misma
+es adecuada y correcta.
+*/
+
+procedure Mover3VecesAl_(direcciónAMover){
+    /*
+    PROPOSITO: Mueve el cabezal tres posiciones hacia la dirección *direccionAMover* 
+    desde la celda actual.
+    PARAMETRO: *direccionAMover: Direccion - El sentido a mover del cabezal.
+    PRECONDICIONES: *Debe haber al menos tres celdas hacia *direccionAMover* 
+    desde la celda actual.
+    */
+    repeat(3){
+        Mover(direccionAMover)
+    }
+}
+
+
+/*
+2.                                      Y 6 de lo que quieras
+Escribir un procedimiento Poner6DeColor_(colorAPoner) que dado un color colorAPoner
+ponga 6 bolitas del color dado.
+*/
+
+procedure Poner6DeColor_(colorAPoner){
+    /*
+    PROPOSITO: Pone 6 bolitas de color *colorAPoner* en la celda actual.
+    PARAMETRO: colorAPoner: Color - El color de las bolitas a poner.
+    PRECONDICIONES: Ninguna.
+    */
+    repeat(6){
+        Poner(colorAPoner)
+    }
+}
+
+//MÚLTIPLES PARÁMETROS Y PARÁMETROS COMO ARGUMENTOS
+/*
+3.                                      Moviendo y poniendo
+Escribir un procedimiento Poner_Al_(colorAPoner, direcciónDondePoner) que dado un color
+colorAPoner y una dirección direcciónDondePoner, ponga una bolita del color dado en la celda
+vecina en la dirección dada, dejando el cabezal en dicha celda.
+a. ¿Cuántos casos distintos habría que considerar si no se usaran parámetros en este caso?
+b. ¿Cómo debería invocar al procedimiento para que ponga una bolita Azul en la celda al Norte?
+c. ¿Y sí quisiera una Azul y una Roja?
+*/
+
+procedure Poner_Al_(colorAPoner, direcciónDondePoner){
+    /*
+    PROPOSITO: Pone una bolita de color *colorAPoner* en la celda lindante en direccion al
+    *direccionDondePoner* desde la celda actual, dejando el cabezal en dicha celda.
+    PARAMETROS: *colorAPoner: Color - El color de la bolita a poner.
+                *direccionDondePoner: Direccion - El sentido a mover del cabezal.
+    PRECONDICIONES: *Debe haber al menos una celda lindante en direccion *direccionDondePoner* 
+    desde la celda actual.
+    */
+    Mover(direcciónDondePoner)
+    Poner(colorAPoner)
+}
+
+/*
+4.                                      Reemplazando colores
+Escribir ReemplazarUnaDe_Por_(colorAReemplazar, colorPorElCualReemplazar), un
+procedimiento que dado un primer color colorAReemplazar y un segundo color
+colorPorElCualReemplazar, reemplaza una bolita del primer color por una del segundo color (En la
+celda actual).
+*/
+
+procedure ReemplazarUnaDe_Por_(colorAReemplazar, colorPorElCualReemplazar){
+    /*
+    PROPOSITO: Reemplaza la bolita de color *colorAReemplazar* por una bolita de color
+    *colorPorElCualReemplazar* en la celda actual.
+    PARAMETROS: *colorAReemplazar: Color - El color de la bolita a reemplazar.
+                *colorPorElCualReemplazar: Color - El color de la bolita a poner.
+    PRECONDICIONES: Debe haber al menos una bolita de color *colorAReemplazar* en la celda actual.
+    */
+    Sacar(colorAReemplazar)
+    Poner(colorPorElCualReemplazar)
+}
+
+/*
+6.                                      Los 3 puntos de Nova
+Al continuar revisando código, encontramos otro procedimiento de Nova que carece de contrato y no
+sigue buenas prácticas de programación.
+a. Escribir el contrato faltante y corregir las malas prácticas:
+
+    procedure Pintar3PuntosAzules() {
+        Poner(Azul)
+            Poner_ADistancia3Al_(Azul, Este)
+     Poner_ADistancia3Al_(Azul, Este)
+        Mover3VecesAl_(Oeste) Mover3VecesAl_(Oeste)
+    }
+    
+    correccion de codigo:
+    procedure Pintar3PuntosAzules(){
+        ***
+        PROPOSITO: Pinta tres puntos azules a tres celdas de distancia uno con el otro 
+        dejando el cabezal en la celda inicial.
+        PRECONDICIONES: Debe haber al menos 6 celdas al Este desde la celda actual.
+        ***
+        Poner(Azul)
+        Poner_ADistancia3Al_(Azul, Este)
+        Poner_ADistancia3Al_(Azul, Este)
+        Mover3VecesAl_(Oeste) 
+        Mover3VecesAl_(Oeste)
+    }
+b. Ayudar a Nova a contestar la siguiente pregunta: ¿Hay alguna relación entre los parámetros de
+Poner_ADistancia3Al_ y Mover3VecesAl_?
+c. Dado que Nova no pensó en código general, basándose en el procedimiento corregido recién,
+generalizarlo para que, dado un color colorPunto, dibuje los puntos de ese color. El nuevo
+procedimiento debe llamarse Pintar3Puntos_.
+*/
+
+procedure Pintar_Puntos_(cantidadDePuntos, colorDePuntos){
+        /*
+        PROPOSITO: Pinta *cantidadDePuntos* puntos *colorDePuntos* a tres celdas de distancia uno 
+        con el otro dejando el cabezal en la celda inicial.
+        PARAMETROS: *cantidadDePuntos: Numero - La cantidad de puntos.
+                    *colorDePuntos: Color - El color de los puntos.
+        PRECONDICIONES: Debe haber al menos 6 celdas al Este desde la celda actual.
+        */
+        Poner(colorDePuntos)
+        
+        repeat(cantidadDePuntos){
+            Poner_ADistancia3Al_(colorDePuntos, Este)
+        }
+        Volver_CeldasAl_(cantidadDePuntos, Oeste)
+    }
+    
+procedure Volver_CeldasAl_(cantidadAMover, direccionAMover){
+    repeat(cantidadAMover*3){
+        Mover(direccionAMover)
+    }
+}
+
+/*
+7.                                      Multi Arcoiris
+Utilizando el procedimiento Pintar3Puntos_, construir el procedimiento PintarArcoIris() que
+ponga el tablero de la derecha cuando el tablero inicial es el de la izquierda. ¡A no ser como Nova, y
+empezar escribiendo el contrato
+*/
+
+procedure PintarArcoIris(){
+    /*
+    PROPOSITO: Pinta un arcoiris desde la celda actual hacia 9 celdas al Este y una fila del mismo tamaño al Norte.
+    PRECONDICIONES:
+        *Debe haber al menos 8 celdas al Este desde la celda actual.
+        *Debe haber al menos una fila al norte desde la celda actual.
+        *
+    */
+    Pintar3Puntos_(Negro)
+    Mover(Este)
+    Pintar3Puntos_(Azul)
+    Mover(Este)
+    Pintar3Puntos_(Rojo)
+    Mover(Norte)
+    Mover(Oeste)
+    Pintar3Puntos_(Verde)
+}
+
+/*
+8.                                      Y ahora, muchas Rojas
+Escribir un procedimiento Poner_DeColorRojo(cantidadAPoner) que dado un número
+cantidadAPoner, ponga tantas bolitas como se indica de color Rojo en la celda actual.
+a. ¿Cuántos casos posibles habría que considerar si no se usaran parámetros en este caso o el
+anterior?
+*/
+
+procedure Poner_DeColorRojo(cantidadAPoner){
+    /*
+    PROPOSITO: Pone en la celda actual *cantidadAPoner* bolitas de color Rojo en la celda actual.
+    PARAMETRO: *cantidadAPoner: Numero - La cantidad de bolitas a poner.
+    PRECONDICIONES: Ninguna.
+    */
+    repeat(cantidadAPoner){
+        Poner(Rojo)
+    }
+}
+
+/*
+9.                                      Poner de a muchas
+BIBLIOTECA Escribir un procedimiento Poner_DeColor_(cantidadAPoner, colorAPoner) que
+dado un número cantidadAPoner y un color colorAPoner, ponga tantas bolitas como se indica del
+color dado de la celda actual.
+*/
+
+procedure Poner_DeColor_(cantidadAPoner, colorAPoner){
+    /*
+    PROPOSITO: Pone *cantidadAPoner* bolitas de color *colorAPoner* en la celda actual.
+    PARAMETROS: *cantidadAPoner: Numero - La cantidad de bolitas a poner.
+                *colorAPoner: Color - El color de la bolitas a poner.
+    PRECONDICIONES: Ninguna.
+    */
+    repeat(cantidadAPoner){
+        Poner(colorAPoner)
+    }
+}
+
+/*
+10.                                     Moviendo tantas veces como quieras a donde quieras
+BIBLIOTECA Escribir Mover_VecesAl_(cantidadAMover, direcciónAMover), un
+procedimiento que dado un número cantidadAMover y una dirección direcciónAMover mueva el
+cabezal tantas veces como la dada en dicha dirección.
+*/
+
+procedure Mover_VecesAl_(cantidadAMover, direcciónAMover){
+    /*
+    PROPOSITO: Mueve el cabezal *cantidadAMover* posiciones en direccion *direccionAMover*
+    de la celda actual. El cabezal termina en dicha celda.
+    PARAMETROS: *cantidadAMover: Numero - La cantidad de celdas a mover.
+                *direcciónAMover: Direccion - El sentido a mover del cabezal.
+    PRECONDICIONES: *Debe haber al menos *cantidadAMover* celdas hacia *direccionAMover*
+    de la celda actual.
+    */
+    repeat(cantidadAMover){
+        Mover(direccionAMover)
+    }
+}
+
+/*
+11.                                     Sacar de a muchas
+BIBLIOTECA Escribir un procedimiento Sacar_DeColor_(cantidadASacar, colorASacar) que
+dado un número cantidadASacar y un color colorASacar, saque tantas bolitas como se indica del
+color dado de la celda actual.
+*/
+
+procedure Sacar_DeColor_(cantidadASacar, colorASacar){
+    /*
+    PROPOSITO: Saca *cantidadASacar* bolitas de color *colorASacar* de la celda actual.
+    PARAMETROS: *cantidadASacar: Numero - La cantidad de bolitas a sacar.
+                *colorASacar: Color - El color de las bolitas a sacar.
+    PRECONDICIONES: Debe haber al menos *cantidadASacar* bolitas de color *colorASacar*
+    en la celda actual.
+    */
+    repeat(cantidadASacar){
+        Sacar(colorASacar)
+    }
+}
+
+/*
+15.                                     Mis iniciales salen fácil
+EN PAPEL Escribir un programa que escriba sus iniciales en el tablero utilizando la primitiva de dibujo
+DibujarLíneaHaciaEl_DeLargo_ que se supone primitiva. También puedeN utilizarse
+procedimientos que hayan sido marcados como BIBLIOTECA hasta ahora.
+
+procedure DibujarLíneaHaciaEl_DeLargo_(dirección, largoDeLaLínea)
+/*
+PROPÓSITO:
+* Dibuja una línea de longitud **largoDeLaLínea** en dirección **dirección**,
+dejando el cabezal en la posición inicial.
+PARÁMETROS:
+* largoDeLaLínea: Número - La longitud de la línea que se dibuja
+* dirección : Dirección - La dirección hacia la que se dibuja la línea
+PRECONDICIONES:
+* La celda actual está vacía y debe haber al menos **largoDeLaLínea** celdas
+en dirección dirección.
+*/
+
+
+program{
+    /*
+    PROPOSITO: Escribir las letras "P" y "J"
+    PRECONDICIONES: *Debe haber al menos 6 celdas hacia el Norte desde la celda actual.
+                    *Debe haber al menos   celdas hacia el  desde la celda actual
+    */
+    EscribirLetraP()
+    PosicionarASiguienteLetra()
+    EscribirLetraJ()
+    
+}
+
+procedure EscribirLetraP(){
+    /*
+    PROPOSITO: Escribe la letra "P" 
+    PRECONDICIONES: *Debe haber al menos 6 celdas hacia el Norte desde la celda actual 
+                    *Debe haber al menos 3 celdas hacia el Este desde la celda actual.
+    */
+    DibujarLíneaHaciaEl_DeLargo_(Norte, 6)
+    Mover(Este)
+    DibujarLíneaHaciaEl_DeLargo_(Este, 3)
+    Mover(Sur)
+    DibujarLineaHaciaEl_DeLargo_(Sur,3)
+    Mover(Oeste)
+    DibujarLíneaHaciaEl_DeLargo_(Norte, 2)
+}
+
+procedure PosicionarASiguienteLetra(){
+    /*
+    PROPOSITO: Posiciona el cabezal a la siguiente letra.
+    PRECONDICIONES: Debe haber al menos 4 
+    */
+    Mover_VecesAl_(4, Este)
+    Mover_VecesAl_(2, Sur)
+}
+
+procedure Mover_VecesAl_(cantidadAMover, direcciónAMover){
+    /*
+    PROPOSITO: Mueve el cabezal *cantidadAMover* posiciones en direccion *direccionAMover*
+    de la celda actual. El cabezal termina en dicha celda.
+    PARAMETROS: *cantidadAMover: Numero - La cantidad de celdas a mover.
+                *direcciónAMover: Direccion - El sentido a mover del cabezal.
+    PRECONDICIONES: *Debe haber al menos *cantidadAMover* celdas hacia *direccionAMover*
+    de la celda actual.
+    */
+    repeat(cantidadAMover){
+        Mover(direccionAMover)
+    }
+}

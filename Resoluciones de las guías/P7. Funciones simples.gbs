@@ -1,0 +1,219 @@
+//punto 1
+/*
+a. La cantidad total de bolitas de la celda actual.
+b. Sí hay más de 5 bolitas en total en la celda actual.
+c. Sí hay exactamente 5 bolitas en la celda actual.
+d. Sí hay al menos 5 bolitas en la celda actual.
+e. Sí hay bolitas de todos los colores en la celda actual.
+f. Si la celda actual está vacía.
+g. Sí a la celda actual le faltan bolitas de alguno de los colores y no está vacía.
+*/
+
+function bolitasTotales(){
+    /*
+    PROPOSITO: Describe la cantidad total de bolitas en la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numero.
+    */
+    return(nroBolitas(Azul) + nroBolitas(Negro) + nroBolitas(Rojo) + nroBolitas(Verde))
+}
+
+function hayMasDe5Bolitas(){
+    /*
+    PROPOSITO: Indica si hay mas de 5 bolitas en total en la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(bolitasTotales() > 5)
+}
+
+function hayExactamente5Bolitas(){
+    /*
+    PROPOSITO: Indica si hay exactamente 5 bolitas en la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(bolitasTotales() == 5)
+}
+
+function tieneUnaDeCada(){
+    /*
+    PROPOSITO: Indica si hay al menos una bolita de cada color en la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(hayBolitas(Azul) && hayBolitas(Negro) && hayBolitas(Rojo) && hayBolitas(Verde))
+}
+
+
+function esCeldaVacia(){
+    /*
+    PROPOSITO: Indica si la celda actual esta vacia.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return (not(hayBolitas(Azul) || hayBolitas(Negro) || hayBolitas(Rojo) || hayBolitas(Verde)))
+}
+
+function leFaltaAlgúnColor() {
+    /*
+        PROPÓSITO:  indica si la celda actual no está vacía pero le falta algún color
+        TIPO: Booleano
+        PRECONDICIONES:
+            * Ninguna
+    */
+    
+    return (not (esCeldaVacía()) && not (tieneUnaDeCada()))
+}
+
+//punto 2
+/*
+a. esCeldaVacía(), que indica si la celda actual se encuentra vacía.
+b. tieneUnaDeCada(), que indica si la celda actual tiene al menos una bolita de cada color.
+c. esCeldaConBolitas(), que indica si la celda actual tiene al menos una bolita, de cualquier
+color.
+*/
+
+function esCeldaVacía(){
+   /*
+    PROPOSITO: Indica si la celda actual esta vacia.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return (not(hayBolitas(Azul) || hayBolitas(Negro) || hayBolitas(Rojo) || hayBolitas(Verde)))
+}
+
+function esCeldaConBolitas(){
+    /*
+    PROPOSITO: Indica si hay al menos una bolita en la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(not(esCeldaVacia()))
+}
+
+program{
+    return(cantidadDeSoldadosDe_(Negro))
+}
+
+//punto 3
+/*
+Escribir las siguientes funciones para el juego ¡A la batalla! de la práctica anterior, donde 
+en las celdas del tablero se representan soldados (los aliados con una bolita de color 
+Negro y los enemigos con una bolita de color Rojo por cada soldado).
+*/
+/*
+a. cantidadDeSoldadosDe_(colorDelEjército), que describe la cantidad de soldados de
+la celda actual del ejército dado.
+*/
+
+function cantidadDeSoldadosDe_(colorDelEjército){
+    /*
+    PROPOSITO: Describe la cantidad de soldados del ejercito **colorDelEjercito** de la celda actual
+    PARAMETRO: *colorDelEjército: Color - El color del ejercito.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico.
+    */
+    return(nroBolitas(colorDelEjército))
+}
+
+/*
+b. Vuelva a escribir EnviarAliadosParaDuplicarEnemigos(), y PelearLaBatalla(), que
+realizó en la práctica anterior, ahora haciendo uso de la función hecha en el punto a, y luego
+conteste: ¿Realizó procedimientos auxiliares para resolver el problema? ¿Cuál de los códigos
+(entre este y el de la práctica anterior) comunica mejor la solución al problema? ¿Por qué?
+*/
+
+procedure EnviarAliadosParaDuplicarEnemigos(){
+    /*
+    PROPOSITO: Agrega soldados aliados en la celda actual en cantidad suficiente para que haya el
+    doble de aliados que de soldados enemigos.
+    PRECONDICIONES: Ninguna
+    */
+    repeat(){
+        AgregarSoldadosDelEjercito_(Negro)
+    }
+}
+
+procedure PelearLaBatalla(){
+    
+}
+
+/*
+c. esCeldaIndefensa() que indica si no hay soldados en la celda actual.
+*/
+
+function esCeldaIndefensa(){
+    /*
+    PROPOSITO: Indica si en la celda actual no hay soldados.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(not(hayBolitas(Negro)) && not(hayBolitas(Rojo)))
+}
+
+/*
+d. estadoDeEmergencia() que indica si existen más de 100 soldados enemigos, y además la
+celda está indefensa.
+*/
+
+function estadoDeEmergencia(){
+    /*
+    PROPOSITO: Indica si hay mas de 100 soldados enemigos y si la celda esta indefensa.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano
+    */
+    return((nroBolitas(Rojo)) > 100 && esCeldaIndefensa())
+}
+
+/*
+e. hayAlMenos_AliadosPorCada_Atacantes(cantidadDefensa, cantidadAtaque)
+que indica si hay por lo menos cantidadDefensa soldados aliados por cada
+cantidadAtaque soldados enemigos en la celda actual. Por ejemplos si en la celda actual
+hubiera 10 soldados aliados y 5 enemigos, la función invocada como
+hayAlMenos_AliadosPorCada_Atacantes(2, 1), describiría Verdadero, pues hay al
+menos dos aliados por cada atacante. Si se invocara con esos mismos argumentos en una
+celda donde hay 7 aliados y 5 enemigos, describiría Falso.
+*/
+
+function hayAlMenos_AliadosPorCada_Atacantes(cantidadDefensa, cantidadAtaque){
+    /*
+    PROPOSITO: Indica si hay por lo menos **cantidadDefensa** soldados aliados por cada 
+    **cantidadAtaque** soldados enemigos en la celda actual.
+    PARAMETROS:
+        *cantidadDefensa: Numerico - La cantidad de soldados aliados minimos.
+        *cantidadAtaque: Numerico - La cantidad de soldados enemigos atacantes.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return()
+}
+
+/*
+aliadosNecesariosParaDefensaEficazContra_(
+cantidadDeSoldadosEnemigosAdicionales) que describe el número de soldados
+aliados que faltan para defender la celda actual si a ella se suman la cantidad de soldados
+enemigos dada. Tener en cuenta que en la celda actual puede ser que haya soldados, pero que
+es precondición de esta función que no hay suficientes aliados. Recordemos que 2 soldados
+enemigos pelean contra 3 soldados aliados y todos mueren.
+*/
+
+function aliadosNecesariosParaDefensaEficazContra_(cantidadDeSoldadosEnemigosAdicionales){
+    /*
+    PROPOSITO: Describe el numero de soldados aliados que faltan para defender si a ella se suman
+    la cantidad de **cantidadDeSoldadosEnemigosAdicionales** soldados enemigos adicionales de la
+    celda actual.
+    PARAMETRO:
+        *cantidadDeSoldadosEnemigosAdicionales: Numerico - Es la cantidad de soldados enemigos
+        adicionales.
+    PRECONDICIONES: 
+        *No deben haber suficientes soldados aliados en la celda actual.
+        *Los soldados enemigos adicionales deben ser de color Rojo.
+    TIPO: Numerico.
+    */
+    return(cantidadDeSoldadosEnemigosAdicionales *3 div 2)
+}
+
+/*
+en el punto de alimentar arboles tendria que usar un if
+*/

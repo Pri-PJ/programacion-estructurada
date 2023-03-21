@@ -1,0 +1,166 @@
+/* PRIMITIVAS
+hayParticipante()
+idDeParticipanteAcá()
+participanteDeVoto_(colorVotoDobleOSimple)()
+hayParticipanteAl_(dirección)
+tieneUnParticipanteAl_(dirección)
+colorParticipante()
+colorVotoDoble()
+colorVotoSimple()
+colorDeVotoAplicado()
+*/
+
+/*
+1) Se pide elaborar el procedimiento IrAParticipante_ que, dado un id y asumiendo que 
+el participante se encuentra en el tablero, posiciona al cabezal sobre el mismo.
+*/
+
+procedure IrAParticipante_(idDePArticipante){
+    /*
+    PROPOSITO: Mueve el cabezal hacia el participante con id **idDePArticipante**.
+    PARAMETRO:
+        *idDeParticipante: Numero - El id del participante a buscar.
+    PRECONDICIONES:
+        *Debe exitir el participante con id **idDeParticipante**.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(not estaElParticipante_(idDePArticipante)){
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+}
+
+function estaElParticipante_(idDePArticipante){
+    /*
+    PROPOSITO: Indica si esta participante con id **idDePArticipante** en la celda actual.
+    PARAMETRO:
+        *idDeParticipante: Numero - El id del participante a buscar.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(hayParticipante() && idDeParticipanteAcá() == idParticipante)
+}
+
+/*
+2) Se pide elaborar el procedimiento AplicarVotos que, aplica los votos del 
+participante de la celda actual a los participantes votados y elimina los 
+indicadores de votos del personaje de la celda actual. Para ello, asumimos que, 
+tanto el participante que recibirá el voto doble, como el participante que recibirá 
+el voto simple, están en el tablero.
+*/
+
+procedure AplicarVotos(){
+    /*
+    PROPOSITO: Aplica los votos del participante de la celda actual y elimina los indicadores
+    de voto.
+    PRECONDICIONES:
+        *El estado del tablero debe estar en "estrategia de nominacion".
+        *Debe exitir un participante en la celda actual.
+        *Deben exitir los participantes a votar en el tablero.
+        *Los votos dobles y los votos simples del participante de la celda actual no deben ser iguales.
+    */
+    idParticipanteActual := idParticipanteAca()
+    AplicarVoto_A_(1, idDeParticipanteAVotarCon_(colorVotoSimple()))
+    IrAParticipante_(idParticipanteActual)
+    AplicarVoto_A_(2, idDeParticipanteAVotarCon_(colorVotoDoble()))
+    IrAParticipante_(idParticipanteActual)
+    SacarIndicadoresDeVoto()
+}
+
+procedure AplicarVotoDobleA_(cantidadDeVotos, idParticipante){
+    /*
+    PROPOSITO: Aplica **cantidadDeVotos** voto al participante con id **idParticipante**
+    PARAMETRO:
+        *cantidadDeVotos: Numero - La cantidad de votos a aplicar.
+        *idParticipante: Numero - El id del participante a aplicarle dos votos.
+    PRECONDICIONES:
+        *El estado del tablero debe estar en "estrategia de nominacion".
+        *Debe exitir el participante con id **idParticipante** a votar en el tablero.
+    */
+    IrAParticipante_(idParticipante)
+    Poner_DeColor_(cantidadDeVotos, colorDelVotoAplicado())
+}
+
+procedure SacarIndicadoresDeVotos(){
+    /*
+    PROPOSITO: Saca los indicadores de voto del participante de la celda actual.
+    PRECONDICIONES:
+        *Debe exitir un participante en la celda actual.
+        *El participante de la celda actual debe tener pensamientos de votos.
+    */
+    Sacar_DeColor_(idParticipanteAVotarCon_(colorVotoSimple(), colorVotoSimple())
+    Sacar_DeColor_(idParticipanteAVotarCon_(colorVotoDoble(), colorVotoDoble())
+}
+
+/*
+3) Realizar la función cantidadDeVotosDelMenosVotado que, luego de generarse la 
+“placa de votos”, describe la máxima cantidad de votos que recibió un/unos participantes
+siendo el/los menos votado/s.
+*/
+
+function cantidadDeVotosDelMenosVotado(){
+    /*
+    PROPOSITO: Describe la menor cantidad de votos recibida por el/los participante/s
+    PRECONDICIONES: 
+        *El estado del tablero debe estar en "placa de votos"
+    TIPO: Numero.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    cantidadDeVotosDelJugadorMenosVotado := 10000000
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        cantidadDeVotosDelJugadorMenosVotado := minimoEntre_Y_(cantidadDeVotosDelJugadorMenosVotado, votosCeldaActualSiHay())
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    cantidadDeVotosDelJugadorMenosVotado := minimoEntre_Y_(cantidadDeVotosDelJugadorMenosVotado, votosCeldaActualSiHay())
+    return(cantidadDeVotosDelJugadorMenosVotado)
+}
+
+function votosCeldaActualSiHay(){
+    /*
+    PROPOSITO: Describe la cantidad de votos de la celda actual de la celda actual si hay, sino
+    describe 10000.
+    PRECONDICIONES: 
+        *El estado del tablero debe estar en "placa de votos".
+    TIPO: Numero
+    */
+    return(
+        choose  nroBolitas(colorVotoAplicado()) when (hayParticipante())
+                10000                           otherwise
+        )
+}
+
+/*
+4) Realizar la función cantidadDeParticipantesVotados que, luego de generarse la 
+“placa de votos”, describe cuántos participantes fueron votados.
+*/
+
+function cantidadDeParticipantesVotados(){
+    /*
+    PROPOSITO: Describe la cantidad de participantes que fueron votados.
+    PRECONDICIONES: 
+        *El estado del tablero debe estar en "placa de votos".
+    TIPO: Numero.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    cantidadDeParticipantesVotados := unoSi_ceroSino(hayParticipanteConVotos())
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+        cantidadDeParticipantesVotados := unoSi_ceroSino(hayPArticipanteConVotos())
+    }
+    return(cantidadDeParticipantesVotados)
+}
+
+function hayParticipanteConVotos(){
+    /*
+    PROPOSITO: Indica si hay un participante con votos en la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(hayParticipante() && nroBolitas(colorDeVotoAplicado()) > 0)
+}
+
+
+
+
+
+
+

@@ -1,0 +1,1034 @@
+//punto 1
+/*
+Escribir la función tieneBolitas_Al_, que, suponiendo que existe una celda lindante en la dirección
+dada, indica si la misma tiene o no bolitas del color indicado. 
+Sí no hay una celda lindante, hace BOOM.
+*/
+
+function tieneBolitas_Al_(color, direccion){
+    /*
+    PROPOSITO: Indica si en la celda lindante al **direccion** hay bolitas de color **color**.
+    PARAMETROS:
+        *color: Color - El color de la bolita a evaluar.
+        *direccion: Direccion - La direccion a la que se evaluara.
+    PRECONDICIONES: 
+        *Debe exitir al menos una celda lindante en direccion **direccion** desde la celda actual.
+    TIPO: Booleano.
+    */
+    Mover(direcciónAMirar)
+    return (hayBolitas(colorAMirar))
+}
+
+//punto 2
+/*
+BIBLIOTECA Escribir la función hayBolitas_Al_, que indica si hay una celda lindante en la dirección
+indicada y la misma tiene bolitas del color dado. Sí no hay celda lindante describe Falso
+*/
+
+function hayBolitas_Al_(color, direccion){ //corregido
+    /*
+    PROPOSITO: Indica si hay una celda lindante al **direccion** desde la celda actual y si 
+    esta tiene bolitas de color **color**.
+    PARAMETROS:
+    *color: Color - El color de la bolita a evaluar.
+    *direccion: Direccion - La direccion de la celda lindante a evaluar.
+    PRECONDICIONES: Ninguna
+    TIPO: Booleano.
+    */
+    return (puedeMover(dirección) && tieneBolitas_Al_(color, dirección))
+
+//punto 3
+
+/*
+Escribir la función hayBolitas_EnElBorde_, que indica si en la celda que se encuentra en el borde
+dado por la dirección, hay bolitas del color indicado.
+*/
+
+function hayBolitas_EnElBorde_(color, direccion){
+    /*
+    PROPOSITO: Indica si hay bolitas de color **color** en la celda que se encuentra en el borde
+    **direccion**.
+    PARAMETROS:
+        *color: Color - El color de la bolita a evaluar.
+        *direccion: Direccion - La direccion del borde a evaluar bolitas.
+    PRECONDICIONES: 
+        
+    TIPO: Booleano.
+    */
+    IrAlBorde(direccion)
+    return(hayBolitas(color))
+}
+
+
+//punto 4
+/*
+Escribir la función hayBolitas_Hacia_ que indica si en alguna de las celdas hacia la dirección dada
+(sin incluir la celda actual) hay bolitas del color dado.
+*/
+
+function tieneBolitas_Hacia_(color, direccion){
+    /*
+    PROPOSITO: Indica si en algunas de las celdas hacia la direccion **direccion** hay bolitas de 
+    color **color**.
+    PARAMETROS:
+        *color: Color - El color de las bolitas a evaluar.
+        *direccion: Direccion - La direccion hacia la que se evaluara bolitas.
+    PRECONDICIONES:
+        *Debe exitir al menos una celda lindante hacia el **direccion** desde la celda actual.
+    TIPO: Booleano.
+    */
+    Mover(dirección)
+    while (not(hayBolitas(color)) && puedeMover(dirección)) {
+        Mover(dirección)
+    }
+    return (hayBolitas(color))
+}
+
+//ahora si queremos no tener ninguna precondicion
+function hayBolitas_Hacia_(color, direccion){
+    /*
+    PROPOSITO: Indica si en algunas de las celdas hacia la direccion **direccion** hay bolitas de 
+    color **color**.
+    PARAMETROS:
+        *color: Color - El color de las bolitas a evaluar.
+        *direccion: Direccion - La direccion hacia la que se evaluara bolitas.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(puedeMover(direccion) && tieneBolitas_Hacia_(color, direccion))
+}
+
+//punto 5
+/*
+Escribir la función hayCeldaVacíaHacia_, que indica si en alguna de las celdas hacia la dirección
+dada (sin incluir la celda actual) hay una que esté vacía.
+*/
+
+function hayCeldaVacíaHacia_(direccion){
+    /*
+    PROPOSITO: Indica si en alguna de las celdas hacia el **direccion** hay una que este vacia.
+    PARAMETRO:
+        *direccion: Direccion - La direccion a la que se evaluará las celdas.
+    PRECONDICIONES:
+        *Debe exitir al menos una celda lindante hacia **direccion**
+    TIPO: Booleano.
+    */
+    Mover(dirección)
+    while (not(esCeldaVacía()) && puedeMover(dirección)) {
+        Mover(dirección)
+    }
+    return (esCeldaVacía())
+}
+
+
+function esCeldaVacia(){
+    /*
+    PROPOSITO: Indica si la celda actual esta vacia.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return (not(hayBolitas(Azul) || hayBolitas(Negro) || hayBolitas(Rojo) || hayBolitas(Verde)))
+}
+
+//punto 6
+/*
+Escribir la función hayAlgunaBolita_, que indica si en alguna de las celdas del tablero existe una
+bolita del color dado.
+*/
+
+function hayAlgunaBolita_(color){
+ /*
+    PROPOSITO: Indica si en alguna de las celdas del tablero existe una bolita de color **color**.
+    PARAMETRO:
+        *color: Color - El color de la bolita a buscar.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(not(hayBolitas(color)) && puedeMover(dirección)){
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    return(hayBolitas(color))
+}
+
+procedure IrAPrimeraCeldaEnUnRecorridoAl_Y_(dirPrincipal, dirSecundaria){
+    /*
+    PROPOSITO: Mueve el cabezal a la primera celda del tablero en dirección
+    **dirPrincipal** y en direccion **dirSecundaria** desde la celda actual.
+    PARAMETROS:
+        *dirPrincipal: Direccion - La direccion principal a la que se movera el cabezal.
+        *dirSecundaria: Direccion - La direccion secundaria a la que se movera el cabezal.
+    PRECONDICIONES: 
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser iguales.
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser opuestas.
+    */
+    IrAlBorde(opuesto(dirPrincipal))
+    IrAlBorde(opuesto(dirSecundaria))
+}
+
+function haySiguienteCeldaEnUnRecorridoAl_Y_(dirPrincipal, dirSecundaria){
+    /*
+    PROPOSITO: Indica si hay siguiente celda en direccion **dirPrincipal** y en direccion
+    **dirSecundaria** desde la celda actual.
+    PARAMETROS:
+        *dirPrincipal: Direccion - La direccion principal a la que se movera el cabezal.
+        *dirSecundaria: Direccion - La direccion secundaria a la que se movera el cabezal.
+    PRECONDICIONES: 
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser iguales.
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser opuestas. 
+    */
+    return(puedeMover(dirPrincipal) || puedeMover(dirSecundaria))
+}
+
+procedure IrASiguienteCeldaEnUnRecorridoAl_Y_(dirPrincipal, dirSecundaria){
+    /*
+    PROPOSITO: Mueve el cabezal a la siguiente celda desde la celda actual.
+    PARAMETROS:
+        *dirPrincipal: Direccion - La direccion principal a la que se movera el cabezal.
+        *dirSecundaria: Direccion - La direccion secundaria a la que se movera el cabezal.
+    PRECONDICIONES: 
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser iguales.
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser opuestas. 
+    */
+    if(puedeMover(dirPrincipal)){
+        Mover(dirPrincipal)
+    }
+    else{
+        IrAlBorde(opuesto(dirPrincipal))
+        Mover(dirSecundaria)
+    }
+}
+
+//punto 7
+/*
+Escribir la función hayAlgunaCeldaVacía, que indica si alguna de las celdas del tablero está vacía.
+*/
+
+function hayAlgunaCeldaVacía(){
+/*
+    PROPOSITO: Indica si en alguna de las celdas del tablero existe una celda vacia.
+    PRECONDICIONES:
+    TIPO: Booleano.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(not(esCeldaVacia()) && puedeMover(dirección)){
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    return(esCeldaVacia())
+}
+
+//punto 8 RE
+/*
+Escribir el procedimiento CopiarCeldaAl_, que copia los contenidos de la celda actual a la celda
+lindante en la dirección dada. Note que se deben eliminar los contenidos originales que hubieran 
+en la celda de destino.
+*/
+
+procedure CopiarCeldaAl_(direccion){
+/*
+    Propósito: Copia el contenido de la celda actual a la celda lindante en dirección *direccion*
+    Precondiciones: Debe haber una celda lindante en dirección *direccion*
+    Parámetros: *direccion* - Direccion: Dirección a mover el cabezal
+*/
+    CopiarColor_Al_(Azul, direccion)
+    CopiarColor_Al_(Verde, direccion)
+    CopiarColor_Al_(Rojo, direccion)
+    CopiarColor_Al_(Negro, direccion)
+    BorrarCelda()
+}
+
+procedure CopiarColor_Al_(color, direccion){
+    cantidadDeBolitas := nroBolitas(color)
+    Mover(direccion)
+    Poner_DeColor(cantidadBolitas, color)
+    Mover(opuesto(direccion))
+}
+
+procedure Poner_DeColor_(cantidadAPoner, colorAPoner){
+    /*
+    PROPOSITO: Pone *cantidadAPoner* bolitas de color *colorAPoner* en la celda actual.
+    PARAMETROS: *cantidadAPoner: Numero - La cantidad de bolitas a poner.
+                *colorAPoner: Color - El color de la bolitas a poner.
+    PRECONDICIONES: Ninguna.
+    */
+    repeat(cantidadAPoner){
+        Poner(colorAPoner)
+    }
+}
+
+//punto 9 
+/*
+Escribir el procedimiento CopiarOrigenEnEsquinas que copia en cada esquina los contenidos que
+hay en la celda actual (las 4 esquinas deben terminar con exactamente las mismas bolitas de cada
+color que había en la celda donde estaba originalmente el cabezal en el tablero inicial. La posición final
+del cabezal no es relevante).
+*/
+
+procedure CopiarOrigenEnEsquinas(){
+    /*
+    PROPOSITO: Copia exactamente en cada esquina las bolitas de la celda actual.
+    PRECONDICIONES: 
+        *No deben exitir bolitas en las celdas de las esquinas.
+        *Tiene que haber 4 esquinas en el tablero
+    */
+    CopiarOrigenEnEsquina_Y_(Oeste,Sur)
+    CopiarOrigenEnEsquina_Y_(Oeste,Norte)
+    CopiarOrigenEnEsquina_Y_(Este,Sur)
+    CopiarOrigenEnEsquina_Y_(Este,Norte)
+}
+
+procedure CopiarOrigenEnEsquina_Y_(dirPrincipal, dirSecundaria){
+    /*
+    PROPÓSITO: Copia el contenido de la celda actual en la esquina *dirPrincipal* 
+    *dirSecundaria* dejando el cabezal en esa misma esquina.
+    PARÁMETROS:
+        *dirPrincipal: direccion - La direccion principal
+        *dirSecundaria: direcccion - La direccion secundaria
+    PRECONDICIONES:
+        * Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser iguales ni opuestos.
+    */
+    cantidadDeBolitasAzul := nroBolitas(Azul)
+    cantidadDeBolitasNegro := nroBolitas(Negro)
+    cantidadDeBolitasRojo := nroBolitas(Rojo)
+    cantidadDeBolitasVerde := nroBolitas(Verde)
+    IrAlBorde(dirPrincipal)
+    IrAlBorde(dirSecundaria)
+    BorrarCelda()
+    Poner_DeColor_(cantidadDeBolitasAzul, Azul)
+    Poner_DeColor_(cantidadDeBolitasNegro, Negro)
+    Poner_DeColor_(cantidadDeBolitasRojo, Rojo)
+    Poner_DeColor_(cantidadDeBolitasVerde, Verde)
+}
+
+//punto 10
+/*
+Se pide entonces, encontrar los errores en los procedimientos que escribió Nova y
+justificar por qué son errores. Luego, renombrar los procedimientos, variables y parámetros (y sus
+usos) de manera adecuada, para que el programa resulte legible, y escribir los contratos.
+
+procedure P(p)
+    { p := p + 1; Poner__Veces(Azul, p) }
+    
+procedure Q(p) {
+    if(p /= 3) {v := 3}
+    Poner__Veces(Azul, v)
+}
+
+procedure R()
+    { Poner__Veces(Azul, v) Mover__Veces(Este, v) }
+    
+procedure S(p) {
+    v := Este
+    Mover__Veces(v, 5)
+    v := 5
+    Mover__Veces(Este, v)
+}
+*/
+
+procedure Poner_VecesMasUnoDeColorAzul(cantidad){
+    /*
+    PROPOSITO: Pone una bolita mas que la cantidad dada de color Azul.
+    PARAMETRO:
+        *cantidad: Numerico - La cantidad de bolitas a poner.
+    PRECONDICIONES: Ninguna.
+    */
+    Poner_DeColor_(cantidad + 1, Azul)
+}
+
+procedure Poner_DeColor_(cantidadAPoner, colorAPoner){
+    /*
+    PROPOSITO: Pone *cantidadAPoner* bolitas de color *colorAPoner* en la celda actual.
+    PARAMETROS: *cantidadAPoner: Numero - La cantidad de bolitas a poner.
+                *colorAPoner: Color - El color de la bolitas a poner.
+    PRECONDICIONES: Ninguna.
+    */
+    repeat(cantidadAPoner){
+        Poner(colorAPoner)
+    }
+}
+
+procedure Poner3AzulesSi_EsDistintoA3(cantidad){
+    /*
+    PROPOSITO: Pone 3 bolitas azules en la celda actual si la **cantidad** es distinto a 3.
+    PARAMETRO:
+        *cantidad: Numerico - La cantidad a comparar.
+    PRECONDICIONES: Ninguna.
+    */
+    if(cantidad /= 3){
+        Poner_DeColor_(Azul, 3)
+    }
+}
+
+procedure Poner_AzulesYMover_AlEste(cantidad){
+    /*
+    PROPOSITO: Poner **cantida** bolitas de color Azul en la celda actual y
+    mueve el cabezal **cantidad** de veces al Este.
+    PARAMETRO:
+        *cantidad: Numerico - La cantidad a mover y poner
+    PRECONDICIONES:
+        *Tiene que haber al menos **cantidad** de celdas en direccion al Este
+    */
+    Poner_DeColor_(cantidad, Azul) 
+    Mover_VecesAl_(cantidad, Este) 
+}
+
+procedure Mover10VecesAlEste(){
+    /*
+    PROPOSITO: Mueve el cabezal 10 veces al Este desde la celda actual.
+    PRECONDICIONES: 
+        *Tiene que haber al menos 10 celdas al Este desde la celda actual
+    */
+    Mover_VecesAl_(10, Este)
+}
+
+procedure Mover_VecesAl_(cantidadAMover, direcciónAMover){
+    /*
+    PROPOSITO: Mueve el cabezal *cantidadAMover* posiciones en direccion *direccionAMover*
+    de la celda actual. El cabezal termina en dicha celda.
+    PARAMETROS: *cantidadAMover: Numero - La cantidad de celdas a mover.
+                *direcciónAMover: Direccion - El sentido a mover del cabezal.
+    PRECONDICIONES: *Debe haber al menos *cantidadAMover* celdas hacia *direccionAMover*
+    de la celda actual.
+    */
+    repeat(cantidadAMover){
+        Mover(direccionAMover)
+    }
+}
+
+//punto 11
+/*
+BIBLIOTECA Escribir la función mínimoEntre_Y_, que dados dos valores describe aquel que sea más
+chico. Por ejemplo, mínimoEntre_Y_(3, 7) describe 3, mientras que mínimoEntre_Y_(9, 4)
+describe 4.
+a. ¿De qué tipo son los parámetros?
+De tipo numero.
+b. ¿Es válida la expresión mínimoEntre_Y_(Rojo, Azul)? ¿Qué describe?
+En este caso seria posible porque en Gobstones los colores tienen orden alfabetico, describiria colores.
+c. ¿Qué se describe si son iguales? ¿Es relevante si es uno o el otro?
+*/
+
+function mínimoEntre_Y_(primerValorAEvaluar, segundoValorAEvaluar){
+    /*
+    PROPOSITO: Describe el valor minimo entre **primerValorAEvaluar** y **segundoValorAEvaluar**.
+    PARAMETROS:
+        *primerValorAEvaluar: Numerico, Dirección o Color - El primer valor a comparar.
+        *segundoValorAEvaluar: Numerico, Dirección o Color - El segundo valor a comparar.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico, Dirección o Color.
+    */
+    return(
+        choose  primerValorAEvaluar when (primerValorAEvaluar < segundoValorAEvaluar)
+                segundoValorAEvaluar otherwise
+        )
+}
+
+//punto 12
+/*
+BIBLIOTECA Escribir ahora la función máximoEntre_Y_ que dados dos valores describe aquel que
+sea el más grande.
+*/
+
+function máximoEntre_Y_(primerValorAEvaluar, segundoValorAEvaluar){
+    /*
+    PROPOSITO: Describe el valor mas grande entre **primerValorAEvaluar** y **segundoValorAEvaluar**.
+    PARAMETROS:
+        *primerValorAEvaluar: Numerico - El primer valor a comparar.
+        *segundoValorAEvaluar: Numerico - El segundo valor a comparar.
+    PRECONDICIONES:
+        *Los valores **primerValorAEvaluar** y **segundoValorAEvaluar** no deben ser iguales.
+    TIPO: Numerico.
+    */
+    return(
+        choose  primerValorAEvaluar when (primerValorAEvaluar > segundoValorAEvaluar)
+                segundoValorAEvaluar otherwise
+        )
+}
+
+//punto 13 REVISAR PORQUE HUBO PARECIDOS EN PARCIALES
+/*
+La primitiva del ejercicio “14. El Caminante” de la Práctica 8, direcciónDelCódigo_(código),
+puede implementarse con alternativa condicional de expresiones. Se pide que la implemente, y que
+pruebe ahora su código del caminante para verificar su correcto funcionamiento.
+*/
+
+function direcciónDelCódigo_(código){
+    /*
+    PROPOSITO: Describe la direccion que representa el codigo con **codigo** de la celda actual.
+    PARAMETROS:
+        *codigo: Numero - Numero de la direccion.
+    PRECONDICIONES: El codigo debe ser un numero entre 1 y 4.
+    TIPO: Direccion
+    */
+    return(
+        choose  Norte   when (codigo == 1)
+                Este    when (codigo == 2)
+                Sur     when (codigo == 3)
+                Oeste   when (codigo == 4)
+        )
+}
+
+//punto 14
+/*
+Escribir jugadaGanadoraDePiedraPapelOTijerasEntre_Y_, que dadas dos jugadas,
+describe la jugada ganadora entre ambas. Para olvidarnos de cómo está codificada la jugada, tenemos
+las funciones piedra(), papel() y tijeras(), que representan a cada una de las jugadas. En
+piedra papel o tijeras, el jugador puede elegir una de tres opciones, y cada opción pierde 
+contra algunan otra y le gana a alguna otra.
+*/
+
+function jugadaGanadoraDePiedraPapelOTijerasEntre_Y_(primerJugada, segundaJugada){
+    /*
+    PROPOSITO: Describe la jugada ganadora entre **primerJugada** y **segundaJugada**.
+    PARAMETROS: 
+        *primerJugada: - 
+        *segundaJugada: - 
+    PRECONDICIONES: 
+        *La primer jugada **primerJugada** y la segunda jugada **segundaJugada**
+        no deben ser iguales.
+    TIPO: 
+    */
+    return(
+        choose  primerJugada when (primerJugada == piedra() && segundaJugada == tijeras())
+                primerJugada when (primerJugada == papel() && segundaJugada == piedra())
+                primerJugada when (primerJugada == tijeras() && segundaJugada == papel())
+                segundaJugada otherwise
+        )
+}
+
+//punto 15
+/*
+Escribir jugadaGanadoraDePiedraPapelOTijerasLagartoSpockEntre_Y_, que dadas dos
+jugadas, describe la jugada ganadora entre ambas. Para olvidarnos de cómo está codificada la jugada,
+tenemos las funciones piedra(), papel(), tijeras(), lagarto() y spock()que representan a
+cada una de las jugadas.
+*/
+
+function jugadaGanadoraDePiedraPapelOTijerasLagartoSpockEntre_Y_(primerJugada, segundaJugada){
+    /*
+    PROPOSITO: Describe la jugada ganadora entre **primerJugada** y **segundaJugada**
+    PARAMETROS:
+        *primerJugada: Sin defrinir - primer jugada.
+        *segundaJugada: Sin defrinir - segunda jugada.
+    PRECONDICIONES: Ninguna.
+    TIPO: Sin defrinir.
+    */
+    return(
+        choose  piedra()    when (hayGanadorConPiedraEntre_Y_(primerJugada, segundaJugada)) 
+                papel()     when (hayGanadorConPapelEntre_Y_(primerJugada, segundaJugada)) 
+                tijeras()   when (hayGanadorConTijerasEntre_Y_(primerJugada, segundaJugada))
+                lagarto()   when (hayGanadorConLagartoEntre_Y_(primerJugada, segundaJugada))
+                spock()     otherwise
+        )
+}
+
+function hayGanadorConPiedraEntre_Y_(primerJugada, segundaJugada){
+    /*
+    PROPOSITO: Indica si **primerJugada** o **segundaJugada** gana con piedra.
+    PARAMETROS:
+        *primerJugada: Sin defrinir - primer jugada.
+        *segundaJugada: Sin defrinir - segunda jugada.
+    PRECONDICION: Ninguna.
+    TIPO: Booleano.
+    */
+    return(
+        laJugada_GanaConPiedraA_(primerJugada, segundaJugada) ||
+        laJugada_GanaConPiedraA_(segundaJugada, primerJugada)
+        )
+}
+
+function hayGanadorConPapelEntre_Y_(primerJugada, segundaJugada){
+    /*
+    PROPOSITO: Indica si **primerJugada** o **segundaJugada** gana con papel.
+    PARAMETROS:
+        *primerJugada: Sin defrinir - primer jugada.
+        *segundaJugada: Sin defrinir - segunda jugada.
+    PRECONDICION: Ninguna.
+    TIPO: Booleano.
+    */
+    return(
+        laJugada_GanaConPapelA_(primerJugada, segundaJugada)    ||
+        laJugada_GanaConPapelA_(segundaJugada, primerJugada)
+        )
+}
+
+function hayGanadorConTijerasEntre_Y_(primerJugada, segundaJugada){
+    /*
+    PROPOSITO: Indica si **primerJugada** o **segundaJugada** gana con tijeras.
+    PARAMETROS:
+        *primerJugada: Sin defrinir - primer jugada.
+        *segundaJugada: Sin defrinir - segunda jugada.
+    PRECONDICION: Ninguna.
+    TIPO: Booleano.
+    */
+    return(
+        laJugada_GanaConTijerasA_(primerJugada, segundaJugada)  ||
+        laJugada_GanaConTijerasA_(segundaJugada, primerJugada)
+        )
+}
+
+function hayGanadorConLagartoEntre_Y_(primerJugada, segundaJugada){
+    /*
+    PROPOSITO: Indica si **primerJugada** o **segundaJugada** gana con lagarto.
+    PARAMETROS:
+        *primerJugada: Sin defrinir - primer jugada.
+        *segundaJugada: Sin defrinir - segunda jugada.
+    PRECONDICION: Ninguna.
+    TIPO: Booleano.
+    */
+    return(
+        laJugada_GanaConLagartoA_(primerJugada, segundaJugada)  ||
+        laJugada_GanaConLagartoA_(segundaJugada, primerJugada)
+        )
+}
+
+//-------------------------------------------------------------------------------
+function jugadaGanadoraDePapelPiedraOTijerasLagartoSpockEntre_Y_Opcion2(primerJugada, segundaJugada){
+    /*
+    PROPOSITO: Describe la jugada ganadora entre **primerJugada** y **segundaJugada**
+    PARAMETROS:
+        *primerJugada: Sin defrinir - primer jugada.
+        *segundaJugada: Sin defrinir - segunda jugada.
+    PRECONDICIONES: Ninguna.
+    TIPO: Sin definir.
+    */
+    return(
+        choose  primerJugada    when (esGanador_Contra_(primerJugada, segundaJugada))
+                segundaJugada   otherwise
+        )
+}
+
+function esGanador_Contra_(primerJugada, segundaJugada){
+    /*
+    PROPOSITO: Indica si la **primerJugada** es ganadora contra la **segundaJugada**
+    PARAMETROS:
+        *primerJugada: Sin definir - primer jugada
+        *segundaJugada: Sin definir - segunda jugada
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano
+    */
+    return(
+        laJugada_GanaConPiedraA_(primerJugada, segundaJugada)   || 
+        laJugada_GanaConPapelA_(primerJugada, segundaJugada)    || 
+        laJugada_GanaConTijerasA_(primerJugada, segundaJugada)  || 
+        laJugada_GanaConLagartoA_(primerJugada, segundaJugada)  || 
+        laJugada_GanaConSpockA_(primerJugada, segundaJugada)
+        )
+}
+
+function laJugada_GanaConPiedraA_(primerJugada, segundaJugada){
+    /*
+    PROPOSITO: Indica si la **primerJugada** le gana con piedra a la **segundaJugada**
+    PARAMETROS:
+        *primerJugada: Sin definir - primer jugada
+        *segundaJugada: Sin definir - segunda jugada
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(primerJugada == piedra() && (segundaJugada == tijeras() || segundaJugada == lagarto()) )
+}
+
+function laJugada_GanaConPapelA_(primerJugada, segundaJugada){
+    /*
+    PROPOSITO: Indica si la **primerJugada** le gana con papel a la **segundaJugada**
+    PARAMETROS:
+        *primerJugada: Sin definir - primer jugada
+        *segundaJugada: Sin definir - segunda jugada
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(primerJugada == papel() && (segundaJugada == piedra() || segundaJugada == spock()) )
+}
+
+function laJugada_GanaConTijerasA_(primerJugada, segundaJugada){
+    /*
+    PROPOSITO: Indica si la **primerJugada** le gana con tijeras a la **segundaJugada**
+    PARAMETROS:
+        *primerJugada: Sin definir - primer jugada
+        *segundaJugada: Sin definir - segunda jugada
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(primerJugada == tijeras() && (segundaJugada == papel() || segundaJugada == lagarto()) )
+}
+
+function laJugada_GanaConLagartoA_(primerJugada, segundaJugada){
+    /*
+    PROPOSITO: Indica si la **primerJugada** le gana con lagarto a la **segundaJugada**
+    PARAMETROS:
+        *primerJugada: Sin definir - primer jugada
+        *segundaJugada: Sin definir - segunda jugada
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(primerJugada == lagarto() && (segundaJugada == spock() || segundaJugada == papel()) )
+}
+
+function laJugada_GanaConSpockA_(primerJugada, segundaJugada){
+    /*
+    PROPOSITO: Indica si la **primerJugada** le gana con spock a la **segundaJugada**
+    PARAMETROS:
+        *primerJugada: Sin definir - primer jugada
+        *segundaJugada: Sin definir - segunda jugada
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(primerJugada == spock() && (segundaJugada == tijeras() || segundaJugada == piedra()) )
+}
+
+//punto 16
+/*
+Escribir la función nroBolitas_EnLaFilaActual que describa la cantidad de bolitas del color dado
+en la fila actual.
+a. Escribir la solución con un recorrido de la fila actual que utilice una variable
+cantidadDeBolitasYaVistas cuyo propósito sea describir la cantidad de bolitas del color
+correspondiente que se contaron en cada momento. ¿Cuántas se vieron antes de empezar a
+contar? ¿Cómo estar seguro que se consideraron todas las celdas para contarlas?
+b. ¿En qué celda queda el cabezal al utilizar la función desde cualquier punto del programa? ¿Por
+qué?
+*/
+
+function nroBolitas_EnLaFilaActual(color){
+    /*
+    PROPOSITO: Describe la cantidad de bolitas de color **color** en la fila actual.
+    PARAMETRO: 
+        *color: Color - El color de las bolitas a evaluar.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico.
+    */
+    IrAlInicioDeLaFila()
+    cantidadDeBolitasYaVistas := 0
+    while(puedeMover(Este)){
+        cantidadDeBolitasYaVistas := cantidadDeBolitasYaVistas + nroBolitas(color)
+        Mover(Este)
+    }
+    cantidadDeBolitasYaVistas := cantidadDeBolitasYaVistas + nroBolitas(color)
+    return(cantidadDeBolitasYaVistas)
+}
+
+//punto 17
+/*
+Escribir la función distanciaAlBorde_, que describe la cantidad de celdas que hay
+entre la celda actual y el borde indicado.
+*/
+
+function distanciaAlBorde_(direccion){
+    /*
+    PROPOSITO: Describe la cantidad de celdas que hay entre la celda actual y el borde **direccion**
+    PARAMETRO:
+        *direccion: Direccion - La direccion a la que se evaluara la distancia.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico.
+    */
+    contadorDeCeldas := 0
+    while(puedeMover(direccion)){
+        Mover(direccion)
+        contadorDeCeldas := contadorDeCeldas + 1
+    }
+    return(contadorDeCeldas)
+}
+
+//punto 18
+/*
+Escribir las funciones coordenadaX y coordenadaY que retornen la coordenada de la
+columna y la coordenada de la fila de la celda actual, respectivamente. Suponer que 0 es la
+coordenada de la primera fila y columna.
+a. ¿Es necesario escribir un recorrido para estas funciones, o puede reutilizarse alguna otra
+función ya hecha?
+*/
+
+function coordenadaX(){
+    /*
+    PROPOSITO: Describe la coordenada del eje x de la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico.
+    */
+    return (distanciaAlBorde_(Oeste))
+}
+
+function coordenadaY(){
+    /*
+    PROPOSITO: Describe la coordenada del eje y de la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico.
+    */
+    return (distanciaAlBorde_(Sur))
+}
+
+//punto 19
+/*
+Escribir las funciones nroFilas y nroColumnas que describan la cantidad de filas y
+columnas del tablero respectivamente.
+a. ¿Se podría conocer la cantidad de filas o columnas del tablero sin que el cabezal se mueva
+realmente de la celda actual?
+b. ¿Qué habría que usar si hubiese que hacerlo exclusivamente con procedimientos?
+c. ¿Es necesario escribir un recorrido para estas funciones, o puede reutilizarse alguna otra
+función ya hecha?
+*/
+
+function nroFilas(){
+    /*
+    PROPOSITO: Describe la cantidad de filas del tablero.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico.
+    */
+    return(distanciaAlBorde_(Norte)+ distanciaAlBorde_(Sur) + 1)
+}
+
+
+function nroColumnas(){
+    /*
+    PROPOSITO: Describe la cantidad de columnas del tablero.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico.
+    */
+    return(distanciaAlBorde_(Este)+ distanciaAlBorde_(Oeste) + 1)
+}
+
+//punto 20
+/*
+Escribir una función nroVacías que describa la cantidad de celdas vacías del tablero.
+Estructurar el código como recorrido por las celdas del tablero.
+*/
+
+function nroVacias(){
+    /*
+    PROPOSITO: Describe la cantidad de celda vacias del tablero.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    cantidadDeCeldasVacias := 0
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        /*
+        otra forma tomando el ejercicio 26 
+        cantidadCeldasVacias := cantidadCeldasVacias + unoSi_ceroSino(esCeldaVacia())
+        y ya no anodariamos el while y el if
+        */
+        if(esCeldaVacia()){
+            cantidadDeCeldasVacias := cantidadDeCeldasVacias + 1
+        }
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    if(esCeldaVacia()){
+            cantidadDeCeldasVacias := cantidadDeCeldasVacias + 1
+        }
+    return(cantidadDeCeldasVacias)
+}
+
+procedure IrAPrimeraCeldaEnUnRecorridoAl_Y_(dirPrincipal, dirSecundaria){
+    /*
+    PROPOSITO: Mueve el cabezal a la primera celda del tablero en dirección
+    **dirPrincipal** y en direccion **dirSecundaria** desde la celda actual.
+    PARAMETROS:
+        *dirPrincipal: Direccion - La direccion principal a la que se movera el cabezal.
+        *dirSecundaria: Direccion - La direccion secundaria a la que se movera el cabezal.
+    PRECONDICIONES: 
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser iguales.
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser opuestas.
+    */
+    IrAlBorde(opuesto(dirPrincipal))
+    IrAlBorde(opuesto(dirSecundaria))
+}
+
+function haySiguienteCeldaEnUnRecorridoAl_Y_(dirPrincipal, dirSecundaria){
+    /*
+    PROPOSITO: Indica si hay siguiente celda en direccion **dirPrincipal** y en direccion
+    **dirSecundaria** desde la celda actual.
+    PARAMETROS:
+        *dirPrincipal: Direccion - La direccion principal a la que se movera el cabezal.
+        *dirSecundaria: Direccion - La direccion secundaria a la que se movera el cabezal.
+    PRECONDICIONES: 
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser iguales.
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser opuestas. 
+    */
+    return(puedeMover(dirPrincipal) || puedeMover(dirSecundaria))
+}
+
+function esCeldaVacia(){
+    /*
+    PROPOSITO: Indica si la celda actual esta vacia.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return (not(hayBolitas(Azul) || hayBolitas(Negro) || hayBolitas(Rojo) || hayBolitas(Verde)))
+}
+
+procedure IrASiguienteCeldaEnUnRecorridoAl_Y_(dirPrincipal, dirSecundaria){
+    /*
+    PROPOSITO: Mueve el cabezal a la siguiente celda desde la celda actual.
+    PARAMETROS:
+        *dirPrincipal: Direccion - La direccion principal a la que se movera el cabezal.
+        *dirSecundaria: Direccion - La direccion secundaria a la que se movera el cabezal.
+    PRECONDICIONES: 
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser iguales.
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser opuestas. 
+    */
+    if(puedeMover(dirPrincipal)){
+        Mover(dirPrincipal)
+    }
+    else{
+        IrAlBorde(opuesto(dirPrincipal))
+        Mover(dirSecundaria)
+    }
+}
+
+//punto 21
+/*
+Escribir la función cantidadDeCeldasConBolitasDeColor_ que describe la cantidad
+de celdas que contienen al menos una bolita del color dado.
+*/
+
+function cantidadDeCeldasConBolitasDeColor_(color){
+    /*
+    PROPOSITO: Describe la cantidad de celdas que tienen al menos una bolita de color **color**.
+    PARAMETRO:
+        *color: Color - El color de las bolitas a evaluar
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    cantidadDeCeldasDeColor_ := 0
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        if(hayBolitas(color)){
+            cantidadDeCeldasDeColor_ := cantidadDeCeldasDeColor_ + 1
+        }
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    if(hayBolitas(color)){
+            cantidadDeCeldasDeColor_ := cantidadDeCeldasDeColor_ + 1
+        }
+    return(cantidadDeCeldasDeColor_)
+}
+
+//punto 22
+/*
+Escribir una función nroBolitasTotalDeColor_ que describa la cantidad de bolitas del color
+dado que hay en total en todo el tablero. Estructurar el código como recorrido por las celdas del
+tablero.
+*/
+
+function nroBolitasTotalDeColor_(color){
+    /*
+    PROPOSITO: Describe la cantidad de colitas de color **color** que hay en total en el tablero.
+    PARAMETRO: 
+        *color: Color - El color de las bolitas a evaluar.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    contadorDeColor_ := 0
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        contadorDeColor_ := contadorDeColor_ + nroBolitas(color)
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    contadorDeColor_ := contadorDeColor_ + nroBolitas(color)
+    return(contadorDeColor_)
+}
+
+//punto 23
+/*
+Dado que en el tablero está representada una carretera, y en cada celda puede haber hasta
+un auto, se pide que realice la función cantidadDeAutosEnLaCarretera. Para realizar esto se
+puede hacer uso de las siguientes:
+
+function hayUnAuto()
+    ***
+    PROPÓSITO: Indica si hay un auto en la celda actual.
+    TIPO: Booleano.
+    PRECONDICIONES: Ninguna.
+    ***
+*/
+
+function cantidadDeAutosEnLaCarretera(){
+    /*
+    PROPOSITO: Describe la cantidad de autos que hay en una carretera.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    contadorDeAutos := 0
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        if(hayUnAuto()){
+            contadorDeAutos := contadorDeAutos + 1
+        }
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    if(hayUnAuto()){
+            contadorDeAutos := contadorDeAutos + 1
+        }
+    return(contadorDeAutos)
+}
+
+//punto 25 BIBLIOTECA
+/*
+Una subtarea de mucha utilidad es aquella que describe 1 cuando se cumple una
+condición o cero en caso contrario. Se pide entonces escriba la función unoSi_ceroSinoque realiza
+precisamente esto.
+*/
+
+function unoSi_ceroSino(condicion){
+    /*
+    PROPOSITO: Describe 1 si la condicion **condicion** es verdadero
+    PARAMETRO:
+        *condicion: Booleano - La condicion a evaluar.
+    TIPO: Numero 
+    */
+    return(
+        choose  1   when (condicion)
+                0   otherwise
+        )
+}
+
+//punto 26
+/*
+Reescriba sus recorridos de acumulación anteriores para utilizar la función unoSi_CeroSino en los
+casos en los que sea posible.
+*/
+
+function nroVaciasReescrita(){
+    /*
+    PROPOSITO: Describe la cantidad de celda vacias del tablero.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    cantidadDeCeldasVacias := 0
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        cantidadCeldasVacias := cantidadCeldasVacias + unoSi_ceroSino(esCeldaVacia())
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    cantidadCeldasVacias := cantidadCeldasVacias + unoSi_ceroSino(esCeldaVacia())
+    return(cantidadDeCeldasVacias)
+}
+
+//punto 28
+/*
+Escribir el procedimiento LimpiarCruzDeColor_ que dado un color limpia el dibujo de una cruz
+realizado con bolitas de dicho color, bajo la suposición de que el cabezal se encuentra en el centro de
+dicha cruz.
+*/
+
+procedure LimpiarCruzDeColor_(color){                               //recorrido por direcciones
+    /*
+    PROPOSITO: Limpia la cruz de color **color**
+    PARAMETRO:
+        *color: Color - El color de la cruz a limpiar.
+    PRECONDICIONES:
+        *Debe haber una cruz de color **color**.
+        *El cabezal debe encontrarse en el centro de la cruz.
+    */
+    direccion := minDir()                       //Inicia el recorrido en este caso seria Norte
+    while(direccion /= maxDir()){
+        Sacar_Al_(color, direccion)
+        direccion := siguiente(direccion)
+    }
+    Sacar_Al_(color, Oeste)
+    Sacar(color)
+}
+
+procedure Sacar_Al_(color,direccion){
+    Mover(direccion)
+    Sacar(color)
+    Mover(opuesto(direccion))
+    
+}

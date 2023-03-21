@@ -1,0 +1,1049 @@
+-------------------------------Practica parcial tema 2 Bomberman----------------------------------------------------
+/* PRIMITIVAS
+--hayObstaculo()
+--tipoDeObstaculo()
+--hayEnemigo()
+--estaBomberman()
+--cantidadDeEnemigos()
+--potenciaDeBombaAca()
+--QuitarElementoAca()
+--ladrillo()
+--concreto()
+--bomba()
+*/
+
+function hayObstaculo(){
+    /*
+    PROPOSITO: Indica si hay un obstaculo en la ubicacion actual.
+    PRECONDICION: Ninguna
+    TIPO: Booleano
+    */
+}
+
+function ladrillo(){
+    /*
+    PROPOSITO: Describe el numero que representa al tipo de obstaculo bloque de ladrillo.
+    PRECONDICION: Ninguna
+    TIPO: Numero
+    */
+}
+
+function concreto(){
+    /*
+    PROPOSITO: Describe el numero que representa al tipo de obstaculo bloque de concreto.
+    PRECONDICION: Ninguna
+    TIPO: Numero
+    */
+}
+
+function bomba(){
+    /*
+    PROPOSITO: Describe el numero que representa al tipo de obstaculo bomba.
+    PRECONDICION: Ninguna
+    TIPO: Numero
+    */
+}
+
+function hayEnemigo(){
+    /*
+    PROPOSITO: Indica si hay al menos un enemigo en la ubicacion actual.
+    PRECONDICION: Ninguna
+    TIPO: Booleano
+    */
+}
+
+function cantidadDeEnemigos(){
+    /*
+    PROPOSITO: Describe la cantidad de enemigos en la ubicacion actual.
+    PRECONDICION: Debe haber al menos un enemigo en la ubicacion actual.
+    TIPO: Numero
+    */
+}
+
+function estaBomberman(){
+    /*
+    PROPOSITO: Indica si Bomberman esta en la ubicacion actual.
+    PRECONDICION: Ninguna
+    TIPO: Booleano
+    */
+}
+
+function tipoDeObstaculo(){
+    /*
+    PROPOSITO: Describe el numero que representa al tipo de obstaculo que hay en la ubicacion actual.
+    PRECONDICION: Debe haber un obstaculo en la ubicacion actual.
+    TIPO: Numero
+    */
+}
+
+//Punto 1
+/*
+Una de las cosas que queremos hacer es simular la explosión de una bomba,
+de forma tal que el tablero quede sin los personajes u obstaculos alcanzados
+por la onda expansiva de la bomba, respetando las reglas del juego (es decir,
+los ladrillos deben ser afectados, pero el concreto y otras bombas, etc).
+Pero antes de ir por la bomba entera, vamos a propagar la onda explosiva
+de una bomba hacia una direccion. Para eso se pide que escriba el procedimiento
+PropagarExplosionAl_ConPotencia_ que dada una direccion y un numero que
+representa la potencia de una bomba en la celda actual, aplica la onda
+expansiva de una bomba hacia la direccion dada (sin explotar la bomba en la 
+celda actual).
+*/
+
+procedure PropagarExplosionAl_ConPotencia_(direccion, potencia){
+    /*
+    PROPOSITO: Representa la onda expansiva de una bomba en la celda actual de 
+    potencia **potencia** hacia el **direccion**
+    PARAMETROS:
+        *direccion: Direccion - La direccion de la onda expansiva.
+        *potencia: Numerico - Es la potencia de la onda expansiva.
+    PRECONDICIONES:  
+        *Debe exitir una bomba enn la celda actual.
+        *Exiten bloques de concreto en los bordes del tablero.
+    */
+    tamañoDeLaOndaExpansiva := potencia
+    cantidadDeCeldasQueSeMovio := 0
+    while(not hayObstaculo()) && puedeMover(direccion) && tamañoDeLaOndaExpansiva /= 0){
+        tamañoDeLaOndaExpansiva := tamañoDeLaOndaExpansiva - 1
+        cantidadDeCeldasQueSeMovio := cantidadDeCeldasQueSeMovio + 1
+        Mover(direccion)
+        AfectarLaCeldaActualSiSePuede()
+    }
+    VolverACeldaInicial(direccion, cantidadDeCeldasQueSeMovio)
+}
+
+procedure AfectarLaCeldaActualSiSePuede(){
+    /*
+    PROPOSITO: Afecta la celda actual si se puede.
+    PRECONDICIONES: Ninguna.
+    */
+    if(hayEnemigo()){
+        AfectarALosEnemigosAca()
+    }
+    elseif(hayObstaculo()){
+        AfectarAObstaculoSiPuede()
+    }
+    elseif(estaBomberman()){
+        AfectarABombermanAca()
+    }
+}
+
+procedure VolverACeldaInicial(direccion, cantidadDeCeldasQueSeMovio){
+    /*
+    PROPOSITO: Mueve el cabezal a la celda inicial.
+    PRECONDICIONES: 
+        *Debe exitir al menos **cantidadDeCeldasQueSeMovio** en la direccion
+        opuesta al **direccion**.
+    */
+    repeat(cantidadDeCeldasQueSeMovio){
+        Mover(opuesto(direccion))
+    }
+}
+
+procedure AfectarALosEnemigosAca(){
+    /*
+    PROPOSITO: Afecta a todos los enemigos de la celda actual.
+    PRECONDICIONES: 
+        *Debe exitir al menos un enemigo en la celda actual. 
+    */
+    repeat(cantidadDeEnemigos()){
+        QuitarElementoAca()
+    }
+}
+
+procedure AfectarAObstaculoSiPuede(){
+    /*
+    PROPOSITO: Afecta al obstaculo si se puede en la celda actual.
+    PRECONDICIONES: 
+        *Debe exitir al menos un obstaculo en la celda actual.
+    */
+    if(tipoDeObstaculo() == ladrillo()){
+        QuitarElementoAca()
+    }
+}
+
+procedure AfectarABombermanAca(){
+    /*
+    PROPOSITO: Afecta al Bomberman de la celda actual.
+    PRECONDICIONES: 
+        *Debe exitir al menos un Bomberman en la celda actual. 
+    */
+        QuitarElementoAca()
+}
+
+
+
+//punto 2
+/*
+Ahora si, vamos a querer simular la explosion de la bomba entera, aplicando
+la onda expansiva hacia todas las direcciones. Por supuesto, cuando una 
+bomba explota, desaparece del tablero. Para ello se pide que realice
+el procedimiento ExplotarBombaAcá que explota la bomba en la celda actual
+siguiendo las reglas del juego.
+*/
+
+procedure ExplotarBombaAcá(){
+    /*
+    PROPOSITO: Explota la bomba en la celda actual en las cuatro direcciones.
+    PRECONDICIONES:
+        *Debe exitir una bomba en la celda actual.
+    */
+    direccion := minDir()
+    while(direccion /= maxDir()){
+        PropagarExplosionAl_ConPotencia_(direccion, potenciaDeBombaAca)
+        direccion := siguiente(direccion)
+    }
+    PropagarExplosionAl_ConPotencia_(maxDir(), potenciaDeBombaAca)
+    QuitarElementoAca()
+}
+
+//punto 3
+/*
+En los torneos profesionales se evalua a un jugador segun varios criterios,
+otorgandoles puntajes. Uno de ellos tiene que ver con el lugar donde
+coloca una bomba en cualquier momento del juego, de la siquiente forma:
+
+    * 5 puntos por cada enemigos que la bomba mata.
+    * 2 puntos por cada pared de ladrillo destruida.
+    * -10 puntos si muere Bomberman al ser alcanzados por la explosion.
+
+Lo que se busca es que escriba la funcion 
+cantidadDeUbicacionesConPuntajeMayorA_ParBombaDePotencia_ que dado un numero
+que describe una cantidad de puntaje y otro que describe la potencia de una bomba,
+describe la cantidad de celdas en las que se podria poner una bomba de la potencia
+dada de forma tal que en dicha celda se obtengan mas puntos que el puntaje dado
+
+Para solucionar el problema puede hacer uso de la funcion 
+puntosQueOtorgariaUnaBombaDePotencia_Aca que indica cuantos puntos otorgaria una bomba
+si se pusiera en la celda actual, teniendo por precondicion que dicha celda esta vacia.
+*/
+
+function cantidadDeUbicacionesConPuntajeMayorA_ParBombaDePotencia_(puntaje, potencia){
+    /*
+    PROPOSITO: Describe la cantidad de celdas en las que se podria poner una bomba de
+    potencia **potencia** de tal foma que obtengan mas puntaje que **puntaje**
+    PARAMETROS:
+        *puntaje: Numerico - Es la cantidad de puntaje a superar.
+        *potencia: Numerico - Es la cantidad de potencia de una bomba.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    cantidadDeCeldasConMejorPuntajeQue_ := 0
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        cantidadDeCeldasConMejorPuntajeQue_ := unoSi_ceroSino(puntosQueOtorgariaUnaBombaDePotencia_Aca > puntaje)
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    cantidadDeCeldasConMejorPuntajeQue_ := unoSi_ceroSino(puntosQueOtorgariaUnaBombaDePotencia_Aca > puntaje)
+    return(cantidadDeCeldasConMejorPuntajeQue_)
+}
+
+-------------------------------Practica parcial tema 1 Bomberman----------------------------------------------------
+/* PRIMITIVAS
+--hayObstaculo()
+--tipoDeObstaculo()
+--hayEnemigo()
+--estaBomberman()
+--cantidadDeEnemigos()
+--ladrillo()
+--concreto()
+--bomba()
+*/
+
+//punto 1
+/*
+En los torneos profesionales se evalua a un jugador segun varios criterios,
+otorgandoles puntaje. Uno de ellos tiene que ver con el lugar donde coloca una bomba en
+cualquier momento del juego, de la siguiente forma:
+
+    * 5 puntos por cada enemigo que la bomba mata.
+    * 2 puntos por cada pared de ladrillo destruida.
+    * -10 puntos si muere Bomberman al ser alcanzado por la explosion.
+    
+En base a este criterio, queremos escribir la funcion puntosPorPropagacionAl_ConPotencia_ que 
+dada direccion hacia donde se movera la onda expansiva, y un numero que representa la potencia
+de una bomba, describe cuantos puntos se obtendrian si la onda expansiva se mueve solo hacia
+la direccion esperada, siguiendo las reglas del juego arriba explicadas.
+*/
+
+function puntosPorPropagacionAl_ConPotencia_(direccion, potencia){
+    /*
+    PROPOSITO: Describe los puntos obtenidos si la onda expansiva tiene una potencia de **potencia**
+    en direccion al **direccion**.
+    PARAMETROS:
+        *direccion: Direccion - La direccion a mover la onda expansiva.
+        *potencia: Numerica - Es la cantidad de potencia de una bomba.
+    PRECONDICIONES: 
+        *Los bordes del tablero son de concreto()
+        *
+    TIPO: Numerico.
+    */
+    puntosObtenidos := 0
+    tamañoDeLaOndaExpansiva := potencia
+    while(not hayObstaculo() && puedeMover(direccion) && tamañoDeLaOndaExpansiva /= 0){
+        Mover(direccion)
+        tamañoDeLaOndaExpansiva := tamañoDeLaOndaExpansiva - 1
+        puntosObtenidos := puntosObtenidos + puntosDeLaCeldaActual()
+    }
+    puntosObtenidos := puntosObtenidos + puntosDeLaCeldaActual()
+    return(puntosObtenidos)
+}
+
+/* correcciones a mejorar por pablen
+function puntosPorPropagacionAl_ConPotencia_(direccion, potencia){
+    puntosObtenidos := 0
+    tamañoDeLaOndaExpansiva := potencia
+    while(puedeSeguirPropagando(direccion, tamañoDeLaOndaExpansiva)){     queda mas clara la estrategia
+        Mover(direccion)
+        tamañoDeLaOndaExpansiva := tamañoDeLaOndaExpansiva - 1
+        puntosObtenidos := puntosObtenidos + puntosDeLaCeldaActual()
+    }
+    puntosObtenidos := puntosObtenidos + puntosDeLaCeldaActual()
+    return(puntosObtenidos)
+}
+
+function puedeSeguirPropagando(direccion, potencia){
+    return(not hayObstaculo() && puedeMover(direccion) && potencia /= 0)
+}
+
+function puntosDeLaCeldaActual(){
+return(
+        choose  5 * cantidadDeEnemigos()    when    (hayEnemigos())     En puntos por ladrillo()
+                2                           when    (hayLadrillo())     no contemple que la primitiva 
+                -10                         when    (estaBomberman())   tenia una precondicion y la estrategia
+                0                           otherwise                   no es clara.
+        )
+}
+
+function hayLadrillo(){
+    return(hayObstaculo() && tipoDeObstaculo() == ladrillo())
+}
+*/
+function puntosDeLaCeldaActual(){
+    /*
+    PROPOSITO: Describe el puntaje total de la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerico.
+    */
+    return(
+        choose  5 * cantidadDeEnemigos()    when    (hayEnemigos())
+                2                           when    (tipoDeObstaculo() == ladrillo())
+                -10                         when    (estaBomberman())
+                0                           otherwise
+        )
+}
+
+//punto 2
+/*
+En base a este criterio, queremeos escribir la funcion 
+puntosQueOtorgariaUnaBombaDePotencia_Aca() que dado un numero que representa la potencia
+de una bomba, describe cuantos puntos otorgaria una bomba colocada en la celda actual, 
+o cero, si la ubicacion no es una en la que se puede colocar una bomba.
+*/
+
+function puntosQueOtorgariaUnaBombaDePotencia_Aca(potencia){
+    /*
+    PROPOSITO: Describe la cantidad de puntos que se obtendran
+    al explotar una bomba de potencia **potencia** en la celda
+    actual, o cero puntos si no se puede colocar una bomba
+    en la celda actual.
+    PARAMETRO:
+        *potencia: Numerico - Es la cantidad de potencia de una bomba.
+    PRECONDICIONES:
+    TIPO: Numerico.
+    */
+      
+}
+
+//punto 3
+/*
+Asumiendo que en el tablero hay una ubicacion en la cual el puntaje a obtener si
+se coloca una bomba de una potencia especifica alli es mas grande que el que se
+puede obtner si se coloca una bomba de la misma potencia en cualquier
+otro lugar del tablero, se pide que escriba la funcion
+maximoPuntajePosiblePorUbicacionDeBombaDePotencia_ que dado un numero que representa
+una potencia, describe cual es el maximo de puntaje que se obtendria en caso de poner
+una bomba en alguna de las celdas del tablero, asumiendo que hay una celda en donde se
+obtiene mas puntaje que en cualquier otra.
+*/
+
+function maximoPuntajePosiblePorUbicacionDeBombaDePotencia_(potencia){
+    /*
+    PROPOSITO: Describe el maximo puntaje que se puede obtener al poner
+    una bomba con potencia **potencia** en alguna de las celdas del tablero.
+    PARAMETROS:
+        *potencia: Numerico - La cantidad de potencia de la bomba.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numerica.
+    */
+    maximoPuntaje := 0
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        maximoPuntaje := máximoEntre_Y_(maximoPuntaje, puntosPorExplosionConBombaPotencia_Aca(potencia))
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    maximoPuntaje := máximoEntre_Y_(maximoPuntaje, puntosPorExplosionConBombaPotencia_Aca(potencia))
+    return(maximoPuntaje)
+}
+-------------------------------Correccion en clase tema 1 Bomberman--------------------------------------
+//PUNTO 1
+
+function puntosPorpropagacionAl_ConPotencia_(direccion, potencia){
+    /*
+    PROPOSITO: Describe el puntaje de daño por la propagacion de una explosion en la direccion dada,
+               cuyo alcance maximo es de tantas ubicaciones en dicha direccion como lo indica la
+               potencia dada.
+    PRECONDICIONES: - La potencia debe ser mayor a cero.
+                    - los bordes del tablero siempre tienen concreto.
+                    - la ubicacion actual no es en el borde del tablero.
+    PARAMETROS:*direccion* - Direccion - direciion hacia donde se propaga la explosion.
+               *potencia* - Numero - describe el alcance maximo de la propagacion.
+    TIPO: Numero
+    OBSERVACIONES: Tanto los bloques de concreto o ladrillo y las bombas detienen la propagacion de la
+                   explosion.
+    */
+    puntosObtenidos := 0
+    celdasAfectadasHastaAhora := 0
+    while (not hayObstaculoAl_(direccion) && celdasAfectadasHastaAhora /= potencia){
+        Mover(direccion)
+        puntosObtenidos := puntosObtenidos + puntosPorElementosAca()
+        celdasAfectadasHastaAhora := celdasAfectadasHastaAhora + 1
+    }
+    if (celdasAfectadasHastaAhora /= potencia){
+        puntosObtenidos := puntosObtenidos + puntosPorElementoAl_(direccion)
+    }
+    return (puntosObtenidos)
+}
+
+function puntosPorElementoAl_(direccion){
+    /*
+    PROPOSITO: Describe los puntos a obtener cuando la onda expansiva de la explosion llega a la
+               ubicacion lindante en la direccion dada. 
+    PRECONDICIONES: -Debe existir al menos una ubicacion lindante hacia la direccion dada.
+                    -la ubicacion actual no es en el borde del tablero.
+    PARAMETROS: *direccio*  -Direccion- direccion hacia la cual se evaluara el puntaje
+    TIPO: Numero
+    OBSERVACIONES:
+    */
+    Mover(direccion)
+    return (puntosPorElementosAca())
+}
+    
+function hayObstaculoAl_(direccion){
+     /*
+    PROPOSITO: Indica si hay un obstaculo en la celda lindante hacia la direccion dada.
+    PRECONDICIONES: Hay al menos una celda lindante hacia la direccion *direccion*
+    PARAMETROS: *diereccion* - Direccion - direccion hacia donde ver si hay obstaculo.
+    TIPO: Booleano
+    OBSERVACIONES:
+    */
+    Mover(direccion)
+    return (hayObstaculo())
+}    
+
+function puntosPorElementosAca(){
+    /*
+    PROPOSITO: Describe los puntos que se obtienen si una onda expansiva llega hasta la ubicacion
+               actual.
+    PRECONDICIONES: Ninguna
+    TIPO: Numero
+    */
+    return ( choose 
+                5 * cantidadDeEnemigos() when (hayEnemigo())
+                2       when (hayLadrillo())
+                -10     when (estaBomberman())
+                0       otherwise
+           )
+}
+
+function hayLadrillo(){
+    /*....*/
+    return (hayObstaculo() && tipoDeObstaculo() == ladrillo())
+}
+
+//PUNTO 2
+
+function puntosQueOtorgariaUnaBombaDePotencia_Aca(potencia){
+    /*
+    PROPOSITO:Describe el puntaje correspondiente al daño que haria la explosion de una bomba con
+              potencia dada en la ubicacion actual, o cero, si en la ubicacion no se puede colocar
+              una bomba.
+    PRECONDICIONES: -los bordes del tablero tienen concreto.
+                    -La potencia debe ser mayor a cero.
+    PARAMETROS:*potencia* - Numero - describe el alcance maximo de la bomba
+    TIPO: Numero
+    */
+    return (choose
+            puntosPorExplosionAcaConPotencia_(potencia) when (esCeldaVacia()) //not hayObstaculo() && not hayEnemigo()
+            0    otherwise
+           )
+}
+
+function puntosPorExplosionAcaConPotencia_(potencia){
+    /*
+    PROPOSITO: Describe el puntaje correspondiente al daño que haria la explosion de una bomba con
+               potencia dada en la ubicacion actual. 
+    PRECONDICIONES: -La ubicacion actual debe estar vacia.
+                    -los bordes del tablero tienen concreto.
+                    -La potencia debe ser mayor a cero.
+    PARAMETROS:*potencia* - describe el alcance maximo de la bomba
+    TIPO: Numero
+    OBSERVACIONES: el puntaje depende del alcance maximo de la explosion y de los elementos que 
+                   se encuentren en la propagacion.
+    */ 
+    puntosHastaAhora := 0
+    dirActual := minDir()
+    while(dirActual /= maxDir()){
+        puntosHastaAhora := puntosHastaAhora
+                            + puntosPorpropagacionAl_ConPotencia_(dirActual, potencia)
+        dirActual := siguiente(dirActual)
+    }
+    return (puntosHastaAhora + puntosPorpropagacionAl_ConPotencia_(dirActual, potencia))
+}
+
+//PUNTO 3
+
+function maximoPuntajePorUbicacionDeBombaDePotencia_(potencia){
+    /*
+    PROPOSITO: Describe el puntaje maximo que podria obtenerse en una ubicacion del tablero si 
+               explotara una bomba con la potencia dada en dicha ubicacion.
+    PRECONDICIONES: -los bordes del tablero tienen concreto.
+                    -La potencia debe ser mayor a cero.
+    PARAMETROS: *potencia* - Numero - describe el alcance maximo de la bomba 
+    TIPO: Numero
+    */
+    maximoPuntaje := 0
+    IrAlInicioEnUnRecorridoAl_Y_(Este,Norte)
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este,Norte)){
+        maximoPuntaje := maxEntre_Y_(maximoPuntaje, puntosQueOtorgariaUnaBombaDePotencia_Aca(potencia))
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    return (maxEntre_Y_(maximoPuntaje, puntosQueOtorgariaUnaBombaDePotencia_Aca(potencia)))
+}
+
+-------------------------------Practica parcial tema 2 Gran Hermano----------------------------------------------------
+
+function hayParticipante(){
+    /* PROPÓSITO: Indica si hay un participante en la celda actual.
+    Precondiciones: Ninguna
+    Tipo: Booleano
+    */ 
+}
+    
+function idParticipanteAVotarCon_(colorVotoDobleOSimple)
+{/* PROPÓSITO:  Describe el id del participante del voto *color
+                VotoDobleoSimple*
+    Precondiciones: Ninguna
+    Tipo: Booleano */ }
+    
+function idDeParticipanteAcá()
+{/* PROPÓSITO: Describe el id del un participante en la celda actual.
+    Precondiciones: Debe haber un participante en la celda actual.
+*/
+    
+}
+function colorParticipante(){
+/* PROPÓSITO: Describe el color del participante.
+    Precondiciones: Ninguna
+    Tipo: Color
+*/
+}
+function colorVotoSimple()
+{/* PROPÓSITO: Describe el color del indicador de voto simple.
+    Precondiciones: Ninguna
+    Tipo: Color
+*/
+}
+function colorVotoDoble()
+{/* PROPÓSITO: Describe el color del indicador de voto doble
+    Precondiciones: Ninguna
+    Tipo: Color
+*/
+}
+
+function colorDeVotoAplicado()
+{/* PROPÓSITO: Describe el color del indicador del voto aplicado
+    Precondiciones: Ninguna
+    Tipo: Color
+*/
+}
+/* PRIMITIVAS
+hayParticipante()
+idParticipanteAVotarCon_(colorVotoDobleOSimple)
+idDeParticipanteAcá()
+colorParticipante()
+colorVotoSimple()
+colorVotoDoble()
+colorDeVotoAplicado()
+*/
+// PUNTO 1
+/* 
+Realizar la función hayComplotAcá que asumiendo que hay un participante en la celda actual, 
+indica si el mismo está realizando un complot previo a efectuar la nominación (en el estado
+"estrategía de nominación"). Hay complot cuando el participante en la celda actual tiene otro
+participante ubicado en alguna de las direcciones ortogonales y ambos votan de la misma manera
+(otorgando los votos dobles a la misma persona y de igual forma en el voto simple).
+*/
+
+function hayComplotAcá(){
+    /*
+    PROPOSITO: Indica si hay complot en la celda actual.
+    PRECONDICIONES:
+        *Debe exitir un participante en la celda actual.
+        *El estado del tablero debe ser "estrategia de nominacion"
+    TIPO: Booleano.
+    */
+    direccionActual := minDir()
+    votosDobleParticipante := idParticipanteAVotarCon_(colorVotoDoble())
+    votosSimpleParticipante := idParticipanteAVotarCon_(colorVotoSimple())
+    while(direccionActual /= maxDir() && puedeMover(direccionActual) && not hayParticipanteComplotandoAl_ConVotosDobles_YVotosSimples_(direccionActual, votosDobleParticipante, votosSimpleParticipante)){
+        direccionActual := siguiente(direccionActual)
+    }
+    return(hayParticipanteComplotandoAl_ConVotosDobles_YVotosSimples_(direccionActual, votosDobleParticipante, votosSimpleParticipante))
+}
+
+function hayParticipanteComplotandoAl_ConVotosDobles_YVotosSimples_(direccion, votosDobleAComparar, votosSimpleAComparar){
+    /*
+    PROPOSITO: Indica si hay celda lindante al **direccion** y en dicha celda hay un participante haciendo complot.
+    PARAMETRO:
+        *direccion: Direccion - La direccion a evaluar.
+        *votosDobleAComparar: Numerico - El id del participante a votar con voto doble.
+        *votosSimpleAComparar: Numerico - El id del participante a votar con voto simple.
+    PRECONDICIONES: 
+        *Debe exitir un participante en la celda actual.
+        *El estado del tablero debe ser "estrategia de nominacion"
+    TIPO: Booleano.
+    */
+    Mover(direccion)
+    return(hayParticipante() && hayComplot(votosDobleAComparar, votosSimpleAComparar))
+}
+
+function hayComplot(votosDobleAComparar, votosSimpleAComparar){
+    /*
+    PROPOSITO: Indica si en la celda actual hay complot.
+    PARAMETRO:
+        *votosDobleAComparar: Numerico - El id del participante a votar con voto doble.
+        *votosSimpleAComparar: Numerico - El id del participante a votar con voto simple.
+    PRECONDICIONES: 
+        *Debe exitir un participante en la celda actual.
+        *El estado del tablero debe ser "estrategia de nominacion"
+    TIPO: Booleano.
+    */
+    return((idParticipanteAVotarCon_(colorVotoDoble) == votosDobleAComparar) && (idParticipanteAVotarCon_(colorVotoSimple) == votosSimpleAComparar))
+}
+
+//Punto 2
+/* Realizar la función hayComplot que indica si hay un complto en el reality durante
+la etapa "estrategia de nominación" 
+*/
+
+function hayComplot(){
+    /*
+    PROPOSITO: Indica si hay complot durante el estado de "estrategia de nominacion".
+    PRECONDICIONES:
+        *El estado del tablero debe ser "Estrategia de nominacion"
+    TIPO: Booleano.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(not hayComplotAcá() && haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    return(hayComplotAcá())
+}
+
+//Punto 3
+/*
+Realizar el procedimiento LimpiarMarcasDePensamientosDeVoto() que asumiendo que los participantes ya nominaron 
+y se aplicaron los votos en el juego, elimina los indicadores de voto doble y voto simple de cada uno de los 
+jugadores
+*/
+
+procedure LimpiarMarcasDePensamientosDeVoto(){
+    /*
+    PROPOSITO: Limpia los indicadores de voto doble y voto simple de cada uno de los jugadores.
+    El cabezal termina en la ultima celda del recorrido celda por celda.
+    PRECONDICIONES: 
+        *Los participantes deben haber nominado.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        LimpiarMarcaDePensamientoSiHayAca()
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    LimpiarMarcaDePensamientoSiHayAca()
+}
+
+procedure LimpiarMarcaDePensamientoSiHayAca(){
+    /*
+    PROPOSITO: Limpia los indicadores de voto doble y voto simple si hay de la celda actual.
+    PRECONDICIONES: Ninguna.
+    */
+    if(hayParticipante()){
+        LimpiarMarcaDeVotoAca(colorVotoDoble)
+        LimpiarMarcaDeVotoAca(colorVotoSimple)
+    }
+}
+
+procedure LimpiarMarcaDeVotoDobleAca(colorDelVoto){
+    /*
+    PROPOSITO: Limpia los indicadores de voto doble de la celda actual.
+    PARAMETRO:
+        *colorDelVoto: Color - El color del voto a limpiar.
+    PRECONDICIONES: 
+        *Debe exitir un participante en la celda actual.
+    */
+    Sacar_DeColor_(idParticipanteAVotarCon_(colorDelVoto), colorDelVoto)
+}
+
+//PUNTO 4
+/* Realizar la función cantidadDeJugadoresConMasDe_Votos que, luego de generarse la
+"placa de votos" describe cuantos participantes quedaron con más votos que los indicados.
+*/
+
+function cantidadDeJugadoresConMasDe_Votos(nroVotos){
+    /*
+    PROPOSITO: Describe cuantos participantes quedaron con mas de **nroVotos** votos.
+    PARAMETRO:
+        *nroVotos: Numero - Es la cantidad a comparar de votos.
+    PRECONDICIONES: 
+        *El estado del tablero debe ser de "placa de votos"
+        *El numero de votos **norVotos** no debe ser menos de 0
+    TIPO: Numero.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    jugadoresConMasVotos := 0
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        jugadoresConMasVotos := jugadoresConMasVotos + unoSi_ceroSino(hayParticipanteConMasVotosQue_(nroVotos))
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    jugadoresConMasVotos := jugadoresConMasVotos + unoSi_ceroSino(hayParticipanteConMasVotosQue_(nroVotos))
+    return(jugadoresConMasVotos)
+}
+
+function hayParticipanteConMasVotosQue_(nroVotos){
+    /*
+    PROPOSITO: Indica si hay un participante con mas votos que **nroVotos** en la celda actual.
+    PARAMETRO:
+        *nroVotos: Numero - Es la cantidad a comparar de votos.
+    PRECONDICIONES: 
+        *El estado del tablero debe ser de "placa de votos"
+        *El numero de votos **norVotos** no debe ser menos de 0
+    TIPO: Booleano.
+    */
+    return(hayParticipante() && votosDelParticipante() > nroVotos)
+}
+
+function votosDelParticipante(){
+    /*
+    PROPOSITO: Describe los votos del participante de la celda actual.
+    PRECONDICIONES: 
+        *Debe exitir un participante en la celda actual.
+    TIPO: Numero.
+    */
+    return(nroBolitas(colorDeVotoAplicado()))
+}
+-----otra forma de resolverlo corregida------------------------------------------------------------------------------------------------------------------
+
+function hayComplotAca(){
+    /*
+    PROPOSITO: Indica si hay un complot en la celda actual.
+    PRECONDICIONES:
+        *El tablero debe estar en el estado "estrategia de nominacion" 
+        *Debe haber un participante en la celda actual.
+    TIPO: Booleano.
+    */
+    direccion := minDir()
+    while(direccion /= maxDir() && not hayComplotAl_(direccion)){
+        direccion := siguiente(direccion)   
+    }
+    return (hayComplotAl_(direccion))   
+}
+
+function hayComplotAl_(direccion){
+    /*
+    PROPOSITO: Indica si hay un complot en la celda actual con un participante 
+    al *direccion* si hubiera.
+    PRECONDICIONES:
+        *El tablero debe estar en el estado "estrategia de nominacion" 
+        *Debe haber un participante en la celda actual.
+    TIPO: Booleano.
+    */
+    return(hayParticipanteAl_(direccion) && hayComplotConParticipanteAl_(direccion))    
+}
+    
+function hayComplotConParticipanteAl_(direccion){
+    /*
+    PROPOSITO: Indica si hay un complot en la celda actual con un participante al *direccion*.
+    PRECONDICIONES:
+        *El tablero debe estar en el estado "estrategia de nominacion" 
+        *Debe haber un participante en la celda actual.
+        *Debe haber un participante en la direccion *direccion*. 
+    TIPO: Booleano.
+    */
+    return(hayMismoVotoSimpleAl_(direccion) && hayMismoVotoDobleAl_(direccion))  
+} 
+    
+function hayMismoVotoSimpleAl_(direccion){
+    return(idParticipanteAVotarCon_(colorVotoSimple()) == idParticipanteAVotarCon_Al_(colorVotoSimple(), direccion) 
+}    
+
+function hayMismoVotoDobleAl_(direccion){
+    return(idParticipanteAVotarCon_(colorVotoDoble()) == idParticipanteAVotarCon_Al_(colorVotoDoble(), direccion)   
+}
+
+function idParticipanteAVotarCon_Al_(colorVoto, direccion) {
+    /*
+    PROPOSITO: Describe el id del participante del voto *colorVoto* que sera votado al *direccion*
+    PRECONDICIONES:
+        *Debe haber un participante en direccion *direccion* que tiene decidido su voto. 
+    TIPO: Numero.
+    */
+    Mover(direccion)
+    return(idParticipanteAVotarCon_(colorVoto)) 
+}   
+    
+-------------------------------Practica parcial tema 1 Gran Hermano----------------------------------------------------
+function cantidadDeVotosDelMásVotado(){
+    /*PROPOSITO: Describe la cantidad de votos del participante mas votado en el reality.
+    PRECONDICIONES:*El estado del tablero debe ser placa de votos.  TIPO: Numero.*/
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    jugadorConMasVotos := 0
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        jugadorConMasVotos := maximoEntre_Y_(jugadorConMasVotos, votosDelJugadorDeLaCeldaActualSiHay())
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    jugadorConMasVotos := maximoEntre_Y_(jugadorConMasVotos, jugadorDeLaCeldaActual())
+    return(jugadoresConMasVotos)    }
+
+function votosDelJugadorDeLaCeldaActualSiHay(){
+    /*PROPOSITO: Describe la cantidad de votos del participante de la celda actual si hay.
+    PRECONDICIONES:*El estado del tablero debe ser placa de votos. TIPO: Numero.*/
+    return(
+            choose  cantidadDeVotosAca()   when    (hayParticipante())
+                    0                                   otherwise
+        )   }
+
+---------------    
+function hayAutovotoYQuedaEnPlaca ( ){
+    /*
+    PROPOSITO: Indica si hay autonominacion en el reality. 
+    PRECONDICIONES:
+        *El estado del tablero debe ser de "Estrategia de nominacion" 
+    TIPO: Booleano.
+    */
+    
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte) && not hayAutonomacionEnCeldaActual()){
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)    
+    }
+    return(hayAutonomacionEnCeldaActual())  
+}
+
+function hayAutonomacionEnCeldaActual(){
+    /*
+    PROPOSITO: Indica si hay un participante autonominandose en la celda actual. 
+    PRECONDICIONES:
+        *El estado del tablero debe ser de "Estrategia de nominacion". 
+    TIPO: Booleano.
+    */
+    return(hayParticipante() && hayAutoVotoAca())   
+}
+
+function hayAutoVotoAca(){
+    /*
+    PROPOSITO: Indica si un participante esta autonominandose en la celda actual. 
+    PRECONDICIONES:
+        *El estado del tablero debe ser de "Estrategia de nominacion".
+        *Debe exitir un participante en la celda actual.
+    TIPO: Booleano.
+    */
+    return(autonimacionEnVotoDoble() || autonimacionEnVotoSimple()) 
+}
+
+function autonimacionEnVotoDoble(){
+    /*
+    PROPOSITO: Indica si un participante esta autonominandose con voto doble en la celda actual. 
+    PRECONDICIONES: 
+        *El estado del tablero debe ser de "Estrategia de nominacion". 
+        *Debe exitir un participante en la celda actual.
+    TIPO: Booleano.
+    */
+    return(idDeParticipanteAcá() == idParticipanteAVotarCon_(colorVotoDoble())) 
+}
+
+function autonimacionEnVotoSimple(){
+    /*
+    PROPOSITO: Indica si un participante esta autonominandose con voto simple en la celda actual. 
+    PRECONDICIONES:
+        *El estado del tablero debe ser de "Estrategia de nominacion".
+        *Debe exitir un participante en la celda actual.
+    TIPO: Booleano.
+    */
+    return(idDeParticipanteAcá() == idParticipanteAVotarCon_(colorVotoSimple()))    
+}
+
+//punto 3
+procedure NominarALosDosMasVotado(){
+    /*
+    PROPOSITO: Nomina a los dos participantes con mas votos del reality.
+    PRECONDICIONES:
+        *El estado del tablero debe ser "placa de votos"
+        *Debe exitir al menos dos participantes.
+    */
+    repeat(2){
+        NominarAlJugadorMasVotadoYBorrarPuntos()
+    }
+}
+
+procedure NominarAlJugadorMasVotadoYBorrarPuntos(){
+    /*
+    PROPOSITO: Nomina al jugador mas votado y borra sus puntos de la placa.
+    PRECONDICIONES:
+    */
+}
+
+
+-------------------------------Practica parcial Guber----------------------------------------------------
+
+/*
+Guber es una novedosa app que permite a los usuarios solicitar un vehículo que pase 
+a recogerlos por donde se encuentran y los lleve a el lugar que desean (similar a 
+otros servicios actuales, que compiten contra los taxis o remises). Como novedad, 
+aquí no hay conductores, sino que el vehículo es autónomo (se maneja solo).
+En este parcial usted deberá programar un simulador de este sistema en Gobstones. 
+No deberemos preocuparnos por la representación, pues tendremos disponibles una serie de primitivas que nos permitirán manipular los diversos elementos. Iremos introduciendo las mismas según
+sea necesario.
+El tablero representará un mapa, donde cada celda representa una ubicación específica del mismo. En el mapa, y bajo el cabezal, se
+encuentra el vehículo que deberemos programar. Disponemos de la siguiente primitiva para mover al mismo:
+
+procedure MoverVehículoAl_(dirección)
+PROPÓSITO: Mueve el vehículo una posición en el mapa hacia la dirección dada. El cabezal termina sobre el
+vehículo.
+PARÁMETROS: dirección es una dirección, que representa la dirección a la cual mover el vehículo.
+PRECONDICIONES:
+* El cabezal se encuentra sobre el vehículo.
+
+En diversos lugares del tablero hay “pasajeros”. Un pasajero es una persona que ha pedido un vehículo para que pase a recogerlo. Los
+pasajeros se identifican con un número único al que llamamos ID (siempre mayor a cero y menor o igual a 499). Para trabajar con los
+pasajeros contamos con:
+
+function hayPasajero()
+PROPÓSITO: Indica Verdadero si en la celda actual hay un pasajero esperando un vehículo. Falso en caso contrario.
+PRECONDICIÓN: Ninguna.
+TIPO: Booleano
+
+function idDePasajero()
+PROPÓSITO: Indica el número de ID con el cual se identifica al pasajero actual.
+PRECONDICIONES:
+* Hay un pasajero en la celda actual.
+TIPO: Número (mayor a cero y menor o igual a 499).
+*/
+
+/*
+1) Una vez el vehículo recoge un pasajero, este queda “ocupado”. No contamos con una función que nos diga si el vehículo está o no
+ocupado, pero si contamos con la siguiente función:
+
+function idDePasajeroEnVehículo()
+PROPÓSITO: Indica el número de ID con el cual se identifica al pasajero que se subió al vehículo, o cero
+si el vehículo no recogió ningún pasajero.
+PRECONDICIONES:
+* El cabezal está sobre el vehículo.
+TIPO: Número (mayor o igual a cero y menor o igual a 499)
+
+Se pide que realice la función elVehículoEstáOcupado() que, dado que el cabezal se encuentra sobre el vehículo, describa
+Verdadero cuando el vehículo se encuentra ocupado y Falso en caso contrario.
+*/
+
+
+
+/*
+2) Cuando el vehículo está en la celda actual y en la misma hay un pasajero, debe recogerlo. Sin embargo, solo puede hacer esto si
+NO ha recogido previamente a otro pasajero. Para recoger pasajeros se cuenta con el siguiente procedimiento:
+
+procedure RecogerPasajero(idPasajero)
+PROPÓSITO: Sube el pasajero con ID “idPasajero” al vehículo.
+PARÁMETROS: idPasajero es un número, que representa al pasajero que se subirá al vehículo.
+PRECONDICIONES:
+* El cabezal se encuentra sobre el vehículo.
+* El cabezal se encuentra sobre el pasajero con ID “idPasajero”
+* El vehículo no está ocupado por otro pasajero.
+* El ID idPasajero está entre 1 y 499.
+
+Se desea realizar un procedimiento RecogerPasajeroSiCorresponde() que, dado que el cabezal se encuentra sobre el vehículo,
+recoja a un pasajero si es que efectivamente hay uno en la celda actual y el vehículo se encuentra en condiciones de recoger un
+pasajero.
+*/
+
+
+
+/*
+3) Ejercicio 3)
+Habiendo recogido a un pasajero, se lo debe llevar a destino. En esta simulación de la app asumimos que el destino de nuestros
+pasajeros es siempre en la misma fila o columna que la ubicación en donde se lo recogió. Por eso deseamos construir la función
+direcciónHaciaLaCuálEstáElDestino() que sabiendo que el cabezal está sobre el vehículo, y este acaba de recoger un pasajero en
+la celda actual, nos indica hacia qué dirección está el destino. Para solucionar este problema contamos adicionalmente con las
+siguientes primitivas:
+
+function esDestinoDe_(idPasajero)
+PROPÓSITO: Indica Verdadero si la celda actual es el lugar de destino del pasajero cuyo ID es el dado.
+Falso en caso contrario.
+PARÁMETROS: idPasajero es un número, que representa al pasajero del cual se desea saber si la celda
+actual es o no destino.
+PRECONDICIONES:
+* El ID idPasajero está entre 1 y 499.
+TIPO: Booleano
+*/
+
+
+
+/*
+4) Con la función del ejercicio anterior, sabemos hacia donde queda el destino, pero nos falta saber a qué distancia se encuentra el
+mismo. Se desea realizar una función distanciaHastaElDestinoAl_(dirección) que dado que el cabezal se encuentra sobre el
+vehículo, y dada una dirección hacia la cual se encuentra el destino, indica a cuántas celdas de distancia se encuentra dicho destino
+desde la celda actual.
+*/
+
+
+
+/*
+5) Se desea además poder llevar un pasajero hasta el destino que quiere ir, y bajarlo en el destino. Para bajar un pasajero contamos
+con:
+
+procedure BajarPasajero(idPasajero)
+PROPÓSITO: Baja al pasajero con ID “idPasajero” del vehículo.
+PARÁMETROS: idPasajero es un número, que representa al pasajero al cual se desea bajar del vehículo.
+PRECONDICIONES:
+* El cabezal se encuentra sobre el vehículo.
+* El vehículo está ocupado por el pasajero con ID idPasajero.
+* El vehículo se encuentra en el destino del pasajero con ID idPasajero.
+* El ID idPasajero está entre 1 y 499.
+
+Se desea entonces realizar el procedimiento LlevarPasajeroADestino() que dado que el cabezal se encuentra sobre el vehículo, y
+este acaba de cargar un pasajero en la celda actual, lleva el pasajero al destino correspondiente, dejando el cabezal en la celda en
+donde se recogió el pasajero (Es decir, el vehículo debe llevar al pasajero y volver)
+*/
+
+
+
+/*
+6) Se desea llevar a destino a cada pasajero que se encuentra esperando en la fila actual. Para ello, sabemos que todo pasajero tiene
+su destino en la misma fila o columna que en el lugar en donde se lo recoge. Deseamos entonces realizar el procedimiento
+LlevarTodosLosPasajerosDeLaFilaADestino() que lleva cada uno de los pasajeros al destino.
+*/
+
+
+
+/*
+7) Si bien venimos diciendo que hay “un” pasajero, la realidad es que a veces no es una única persona que se va a subir al vehículo.
+Por ejemplo, una persona puede haber pedido el vehículo para él y para 2 amigos. La aplicación trata a estos casos como un único
+pasajero, pues la forma de llevarlos a destino es la misma si es una única persona o son varias. Sin embargo, para poder saber
+cuántas personas se van a subir al auto en cuestión, la aplicación realiza un “hack”, es decir, una solución que no es correcta
+conceptualmente, pero que funciona en la práctica.
+Así, el ID del pasajero nos indica cuantas personas se planean subir. Si el ID está entre 1 y 99 se subirá una única persona al
+recoger a ese pasajero, si está entre 100 y 199, serán 2, si está entre 200 y 299 serán 3, si está entre 300 y 399 serán 4 y si está
+entre 400 y 499 serán 5. No se pueden subir más de 5 pasajeros en un vehículo, y por tanto no hay IDs mayores a 499.
+Se quiere poder determinar cuántas personas (no pasajeros, sino personas) hay exactamente esperando en un determinado
+momento (Es decir, todos los que hay en el tablero). Para ello se pide que realice la función cantidadDePersonasEsperando() que
+indique el total de personas que están esperando un viaje actualmente. Ojo, no en toda celda hay pasajeros, y en las celdas donde
+hay, hay que poder determinar cuántas personas son las que esperan allí.
+*/

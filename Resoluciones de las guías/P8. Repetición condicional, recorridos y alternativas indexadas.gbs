@@ -1,0 +1,565 @@
+//punto 1
+/*
+Definir el procedimiento IrAlBorde_(dirección), que lleva al cabezal al borde dado por el
+parámetro dirección.
+*/
+
+procedure IrAlBorde_(dirección){
+    /*
+    PROPOSITO: Mueve el cabezal desde la celda actual hacia el borde **dirección**.
+    PARAMETRO:
+        *dirección: Direccion - El borde hacia donde se movera el cabezal.
+    PRECONDICIONES: Ninguna.
+    */
+    while(puedeMover(dirección)){
+        Mover(dirección)
+    }
+}
+
+//punto 2
+/*
+Volver a definir el procedimiento SacarTodasLasDeColor_(color), que quita todas las bolitas del
+color dado por el parámetro color de la celda actual, pero esta vez SIN utilizar 
+la expresión primitiva nroBolitas (directa o indirectamente).
+*/
+
+procedure SacarTodasLasDeColor_(color){
+    /*
+    PROPOSITO: Saca todas las bolitas de color **color** de la celda actual.
+    PARAMETRO: 
+        *color: Color - El color de las bolitas a sacar.
+    PRECONDICIONES: Ninguna.
+    */
+    while(hayBolitas(color)){
+        Sacar(color)
+    }
+}
+
+
+//punto 3
+/*
+Considerar el procedimiento VaciarFilaDe_(color), que debe quitar todas las bolitas del color
+dado por el parámetro color de cada una de las celdas de la fila actual. 
+El cabezal puede empezar en cualquier celda de la fila, y también puede terminar 
+en cualquier celda de la fila (ya sea celda inicial o cualquier otra).
+a. Definir el procedimiento, como siempre, comenzando por establecer el contrato, 
+y luego recién el código.
+c. Al recorrer la fila, ¿en qué dirección se movió el cabezal? ¿Podría haberse movido en la
+dirección opuesta?
+Se movio en direccion Este, y si se pudo haber movido hacia el Oeste solo si la celda inicial de la
+fila sea la del borde Este.
+d. A partir de la respuesta anterior, ¿de cuántas formas posibles se puede realizar el recorrido de
+una fila?
+De dos formas: Oeste o Este.
+e. Volver a definir el procedimiento con direcciones distintas.
+f. ¿Y si tuviéramos que vaciar la columna en lugar de la fila? ¿Qué cambia entre las distintas
+formas de moverse?
+Seria mas o menos lo mismo, en vez de moverse en direccion horizontal seria en vertical
+(Norte o Sur) y aplicando otra vez lo de cambiando la celda inicial del recorrido.
+Lo que cambiaria sería la celda inicial desde la que se comienza el recorrido, tendria que ser
+el borde opuesto de la direccion deseada. 
+*/
+
+procedure VaciarFilaDe_(color){
+    /*
+    PROPOSITO: Quita todas las bolitas de color **color** de cada una de las celdas en la fila 
+    actual. El cabezal termina en la ultima celda de la fila actual.
+    PARAMETRO:
+        *color: Color - El color de las bolitas a quitar.
+    PRECONDICIONES: Ninguna.
+    */
+    IrAlBorde(Oeste)
+    while(puedeMover(Este)){
+        QuitarTodasLasBolitas_SiHayAca(color)
+        Mover(Este)
+    }
+    QuitarTodasLasBolitas_SiHayAca(color)
+}
+
+procedure QuitarTodasLasBolitas_SiHayAca(color){
+    /*
+    PROPOSITO: Quita si hay todas las bolitas de color **color** de la celda actual. 
+    PARAMETRO:
+        *color: Color - El color de las bolitas a quitar.
+    PREOCNDICIONES: Ninguna
+    */
+    if(hayBolitas(color)){
+        SacarTodasLasDeColor_(color)
+    }
+}
+
+//punto 4
+/*
+procedimiento: VaciarFilaDe_HaciaEl_(color, dirección), que debe quitar todas las bolitas 
+del color dado por el parámetro color de cada una de las celdas de la fila actual, desde 
+la celda en donde se encuentra el cabezal (incluyendo esta) hacia el final de la fila en la
+dirección dada por dirección. Tras definir el código y el contrato considere.
+a. ¿Qué valores puede tomar el parámetro dirección para que el propósito sea consistente con su
+nombre?
+a. ¿Qué nombre podría recibir el procedimiento para que sea correcto utilizarlo con cualquier
+dirección?
+*/
+
+procedure VaciarFilaDe_HaciaEl_(color, dirección){
+    /*
+    PROCEDIMIENTO: Quita todas las bolitas de color **color** de cada una de las celdas en la
+    fila actual desde la celda actual hacia el final de la fila en direccion **dirección**
+    PARAMETROS:
+        *color: Color - El color de las bolitas a quitar.
+        *dirección: Direccion - La direccion hacia la que se quitara las bolitas.
+    PRECONDICIONES: 
+        *La direccion **dirección** debe ser Oeste o Este.
+    */
+    IrAlBorde(opuesto(dirección))
+    while(puedeMover(dirección)){
+        QuitarTodasLasBolitas_SiHayAca(color)
+        Mover(dirección)
+    }
+    QuitarTodasLasBolitas_SiHayAca(color)
+}
+
+//punto 5
+/*
+En cada uno de los casos siguientes, definir de la forma indicada el procedimiento
+VaciarTableroDe_(color), que quite todas las bolitas del color dado por el parámetro color de
+cada una de las celdas del tablero. El cabezal debe poder comenzar en cualquier celda del tablero, y no
+es relevante para el problema donde finaliza, basta con que lo declare en su propósito.
+a. Estructurar el procedimiento como un recorrido sobre las filas . ¿Qué subtareas van a
+precisarse en este caso? ¿Es necesario volver a definirlas o se pueden encontrar en esta
+práctica?
+b. Estructurar el procedimiento como un recorrido sobre las celdas del tablero. Las subtareas
+necesarias serán diferentes, y puede ser que sea necesario definir alguna que aún no está
+disponible en esta práctica.
+c. En este última opción, ¿Cuántas formas distintas hay de recorrer el las celdas del tablero? ¿Se
+podría elegir valores distintos para los movimientos?
+d. Implemente ahora nuevamente el procedimiento de 2 formas distintas.
+*/
+
+procedure VaciarTableroDe_RecorridoCeldaxCelda(color){
+    /*
+    PROPOSITO: Quita todas las bolitas de color **color** del tablero. El cabezal termina
+    en la esquina Suroeste.
+    PARAMETROS:
+        *color: Color - El color de las bolitas a quitar del tablero
+    PRECONDICIONES: Ninguna.
+    */
+    IrALaPrimerCelda()
+    while(haySiguienteCelda()){
+        QuitarTodasLasBolitas_SiHayAca(color)
+        IrAProximaCelda()
+    }
+    QuitarTodasLasBolitas_SiHayAca(color)
+    IrALaPrimerCelda()
+}
+
+procedure IrALaPrimerCelda(){
+    /*
+    PROPOSITO: Mueve el cabezal a la esquina SurOeste del tablero desde la celda actual.
+    PRECONDICIONES: Ninguna.
+    */
+    IrAlBorde(Oeste)
+    IrAlBorde(Sur)
+}
+
+function haySiguienteCelda(){
+    /*
+    PROPOSITO: Indica si hay siguiente celda en direccion Este y Norte desde la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(puedeMover(Este) || puedeMover(Norte))
+}
+
+procedure IrAProximaCelda(){
+    /*
+    PROPOSITO: Mueve el cabezal a la proxima celda desde la celda actual.
+    PRECONDICIONES: Ninguna.
+    */
+    if(puedeMover(Este)){
+        Mover(Este)
+    }
+    else{
+        IrAlBorde(Oeste)
+        Mover(Norte)
+    }
+}
+
+procedure VaciarTableroDe_RecorridoxFilas(color){
+    /*
+    PROPOSITO: Quita todas las bolitas de color **color** del tablero. El cabezal termina
+    en la esquina Suroeste.
+    PARAMETROS:
+        *color: Color - El color de las bolitas a quitar del tablero
+    PRECONDICIONES: Ninguna.
+    */
+    IrALaPrimerCelda()
+    while(hayProximaFila()){
+        VaciarFilaDe_HaciaEl_(color, Este)
+        IrASiguienteFila()
+    }
+    VaciarFilaDe_HaciaEl_(color, Este)
+    IrALaPrimerCelda()
+}
+
+function hayProximaFila(){
+    /*
+    PROPOSITO: Indica si hay una fila al Norte desde la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(puedeMover(Norte))
+}
+
+procedure IrASiguienteFila(){
+    /*
+    PROPOSITO: Mueve el cabezal a la siguiente fila hacia el Norte.
+    PRECONDICIONES: *Debe exitir una siguiente fila en dirección Norte
+    desde la celda actual.
+    */
+    IrAlBorde(Oeste)
+    Mover(Norte)
+}
+
+//punto 6
+/*
+Escribir los procedimientos necesarios para generalizar la noción de recorrido por celdas
+de un tablero, para que las direcciones de recorrido no estén fijas. En particular, 
+definir (como siempre,  comenzando por los contratos):
+a. IrAPrimeraCeldaEnUnRecorridoAl_Y_(dirPrincipal, dirSecundaria)
+b. haySiguienteCeldaEnUnRecorridoAl_Y_(dirPrincipal, dirSecundaria)
+c. IrASiguienteCeldaEnUnRecorridoAl_Y_(dirPrincipal, dirSecundaria)
+Que hacen precisamente lo que sugiere su nombre, permitiendo utilizarlas en un 
+recorrido por celdas. Puede probarlas intentando colocar una bolita en cada celda del 
+tablero, o volviendo a implementar el ejercicio anterior, ahorqa de forma parametrizada. 
+Al escribir las precondiciones, tener en cuenta que las direcciones no pueden ser 
+cualesquiera, sino que deben estar relacionadas. ¿Cuál es esa relación? 
+¿Cómo expresarla?
+*/
+
+procedure IrAPrimeraCeldaEnUnRecorridoAl_Y_(dirPrincipal, dirSecundaria){
+    /*
+    PROPOSITO: Mueve el cabezal a la primera celda del tablero en un recorrido que
+    va en dirección **dirPrincipal** y en direccion **dirSecundaria**.
+    PARAMETROS:
+        *dirPrincipal: Direccion - La direccion principal del recorrido.
+        *dirSecundaria: Direccion - La direccion secundaria del recorrido.
+    PRECONDICIONES: 
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser iguales.
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser opuestas.
+    */
+    IrAlBorde(opuesto(dirPrincipal))
+    IrAlBorde(opuesto(dirSecundaria))
+}
+
+function haySiguienteCeldaEnUnRecorridoAl_Y_(dirPrincipal, dirSecundaria){
+    /*
+    PROPOSITO: Indica si hay siguiente celda en un recorrido que va en 
+    direccion **dirPrincipal** y en direccion **dirSecundaria**.
+    PARAMETROS:
+        *dirPrincipal: Direccion - La direccion principal del recorrido.
+        *dirSecundaria: Direccion - La direccion secundaria del recorrido.
+    PRECONDICIONES: 
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser iguales.
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser opuestas.
+    TIPO: Booleano.
+    */
+    return(puedeMover(dirPrincipal) || puedeMover(dirSecundaria))
+}
+
+procedure IrASiguienteCeldaEnUnRecorridoAl_Y_(dirPrincipal, dirSecundaria){
+    /*
+    PROPOSITO: Mueve el cabezal a la siguiente celda desde la celda actual en un recorrido 
+    que va en direccion **dirPrincipal** y en direccion **dirSecundaria**.
+    PARAMETROS:
+        *dirPrincipal: Direccion - La direccion principal del recorrido.
+        *dirSecundaria: Direccion - La direccion secundaria del recorrido.
+    PRECONDICIONES: 
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser iguales.
+        *Las direcciones **dirPrincipal** y **dirSecundaria** no deben ser opuestas.
+        *Debe exitir al menos una celda en direccion **dirPrincipal** o en 
+        direccion **dirSecundaria**.
+    */
+    if(puedeMover(dirPrincipal)){
+        Mover(dirPrincipal)
+    }
+    else{
+        IrAlBorde(opuesto(dirPrincipal))
+        Mover(dirSecundaria)
+    }
+}
+
+//punto 7
+/*
+Escribir ahora los siguientes procedimientos, teniendo en cuenta que para todos, el cabezal puede
+comenzar en cualquier lugar del tablero, y terminar en dónde usted crea conveniente.
+a. PintarTableroDe_(color) que coloca exactamente una bolita del color dado en cada
+celda del tablero.
+b. UnaDeCadaEnTodoElTablero() que coloca una bolita de cada color en cada celda del
+tablero.
+c. RellenarCon_EnAusenciaDe_EnElTablero(colorAPoner, colorAMirar) que coloca
+una bolita de color colorAPoner en cada celda del tablero en la que no haya al menos una
+bolita de color colorAMirar.
+d. CompletarHasta_De_EnElTablero(cantidad, color) que deja en cada celda del
+tablero exactamente tantas bolitas del color dado como la cantidad indicada por el parámetro
+cantidad. Note que puede que ya existan bolitas del color dado en algunas de las celdas, en
+cuyo caso. Realice el procedimiento sin hacer uso del comando Sacar ni ninguno de los
+procedimientos que implican Sacar.
+*/
+
+procedure PintarTableroDe_(color){
+    /*
+    PROPOSITO: Pinta cada una de las celdas del tablero con una
+    bolita de color **color**. El cabezal termina en la esquina 
+    SurOeste.
+    PARAMETRO:
+        *color: Color - El color de las bolitas a pintar.
+    PRECONDICIONES: Ninguna.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        Pintar_EnCeldaActual(color)
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    Pintar_EnCeldaActual(color)
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+}
+
+procedure Pintar_EnCeldaActual(color){
+    /*
+    PROPOSITO: Pinta la celda actual de color **color**
+    PARAMETRO:
+        *color: Color - El color de las celdas a pintar
+    PRECONDICIONES: Ninguna.
+    */
+    Poner(color)
+}
+
+procedure UnaDeCadaEnTodoElTablero(){
+    /*
+    PROPOSITO: Pinta cada una de las celdas del tablero
+    con una bolita de cada color. El cabezal termina en la esquina Suroeste.
+    PRECONDICIONES: Ninguna.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        PonerUnaDeCada()
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    PonerUnaDeCada()
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+}
+
+procedure PonerUnaDeCada(){
+    /*
+    PROPOSITO: Pinta en la celda actual con una bolita de cada color.
+    PRECONDICIONES: Ninguna.
+    */
+    Poner(Azul)
+    Poner(Negro)
+    Poner(Rojo)
+    Poner(Verde)
+}
+
+procedure RellenarCon_EnAusenciaDe_EnElTablero(colorAPoner, colorAMirar){
+    /*
+    PROPOSITO: Rellena con una bolita de color **colorAPoner**
+    cada una de las celdas del tablero en la que no haya al menos una
+    bolita de color **colorAMirar**.
+    PARAMETROS:
+        *colorAPoner: Color - El color de las bolitas a poner.
+        *colorAMirar: Color - El color de las bolitas a mirar.
+    PRECONDICIONES: Ninguna.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        RellenarCon_EnAusenciaDe_EnLaCeldaActual(colorAPoner, colorAMirar)
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    RellenarCon_EnAusenciaDe_EnLaCeldaActual(colorAPoner, colorAMirar)
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+}
+
+procedure RellenarCon_EnAusenciaDe_EnLaCeldaActual(colorAPoner, colorAMirar){
+    /*
+    PROPOSITO: Rellena con una bolita de color **colorAPoner**
+    en la celda actual si no hay al menos una bolita de color **colorAMirar**.
+    PARAMETROS:
+        *colorAPoner: Color - El color de las bolitas a poner.
+        *colorAMirar: Color - El color de las bolitas a mirar.
+    PRECONDICIONES: Ninguna.
+    */
+    Poner_Si_(colorAPoner, not hayBolitas(colorAMirar))
+}
+
+procedure Poner_Si_(color, condición){ //BIBLIOTECA
+    /*
+    PROPOSITO: Pone una bolita de color *color* en la celda actual si se cumple la condicion *condicion*    
+    PRECONDICIONES: Ninguna.
+    PARAMETROS: 
+        *color: Color - El color de la bolita a poner.
+        *condicion: Booleano - La condicion que se debe cumplir para poner una bolita
+    */
+    if(condicion){
+        Poner(color)
+    }
+}
+
+procedure CompletarHasta_De_EnElTablero(cantidad, color){
+    /*
+    PROPOSITO: Completa en cada una de las celdas del tablero tantas bolitas de color **color**
+    como la cantidad **cantidad**. (aclaro donde termina el cabezal?) si
+    PARAMETROS:
+        *cantidad: Numero - La cantidad de bolitas a completar.
+        *color: Color - El color de bolitas a completar.
+    PRECONDICIONES: 
+        *No debe haber mas de **cantidad** bolitas de color **color** en cada una de las
+        celdas.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        CompletarHasta_De_EnLaCeldaActual(cantidad, color)
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    CompletarHasta_De_EnLaCeldaActual(cantidad, color)
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+}
+
+procedure CompletarHasta_De_EnLaCeldaActual(cantidad, color){
+    /*
+    PROPOSITO: Deja exactamente **cantidad** bolitas del color **color** en la celda actual.
+    PARAMETROS:
+        *cantidad: Numero - La cantidad de bolitas.
+        *color: Color - El color de bolitas.
+    PRECONDICIONES: 
+        *No debe haber mas de **cantidad** bolitas de color **color** en la celda actual.
+    */
+    while(not(nroBolitas(color) == cantidad)){
+        Poner(color)
+    }
+}
+
+/*
+otra posible solucion:
+Poner_VecesDe_(cantidad - nroBolitas(color), color)
+*/
+
+//punto 8
+/*
+Escribir un procedimiento IrHastaLaBolitaRojaHacia_(direcciónABuscar) que deja el
+cabezal posicionado en la celda más próxima a la actual en la dirección dada que posea una bolita de
+color Rojo Cuidado, sí hay una bolita de color Rojo en la celda actual, el cabezal debe moverse a la más
+cercana, no permanecer en la actual. ¿Cuál es la precondición de este procedimiento?
+*/
+
+procedure IrHastaLaBolitaRojaHacia_(direcciónABuscar){
+    /*
+    PROPOSITO: Posiciona el cabezal hacia en proxima celda al **direcciónABuscar**
+    que posea una bolita color Rojo desde la celda actual.
+    PARAMETRO:
+        *direcciónABuscar: Direccion - La direccion a la que se busca una bolita roja.
+    PRECONDICIONES: 
+        *Debe exitir una celda con al menos una bolita Roja en alguna celda en 
+        direccion **direcciónABuscar**.
+        *No debe haber bolitas de color Rojo en la celda actual.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(not(hayBolitas(Rojo))){
+        Mover(Este)
+    }
+}
+
+//punto 9
+/*
+Escribir un procedimiento IrALaSiguienteVacíaHacia_(dirección) que posiciona el cabezal en
+la próxima celda vacía en la fila o columna, desde la celda en donde se encuentra el cabezal (sin
+incluirla) hacia el borde en la dirección dada, dejando el cabezal en el borde en caso de no haber
+ninguna celda vacía en dicha dirección.
+*/
+
+procedure IrALaSiguienteVacíaHacia_(dirección){ //preguntar
+    /*
+    PROPOSITO: Posiciona el cabezal en la proxima celda vacía desde la celda actual hacia la direccion
+    **dirección** o en el borde de dicha direccion si no hay celda vacia en la fila o columna.
+    PARAMETRO:
+        *dirección: Dirección - La direccion hacia la que se buscara una celda vacia.
+    PRECONDICIONES: Ninguna.
+    */
+    Mover_Si_(dirección, puedeMover(dirección))
+    while(not(esCeldaVacia()) && puedeMover(dirección)){
+        Mover(dirección)
+    }
+}
+
+procedure Mover_Si_(dirección, condición){
+    /*
+    PROPOSITO: Se mueve el cabezal en direccion **direccion** si se cumple la
+    condicion **condicion**.
+    PARAMETROS: *dirección: Direccion - La direccion a la que se movera el cabezal.
+                *condición: Booleano - La condicion que se debe cumplir para mover el cabezal.
+    PRECONDICIONES: 
+        *Debe haber al menos una celda en direccion **direccion** si se cumple la condicion
+        **condicion**.
+    */
+    if(condición){
+        Mover(dirección)
+    }
+}
+
+function esCeldaVacia(){
+    /*
+    PROPOSITO: Indica si la celda actual esta vacia.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return (not(hayBolitas(Azul) || hayBolitas(Negro) || hayBolitas(Rojo) || hayBolitas(Verde)))
+}
+
+//punto 10 
+/*
+Definir un procedimiento IrHastaLaQueTengaUnaDeCada() que posiciona el cabezal en cualquier
+celda que contenga una bolita de cada color, y que hace BOOM si no hubiera en el tablero alguna celda
+que cumpla con dicha característica.
+*/
+
+procedure IrHastaLaQueTengaUnaDeCada(){
+    /*
+    PROPOSITO: Posiciona el cabezal en cualquier celda que contenga una bolita
+    de cada color y si no hay en todo el tablero una celda que cumpla con dicha
+    caracteristica hace BOOM.
+    PRECONDICIONES: Ninguna.
+    */
+    
+}
+
+//punto 11
+/*
+ Nova escribió un procedimiento cuyos contratos son inexistentes, y donde los nombres de
+los procedimientos y de las funciones son muy poco descriptivos.
+
+procedure Pos() {
+    while (not a() && b() && not estoyElFinalDeUnRecorrido__(Norte, Este)) {
+    PasarASiguienteCelda__(Norte, Este)
+    }
+}
+
+function a() {
+    return (hayBolitas(Azul))
+}
+
+function b() {
+    return (nroBolitas(Negro) < 42)
+}
+*/
+//correcciones
+procedure Pos() {
+    /*
+    PROPOSITO: Mueve el cabezal a la siguiente celda desde la celda actual
+    PRECONDICIONES:
+    */
+    while (not a() && b() && not estoyElFinalDeUnRecorrido__(Norte, Este)) {
+    PasarASiguienteCelda__(Norte, Este)
+    }
+}
+
+
+

@@ -1,0 +1,944 @@
+//punto 1
+/*
+Declarar un tipo variante llamado DíaDeLaSemana, que sirva para identificar los días de la semana.
+Luego implementar las siguientes funciones (sin olvidar sus contratos):
+a. díaSiguiente_ que dado un día de la semana, devuelve el día siguiente.
+b. díaPrevio_ que dado un día de la semana, devuelve el día previo.
+c. esDíaDeFinDeSemana_, que indica si el día dado es uno del fin de semana.
+Reflexionamos: ¿De qué tipo es el parámetro dado a cada una de estas funciones? ¿Cuál sería un buen nombre
+para el mismo? ¿Por qué las funciones siguiente y previo no pueden utilizarse para solucionar este problema?
+¿Qué beneficios trae tener ahora díaSiguiente y díaPrevio sí necesito saber algo cómo “en qué día ocurrió un
+suceso”?
+*/
+
+type DíaDeLaSemana is variant {     //este no tendria una funcion observadora porque no forma parte de 
+    /*                              //una estructura (type record) que tenga un constructor
+    PROPOSITO: Modela los dias de la semana.
+    */
+    case    Lunes       {}
+    case    Martes      {}
+    case    Miercoles   {}
+    case    Jueves      {}
+    case    Viernes     {}
+    case    Sabado      {}
+    case    Domingo     {}
+}
+
+function díaSiguiente_(unDia){
+    /*
+    PROPOSITO: Describe el dia siguiente el dia **unDia**.
+    PARAMETRO:
+        *unDia: DiaDeLaSemana - El dia de la semana que se quiere saber el dia siguiente.
+    PRECONDICIONES: Ninguna.
+    TIPO: DiaDeLaSemana.
+    */
+    return(
+        choose  Martes      when    (unDia == Lunes)
+                Miercoles   when    (unDia == Martes)
+                Jueves      when    (unDia == Miercoles)
+                Viernes     when    (unDia == Jueves)
+                Sabado      when    (unDia == Viernes)
+                Domingo     when    (unDia == Sabado)
+                Lunes       otherwise
+        )
+}
+
+function díaPrevio_(unDia){
+    /*
+    PROPOSITO: Describe el dia previo el dia **unDia**.
+    PARAMETRO:
+        *unDia: DiaDeLaSemana - El dia de la semana que se quiere saber el dia previo.
+    PRECONDICIONES: Ninguna.
+    TIPO: DiaDeLaSemana.
+    */
+    return(
+        choose  Martes      when    (unDia == Miercoles)
+                Miercoles   when    (unDia == Jueves)
+                Jueves      when    (unDia == Viernes)
+                Viernes     when    (unDia == Sabado)
+                Sabado      when    (unDia == Domingo)
+                Domingo     when    (unDia == Lunes)
+                Lunes       otherwise
+        )
+}
+
+function esDíaDeFinDeSemana_(unDia){
+    /*
+    PROPOSITO: Indica si el dia **unDia** es un dia de fin de semana.
+    PARAMETRO:
+        *unDia: DiaDeLaSemana - El dia de la semana que se quiere saber si es fin de semana.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(unDia == Sabado || unDia == Domingo)
+}
+
+
+//punto 2
+/*
+EN PAPEL Se quiere modelar una serie de partidos politicos de un país, y poder realizar consultas
+sobre los mismos. Se cuenta entonces con la siguiente tabla de información: (tabla)
+
+*/
+
+type Partido is variant {
+    /*
+    PROPOSITO: Modela los partidos politicos de un pais.
+    */
+    case    Democracia por la Verdad    {}
+    case    Unidos por la República     {}
+    case    Liberales por la Libertad   {}
+    case    Izquierda de los Obreros    {}
+}
+
+function cantidadDeVotosDe_(unPartido){
+    /*
+    PROPÓSITO: Indica la cantidad de votos que recibió un partido.
+    PARÁMETROS
+    * unPartido: PartidoPolítico - El partido político del cual saber su cantidad de votos.
+    TIPO: Número
+    PRECONDICIÓN: Ninguna
+    */
+}
+
+/*
+a) tieneMásVotantes_Que_ que dados dos partidos indique si el primero tiene más votos que
+el segundo.
+*/
+
+function tieneMásVotantes_Que_(unPartido, otroPartido){
+    /*
+    PROPOSITO: Indica si el partido **unPartido** tiene mas votantes que **otroPartido**.
+    PARAMETROS:
+        *unPartido: PartidoPolítico - El partido político a cual se quiere comparar su cantidad de votos.
+        *otroPartido: PartidoPolítico - El partido político a cual se quiere comparar su cantidad de votos.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(cantidadDeVotosDe_(unPartido) > cantidadDeVotosDe_(otroPartido))
+}
+
+/*
+b) elQueTieneMásVotos que describe el partido con más votantes.
+*/
+
+function elQueTieneMásVotos(){
+    /*
+    PROPOSITO: Describe el partido politico con mas votantes.
+    PRECONDICIONES: Ninguna.
+    TIPO: PartidoPolítico.
+    */
+    return(
+        choose  Democracia por la Verdad    when    (elPartido_TieneMasVotosQue__Y_(Democracia por la Verdad, 
+                                                    Unidos por la República, Liberales por la Libertad, 
+                                                    Izquierda de los Obreros))
+                Unidos por la República     when    (elPartido_TieneMasVotosQue__Y_(Unidos por la República, 
+                                                    Democracia por la Verdad, Liberales por la Libertad, 
+                                                    Izquierda de los Obreros))
+                Liberales por la Libertad   when    (elPartido_TieneMasVotosQue__Y_(Liberales por la Libertad,
+                                                    Democracia por la Verdad, Unidos por la República,
+                                                    Izquierda de los Obreros))
+                Izquierda de los Obreros    when    (elPartido_TieneMasVotosQue__Y_(Izquierda de los Obreros,
+                                                    Democracia por la Verdad, Unidos por la República, 
+                                                    Liberales por la Libertad))
+        )
+}
+
+function elPartido_TieneMasVotosQue__Y_(partidoPolitico1, partidoPolitico2, partidoPolitico3, partidoPolitico4){
+    /*
+    PROPOSITO: Indica si el partido politico **partidoPolitico1** tiene mas
+    votos que los partidos politicos **partidoPolitico2**, **partidoPolitico3** y
+    **partidoPolitico4**.
+    PARAMETROS:
+        *partidoPolitico1: PartidoPolítico - El partido político del cual se quiere
+        comparar su cantidad de votos.
+        *partidoPolitico2: PartidoPolítico - El partido político del cual se quiere
+        comparar su cantidad de votos.
+        *partidoPolitico3: PartidoPolítico - El partido político del cual se quiere
+        comparar su cantidad de votos.
+        *partidoPolitico4: PartidoPolítico - El partido político del cual se quiere
+        comparar su cantidad de votos.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return( tieneMásVotantes_Que_(partidoPolitico1, partidoPolitico2)   &&
+            tieneMásVotantes_Que_(partidoPolitico1, partidoPolitico3)   &&
+            tieneMásVotantes_Que_(partidoPolitico1, partidoPolitico4)
+        )
+}
+
+//punto 3
+/*
+Declare el tipo variante Palo y el tipo registro Carta y escriba las siguientes funciones. No se olvide de
+ir probando en Gobstones cada función que realiza para saber sí el resultado es correcto.
+*/
+
+type Carta is record {
+   /*
+    PROPOSITO: Modela las cartas españolas.
+    INV. DE REPRESENTACION: 
+        *El valor de la carta debe estar comprendido entre 1 y 12.
+    */
+    field valor {}
+    field palo  {}
+}
+
+type Palo is variant {
+    /*
+    PROPOSITO: Modela el palo de las cartas españolas.
+    */
+    case Oro    {}
+    case Copa   {}
+    case Espada {}
+    case Basto  {}
+}
+
+/*
+a) anchoDeEspadas que describe la carta 1 de Espadas.
+*/
+
+function anchoDeEspadas(){
+    /*
+    PROPOSITO: Decribe la carta 1 de Espadas.
+    PRECONDICIONES: Ninguna.
+    TIPO: Carta.
+    */
+    return(Carta(valor <- 1, palo <- Espada)
+}
+
+/*
+b) anchoDeBastos que describe la carta 1 de Bastos
+*/
+
+function anchoDeBastos(){
+    /*
+    PROPOSITO: Decribe la carta 1 de Basto.
+    PRECONDICIONES: Ninguna.
+    TIPO: Carta.
+    */
+    return(Carta(valor <- 1, palo <- Basto)
+}
+
+/*
+c) laCarta_de_ que dado un número y un palo que describe la carta con dicho número y dicho
+palo.
+*/
+
+function laCarta_de_(numero, unPalo){
+    /*
+    PROPOSITO: Decribe la carta con valor **numero** y palo de **unPalo**.
+    PRECONDICIONES: Ninguna.
+    TIPO: Carta.
+    */
+    return(Carta(valor <- numero, palo <- unPalo))
+}
+
+/*
+d) esUnAncho_ que indica si la carta dada es un 1.
+*/
+
+function esUnAncho_(unaCarta){
+    /*
+    PROPOSITO: Indica si la carta **unaCarta** es un ancho.
+    PARAMETRO:
+        *unaCarta: Carta - La carta a evaluar su valor.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(valor(unaCarta) == 1)
+}
+
+/*
+e) esFigura_ que dada una carta, indica si la misma es una figura (las figuras son los 10s, los
+11s y los 12s).
+*/
+
+function esFigura_(unaCarta){
+    /*
+    PROPOSITO: Indica si la carta **unaCarta** es una figura.
+    PARAMETRO:
+        *unaCarta: Carta - La carta a evaluar su valor.
+    PRECONDICIONES: Ninguna
+    TIPO: Booleano.
+    */
+    return(valor(unaCarta) == 10 || valor(unaCarta) == 11 || valor(unaCarta) == 12)
+}
+
+/*
+f) esDeOro_ que indica si la carta dada es de Oros.
+*/
+
+function esDeOro_(unaCarta){
+    /*
+    PROPOSITO: Indica si la carta **unaCarta** es de oro.
+    PARAMETRO:
+        *unaCarta: Carta - La carta a evaluar su palo.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(palo(unaCarta) == Oro)
+}
+
+/*
+g) tieneUnNúmeroMásGrande_Que_ que dadas dos cartas indica si la primera carta tiene un
+número más grande que la segunda.
+*/
+
+function tieneUnNúmeroMásGrande_Que_(primerCarta, segundaCarta){
+    /*
+    PROPOSITO: Indica si la carta **primerCarta** es un numero mas grande que
+    **segundaCarta**.
+    PARAMETRO:
+        *primerCarta: Carta - La carta a evaluar su valor.
+        *segundaCarta: Carta - La carta a evaluar su valor.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(valor(primerCarta) > valor(segundaCarta))
+}
+
+/*
+h) sonDelMismoPalo_Y_ que dadas dos cartas, indica si estas tienen el mismo palo.
+*/
+
+function sonDelMismoPalo_Y_(primerCarta, segundaCarta){
+    /*
+    PROPOSITO: Indica si la carta **primerCarta** y la carta **segundaCarta** son del mismo palo.
+    PARAMETROS:
+        *primerCarta: Carta - La carta a comparar su palo.
+        *segundaCarta: Carta - La carta a comparar su palo.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(palo(primerCarta) == palo(segundaCarta))
+}
+
+/*
+i) valorParaEnvidoDe_ que describa el número que aporta la carta dada en el canto del envido. El
+número se corresponde al número de la carta, si la misma no es figura, y cero, si fuera figura.
+Atención: Sí ya sabe jugar al truco, tenga en cuenta que se está preguntando el valor que aportaría una
+única carta, no una jugada de multiples cartas.
+*/
+
+function valorParaEnvidoDe_(unaCarta){
+    /*
+    PROPOSITO: Describe el numero que aporta la carta **unaCarta** en el canto del envido.  
+    PARAMETROS:
+        *unaCarta: Carta - La carta a evaluar su valor para envido.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numero.
+    */
+    return(
+        choose  valor(unaCarta)     when    (not esFigura_(unaCarta))
+                0                   otherwise
+        )
+}
+
+/*
+j) mayorValorEntre_Y_ que describe el valor más grande entre dos cartas, según lo que aporta
+cada una para el envido. Por ejemplo, si las cartas son un 7 y un 12, describe 7, pues el 12 no
+aporta nada para el envido.
+*/
+
+function mayorValorEntre_Y_(unaCarta, otraCarta){
+    /*
+    PROPOSITO: Describe el valor mas grande segun lo que aporta para el envido
+    entre la carta **unaCarta** y la carta **otraCarta**.
+    PARAMETROS:
+        *unaCarta: Carta - La carta a comparar su valor para envido.
+        *otraCarta: Carta - La carta a comparar su valor para envido.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numero.
+    */
+    return(
+        choose  valorParaEnvidoDe_(unaCarta)    when    (valorParaEnvidoDe_(unaCarta) >= valorParaEnvidoDe_(otraCarta))
+                valorParaEnvidoDe_(otraCarta)   otherwise
+        )
+}
+
+/*
+k) sumaParaElEnvidoCon_Y_ que dadas dos cartas, describe el número que tienen las mismas
+para el envido. El envido se calcula como la suma los valores del envido de cada carta más 20,
+si las cartas son del mismo palo, o como el mayor valor entre ellas, cuando son de distinto
+palo.
+*/
+
+function sumaParaElEnvidoCon_Y_(unaCarta, otraCarta){
+    /*
+    PROPOSITO: Describe el valor que aporta para el envido con las cartas
+    **unaCarta** y **otraCarta**.
+    PARAMETROS:
+        *unaCarta: Carta - La carta a evaluar su valor para envido.
+        *otraCarta: Carta - La carta a evaluar su valor para envido.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numero.
+    */
+    return(
+        choose  valorParaEnvidoConCartasDeMismoPalo(unaCarta, otraCarta)        when    (palo(unaCarta) == palo(otraCarta))
+                valorParaEnvidoDe_(unaCarta) + valorParaEnvidoDe_(otraCarta)    otherwise
+        )
+}
+
+function valorParaEnvidoConCartasDeMismoPalo(unaCarta, otraCarta){
+    /*
+    PROPOSITO: Describe el valor que aporta para el envido con las cartas
+    **unaCarta** y **otraCarta** con palos iguales.
+    PARAMETROS:
+        *unaCarta: Carta - La carta a evaluar su valor para envido.
+        *otraCarta: Carta - La carta a evaluar su valor para envido.
+    PRECONDICIONES: 
+        *El palo de ambas cartas dadas deben ser iguales.
+    TIPO: Numero.
+    */
+    return(valorParaEnvidoDe_(unaCarta) + valorParaEnvidoDe_(otraCarta) + 20)
+}
+
+/*
+l) sonMejores_Y_Que_Y_ que dadas 4 cartas, donde las dos primeras son las cartas del primer
+jugador para cantar envido, y las segundas dos las del segundo jugador, indica si el envido del
+primer jugador es más grande que el envido del segundo jugador.
+*/
+
+function sonMejores_Y_Que_Y_(primerCartaDeJugador1, segundaCartaDeJugador1, primerCartaDeJugador2, segundaCartaDeJugador2){
+    /*
+    PROPOSITO: Indica si el valor de las cartas para jugar envido 
+    del primer jugador **primerCartaDeJugador1** y **segundaCartaDeJugador1** son mas 
+    grandes que las cartas del segundo jugador **primerCartaDeJugador2** y **segundaCartaDeJugador2**.
+    PARAMETROS:
+        *primerCartaDeJugador1: Carta - La carta del primer jugador a evaluar su valor para envido.
+        *segundaCartaDeJugador1: Carta - La carta del primer jugador a evaluar su valor para envido.
+        *primerCartaDeJugador2: Carta - La carta del segundo jugador a evaluar su valor para envido.
+        *segundaCartaDeJugador2: Carta - La carta del segundo jugador a evaluar su valor para envido.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(sumaParaElEnvidoCon_Y_(primerCartaDeJugador1, segundaCartaDeJugador1) > sumaParaElEnvidoCon_Y_(primerCartaDeJugador2, segundaCartaDeJugador2))
+}
+
+//punto 4
+/*
+Dado el siguiente tipo de registro:
+*/
+
+type Celda is record {
+    /*
+    PROPÓSITO: Modelar una celda del tablero
+    INV.REP.: Los números son todos >=0
+    */
+    field cantidadDeAzules // tipo: Número
+    field cantidadDeNegras // tipo: Número
+    field cantidadDeRojas // tipo: Número
+    field cantidadDeVerdes // tipo: Número
+}
+
+/*
+a. celdaActual que lee la información de la celda en donde está el cabezal y retorna un dato de
+tipo Celda.
+*/
+
+function celdaActual(){
+    /*
+    PROPOSITO: Retorna los contenidos que hay en la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Celda.
+    */
+    return(
+         cantidadDeAzules <- cantidadDeAzules(Celda) , cantidadDeNegras <- cantidadDeNegras(Celda), 
+         cantidadDeRojas <- cantidadDeRojas(Celda), cantidadDeVerdes <- cantidadDeVerdes(Celda) 
+        )
+}
+
+/*
+b) EscribirEnCelda_ que dado el dato de una calda, escribe la información de este en el
+tablero en la celda actual.
+*/
+
+procedure EscribirEnCelda_(datoDeUnaCelda){
+    /*
+    PROPOSITO: Escribe los datos de la celda **datoDeUnaCelda** en la celda actual.
+    PARAMETRO:
+        *datoDeUnaCelda: Celda - Es el contenido de la celda a escribir.
+    PRECONDICIONES: Ninguna.
+    */
+    Poner_DeColor_(cantidadDeAzules(datoDeUnaCelda), Azul)
+    Poner_DeColor_(cantidadDeNegro(datoDeUnaCelda), Negro)
+    Poner_DeColor_(cantidadDeRojo(datoDeUnaCelda), Rojo)
+    Poner_DeColor_(cantidadDeVerde(datoDeUnaCelda), Verde)
+}
+
+/*
+c) tienenMismaCantidadDeRojas_Y_ que dados dos datos del tipo celda, indica si
+efectivamente ambos tienen la misma cantidad de bolitas rojas.
+*/
+
+function tienenMismaCantidadDeRojas_Y_(unaCelda, otraCelda){
+    /*
+    PROPOSITO: Indica si las celdas **unaCelda** y **otraCelda** tienen 
+    la misma cantidad de bolitas rojas.
+    PARAMETROS:
+        *unaCelda: Celda - Es el dato de la celda a comparar.
+        *otraCelda: Celda - Es el dato de la celda a comparar.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(cantidadDeRojo(unaCelda) == cantidadDeRojo(otraCelda))
+}
+
+//punto 5 
+/*
+a) Declarar un tipo de registros llamado Persona, que contenga el número de DNI y el domicilio
+representados mediante Strings, y un Booleano indicando si la persona es donante de
+órganos. Implementar las siguientes funciones:
+*/
+
+type Persona is record {
+    /*
+    PROPOSITO: Modela a una persona.
+    */
+    field dni           //string - cadena de caracteres - TEXTO (va entre "")
+    field domicilio     //string - cadena de caracteres - TEXTO
+    field esDonante     //booleano
+}
+
+/*
+b) sonConvivientes_Y_, que dadas dos personas indique si comparten domicilio.
+*/
+
+function sonConvivientes_Y_(unaPersona, otraPersona){
+    /*
+    PROPOSITO: Indica si las personas **unaPersona** y **otraPersona** 
+    viven en el mismo domicilio.
+    PARAMETROS:
+        *unaPersona: Persona - Es la persona a comparar domicilio.
+        *otraPersona: Persona - Es la persona a comparar domicilio.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(domicilio(unaPersona) == domicilio(otraPersona))
+}
+
+/*
+c) personaNacidaDe_ que, dada una persona madre, describe a una nueva persona que haya
+nacido de la misma, y por lo tanto conviva con la madre, no tenga DNI asignado y en principio
+se indica que no es donante de órganos.
+Para registrar el DNI sin asignar, escribir la función sinAsignar, que denote el string vacío y
+utilizarla adecuadamente.
+*/
+
+function personaNacidaDe_(personaMadre){
+    /*
+    PROPOSITO: Describe el hijo nacido de la persona madre **personaMadre**.
+    PARAMETROS:
+        *personaMadre: Persona - Es la persona madre del cual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Persona.
+    */
+    return(Persona(personaMadre | 
+                    dni         <- sinAsignar(),
+                    esDonante   <- False
+        ))
+}
+
+function sinAsignar(){
+    /*
+    PROPOSITO: Describe un string vacio.
+    PRECONDICIONES: Ninguna.
+    TIPO: String.
+    */
+    return("")
+}
+
+/*
+d) persona_RegistradaCon_, que dada una persona con DNI sin asignar y un DNI de registro,
+describe a la persona pero con el DNI asignado al dado.
+*/
+
+function persona_RegistradaCon_(personaSinAsignarDNI, dniAAsignar){
+    /*
+    PROPOSITO: Describe a la persona **unaPersona** con el nuevo dni asignado **dniAAsignar**
+    PARAMETROS:
+        *unaPersona: Persona - Es la persona a asignar dni.
+        *dniAAsignar: String - Es el dni a asignar.
+    PRECONDICIONES: 
+        *La persona **unaPersona** no debe tener un dni asignado.
+    TIPO: Persona.
+    */
+    return(Persona(personaSinAsignarDNI | dni  <- dniAAsignar))
+}
+
+/*
+e) persona_ConDomicilioNuevoEn_, que recibe una persona y un nuevo domicilio y describe
+a la persona con el domicilio cambiado.
+*/
+
+function persona_ConDomicilioNuevoEn_(unaPersona, nuevoDomicilio){
+    /*
+    PROPOSITO: Describe a la persona **unaPersona** con el nuevo domicilio asignado 
+    **nuevoDomicilio**.
+    PARAMETROS:
+        *unaPersona: Persona - Es la persona a cambiar el domicilio.
+        *nuevoDomicilio: String - Es el nuevo domicilio a asignar.
+    PRECONDICIONES: Ninguna.
+    TIPO: Persona.
+    */
+    return(Persona(unaPersona | domicilio <- nuevoDomicilio))
+}
+    
+/*
+f) persona_ConSituaciónComoDonanteCambiada, que recibe una persona y retorna la
+persona con su situación como donante cambiada.
+*/
+
+function persona_ConSituaciónComoDonanteCambiada(unaPersona){
+    /*
+    PROPOSITO: Describe a la persona **unaPersona** con el registro de donante cambiado.
+    PARAMETROS:
+        *unaPersona: Persona - Es la persona a cambiar el registro de donante.
+    PRECONDICIONES: Ninguna.
+    TIPO: Persona.
+    */
+    return(Persona(unaPersona | esDonante   <- not esDonante(unaPersona)
+        ))
+}
+
+//punto 6
+/*
+Declarar un tipo de registros llamado Empleado que contenga la identidad del empleado modelada
+con el registro Persona, el puesto dentro de la empresa, representado por un tipo variante llamado
+Puesto dado a continuación, y un sueldo modelado como un Número en pesos (sin centavos).
+*/
+
+type Puesto is variant {
+    /*
+    PROPÓSITO: Modelar los diferentes puestos que hay
+    dentro de una empresa de software
+    */
+    case GestorDeProyecto   {}
+    case LiderDeProyecto    {}
+    case Desarrollador      {}
+    case Operador           {}
+}
+
+type Empleado is record {
+    /*
+    PROPOSITO: Modela un empleado.
+    */
+    field persona   // tipo: Persona
+    field puesto    // tipo: Puesto
+    field sueldo    // tipo: Numero
+}
+
+/*
+a) empleado_ConSueldoActualizadoA_, que dado un empleado y un nuevo sueldo, describa
+al empleado con el sueldo actualizado.
+*/
+
+function empleado_ConSueldoActualizadoA_(unEmpleado, sueldoActualizado){
+    /*
+    PROPOSITO: Describe al empleado **unEmpleado** con el sueldo actualizado de 
+    **sueldoActualizado**.
+    PARAMETROS:
+        *unEmpleado: Empleado - Es el empleado a actualizar el sueldo.
+        *sueldoActualizado: Numero - Es el nuevo sueldo a asignar.
+    PRECONDICIONES: Ninguna.
+    TIPO: Empleado.
+    */
+    return(Empleado(unEmpleado | sueldo <- sueldoActualizado))
+}
+
+/*
+b) empleado_ConNuevoPuesto_, que dado un empleado y un nuevo puesto, describa al
+empleado con el puesto actualizado.
+*/
+
+function empleado_ConNuevoPuesto_(unEmpleado, nuevoPuesto){
+    /*
+    PROPOSITO: Describe al empleado **unEmpleado** con el puesto actualizado a 
+    **nuevoPuesto**.
+    PARAMETROS:
+        *unEmpleado: Empleado - Es el empleado a actualizar el puesto.
+        *nuevoPuesto: Puesto - Es el nuevo puesto a asignar.
+    PRECONDICIONES: Ninguna.
+    TIPO: Empleado.
+    */
+    return(Empleado(unEmpleado | puesto <- nuevoPuesto))
+}
+
+/*
+c) categoríaDelPuesto_, que dado un valor de tipo puesto devuelve su categoría según la
+siguiente tabla:
+                GestorDeProyecto    4
+                LíderDeProyecto     3
+                Desarrollador       2
+                Operador            1
+*/
+
+function categoríaDelPuesto_(unPuesto){
+    /*
+    PROPOSITO: Describe la categoria del puesto **unPuesto**
+    PARAMETROS:
+        *unPuesto: Puesto - Es el puesto a evaluar su categoria.
+    PRECONDICIONES: Ninguna.
+    TIPO: Empleado.
+    */
+    return(
+        choose  4   when    (puesto(unPuesto) == GestorDeProyecto)
+                3   when    (puesto(unPuesto) == LíderDeProyecto)
+                2   when    (puesto(unPuesto) == Desarrollador)
+                1   otherwise
+        )
+}
+
+/*
+d) empleadoConMayorCargoEntre_Y_, que dados dos empleados describa el empleado de
+mayor categoría entre ellos.
+*/
+
+function empleadoConMayorCargoEntre_Y_(unEmpleado, otroEmpleado){
+    /*
+    PROPOSITO: Describe el empleo con mas categoria entre los empleados
+    **unEmpleado** y **otroEmpleado**.
+    PARAMETROS:
+        *unPuesto: Empleado - Es el empleado a comparar la categoria de su empleo.
+        *otroEmpleado: Empleado - Es el empleado a comparar la categoria de su empleo.
+    PRECONDICIONES: Ninguna.
+    TIPO: Empleado.
+    */
+    return(
+        choose  unEmpleado      when    (categoríaDelPuesto_(unEmpleado) > categoríaDelPuesto_(otroEmpleado))
+                otroEmpleado    otherwise
+        )
+}
+
+/*
+e) tienenIgualSueldo_Y_, que dados dos empleados indique si ambas cobran lo mismo.
+*/
+
+function tienenIgualSueldo_Y_(unEmpleado, otroEmpleado){
+    /*
+    PROPOSITO: Indica si los empleados **unEmpleado** y **otroEmpleado**
+    cobran el mismo sueldo.
+    PARAMETROS:
+        *unPuesto: Empleado - Es el empleado a comparar su sueldo.
+        *otroEmpleado: Empleado - Es el empleado a comparar su sueldo.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(sueldo(unEmpleado) == sueldo(otroEmpleado))
+}
+
+/*
+f) empleado_ConAumentoEn_PorBonoDeFinalizaciónDeProyecto, que dado un empleado
+y un porcentaje de aumento describa al empleado con el sueldo actualizado en ese porcentaje.
+El porcentaje de aumento es un número del 0 al 100. El monto en el que se incrementa depende
+del porcentaje (i.e. si el porcentaje es 20%, cuando el sueldo es 100, el nuevo sueldo es 120,
+cuando el sueldo es 200 el nuevo sueldo es 240, y cuando el sueldo es 150, el nuevo sueldo es
+180).
+*/
+
+function empleado_ConAumentoEn_PorBonoDeFinalizaciónDeProyecto(unEmpleado, aumentoDeSalario){
+    /*
+    PROPOSITO: Describe al empleado **unEmpleado** con aumento de **aumentoDeSalario**
+    por bono de finalizacion de proyecto.
+    PARAMETROS:
+        *unEmpleado: Empleado - Es el empleado a aumentar su sueldo.
+        *aumentoDeSalario: Numero - Es la cantidad de aumento del sueldo.
+    PRECONDICIONES: 
+        *El procentaje de **aumentoDeSalario** debe ser un numero de 0 a 100.
+    TIPO: Empleado.
+    */
+    return(Empleado(unEmpleado |
+                    sueldo <- ((aumentoDeSalario * sueldo(unEmpleado)) div 100) + sueldo(unEmpleado) 
+        ))
+}
+
+/*
+g) empleado_ConDomicilioActualizadoA_ que dado un empleado y un nuevo domicilio, describe el
+empleado en donde la identidad se ha actualizado para contener el nuevo domicilio
+*/
+
+function empleado_ConDomicilioActualizadoA_(unEmpleado, nuevoDomicilio){
+    /*
+    PROPOSITO: Describe el empleado **unEmpleado** con el nuevo domicilio en **nuevoDomicilio**.
+    PARAMETROS:
+        *unEmpleado: Empleado - Es el empleado a cambiar su domicilio.
+        *nuevoDomicilio: String - Es el nuevo domicilio del empleado.
+    PRECONDICIONES: Ninguna.
+    TIPO: Empleado.
+    */
+    return(Empleado(unEmpleado |
+                    persona     <- persona_ConDomicilioNuevoEn_(persona(unEmpleado), nuevoDomicilio)
+        ))
+}
+
+//punto 7
+/*
+Declarar los tipos necesarios para representar Fechas (según el calendario gregoriano utilizado para
+identificar nuestras fechas, componiendolas de una día (representado mediante un Número, un mes
+(representado mediante un tipo variante Mes que modela los meses, y un año representado mediante
+un Número).
+*/
+
+type Fechas is record {
+    /*
+    PROPOSITO: Modela la fecha con el sistema de calendario gregoriano.
+    INV. DE REPRESENTACION: 
+        * El valor del campo dia debe estar comprendido entre 1 y 30 para los meses de
+        Abril, Junio, Septiembre o Noviembre.
+        * El valor del campo dia debe estar comprendido entre 1 y 31 para los meses de
+        Enero, Marzo, Mayo, Julio, Agosto, Octubre o Diciembre.
+        * El valor del campo dia debe estar comprendido entre 1 y 28 para el mes Febrero cuando
+        el año no es bisiesto.
+        * El valor del campo dia debe estar comprendido entre 1 y 29 para el mes Febrero cuando
+        el año es bisiesto.
+    */
+    field dia
+    field mes
+    field año
+}
+
+type Mes is variant {
+    /*
+    PROPOSITO: Modela los meses del calendario gregoriano.
+    */
+    case Enero          {}
+    case Febrero        {}
+    case Marzo          {}
+    case Abril          {}
+    case Mayo           {}
+    case Junio          {}
+    case Julio          {}
+    case Agosto         {}
+    case Septiembre     {}
+    case Octubre        {}
+    case Noviembre      {}
+    case Diciembre      {}
+}
+
+//punto 9
+/*
+a) esDíaDeÑoquis_, que indica si el día dado es un 29
+*/
+
+function esDíaDeÑoquis_(unaFecha){
+    /*
+    PROPOSITO: Indica si el dia de la fecha **unaFecha** es 29.
+    PARAMETROS:
+        *unEmpleado: Fecha - Es la fecha a evaluar si el dia es 29 o no.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(dia(unaFecha) == 29)
+}
+
+/*
+b) esDelPrimerSemestre_, que indica si el día determinado por la fecha dada es uno del primer
+semestre (entre el 1ro de enero y el 31 de julio).
+AYUDA: Considere implementar una función auxiliar númeroDelMes_ que describa el número de un mes
+dado, y otra que le permita determinar si un mes es anterior a otro.
+*/
+
+function esDelPrimerSemestre_(unaFecha){
+    /*
+    PROPOSITO: Indica si el fecha **unaFecha** es del primer semestre.
+    PARAMETROS:
+        *unEmpleado: Fecha - Es la fecha a evaluar si es primer semestre.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return((númeroDelMes_(mes(unaFecha)) >= 1) && (númeroDelMes_(mes(unaFecha)) <= 6))
+}
+
+function númeroDelMes_(unaFecha){
+    /*
+    PROPOSITO: Describe el numero de mes de la fecha **unaFecha**.
+    PARAMETROS:
+        *unEmpleado: Fecha - Es la fecha a describir el numero de mes.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numero.
+    */
+    return(
+        choose  1   when    (mes == Enero)
+                2   when    (mes == Febrero)
+                3   when    (mes == Marzo)
+                4   when    (mes == Mayo)
+                5   when    (mes == Abril)
+                6   when    (mes == Junio)
+                7   when    (mes == Julio)
+                8   when    (mes == Agosto)
+                9   when    (mes == Septiembre)
+                10  when    (mes == Octubre)
+                11  when    (mes == Noviembre)
+                12  when    (mes == Diciembre)
+        )
+}
+
+/*
+c) esFechaDeAñoBisiesto_, que dada una fecha, indica si la misma cae dentro de un año
+bisiesto.
+AYUDA: Para saber si un año es bisiesto, hay que verificar que el año sea múltiplo de 4, pero no de 100 a
+menos que sea múltiplo de 400. Por ejemplo, 1796, 1896 y 1996 son bisiestos (son múltiplos de 4 y no
+de 100), pero 1800 y 1900 NO lo son (son múltiplos de 4 y de 100, pero no de 400); en cambio 2000 ES
+bisiesto (es múltiplo de 4, de 100 y de 400).
+*/
+
+function esFechaDeAñoBisiesto_(unAño){
+    /*
+    
+    */
+    return(
+    (elAño_EsDivisiblePor_(unAño, 4) && elAño_EsDivisiblePor_(unAño, 100) && elAño_EsDivisiblePor_(unAño, 400)) || 
+      (elAño_EsDivisiblePor_(unAño, 4) && not elAño_EsDivisiblePor_(unAño, 100))
+        )
+}
+
+function elAño_EsDivisiblePor_(unAño, un numero){
+    /*
+    
+    */
+    return(unAño mod numero == 0)
+}
+
+/*
+d) primerDíaDelInviernoDe_, que describa el primer día del invierno del año dado (en el
+hemisferio sur).
+*/
+
+function primerDíaDelInviernoDe_(unAño){
+    /*
+    PROPOSITO: Describe la fecha del primer dia del invierno del año **unAño**
+    PARAMETRO:
+        *unAño - Numero - El año del cual queremos saber la fecha
+    PRECONDICIONES:
+    TIPO: Fecha.
+    */
+    return (
+        Fecha(
+            diaDeLaFecha <- 21,
+            mesDeLaFecha <- Junio,
+            añoDeLaFecha <- añoDado
+        )
+    )
+}
+
+/*
+e) últimoDíaDelInviernoDe_, que describa el último día del invierno del año dado (en el
+hemisferio sur).
+*/
+
+function últimoDíaDelInviernoDe_(unAño){
+    /*
+    PROPOSITO: Describe la fecha del ultimo dia del invierno del año **unAño**
+    PARAMETRO:
+        *unAño - Numero - El año del cual queremos saber la fecha.
+    PRECONDICIONES: Ninguna.
+    TIPO: Fecha.
+    */
+    return (
+        Fecha(
+            diaDeLaFecha <- 20,
+            mesDeLaFecha <- Septiembre,
+            añoDeLaFecha <- añoDado
+        )
+    )
+}

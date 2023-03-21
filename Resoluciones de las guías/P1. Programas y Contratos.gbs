@@ -1,0 +1,217 @@
+//PRIMEROS PROGRAMAS
+
+/*
+                                        Reemplazando bolitas
+1. Escribir un programa que reemplace una bolita de color Roja con otra de color Verde en la celda
+actual. Pruebe su programa en la computadora, modificando el tablero inicial de forma que el
+programa funcione satisfactoriamente.
+*/
+
+program{
+    Poner(Verde)
+    Sacar(Rojo)
+}
+
+/*
+                                        Moviendo bolitas
+2. Escribir un programa que mueva una bolita de color Negro de la celda actual a la celda vecina al Este,
+dejando el cabezal en la celda lindante al Este.
+*/
+
+program{
+    Sacar(Negro)
+    Mover(Este)
+    Poner(Negro)
+    Mover(Este)
+}
+
+/*
+                                        Poniendo en vecinas
+3. Escribir un programa que ponga una bolita de color Azul en la celda vecina al Norte de la actual.
+*/
+
+program{
+    Mover(Norte)
+    Poner(Azul)
+    Mover(Sur)
+}
+
+/*
+6.                                      Cuadrados verdes
+Escribir los siguientes programas:
+a. Uno que ponga un cuadrado de tamaño 3 con bolitas de color verde, con centro en la celda 
+inicial (dejando el cabezal en dicha celda al finalizar)
+    i. ¿Qué ocurre si el tablero ya tenía bolitas verdes? ¿Es esto un problema, o el efecto
+    obtenido es acorde al propósito?
+    Si ya hay no hay problema porque el enunciado no lo aclara.
+    
+    ii. ¿Qué ocurriría si desde la celda inicial no hay espacio para colocar las bolitas
+    necesarias para que se cumpla el propósito?
+    No funcionaria el codigo porque no tengo celdas para que se pueda ejecutar.
+    
+b. Uno que saque un cuadrado de tamaño 3 con bolitas de color verde (saca una bolita de cada
+celda), siendo la celda inicial el centro del cuadrado, dejando el cabezal en dicha celda al
+finalizar.
+
+    i. ¿Qué sucede si no hay al menos una bolita verde en cada una de las celdas necesarias?
+    ¿Y si el tablero no tiene el tamaño adecuado?
+    Explotaria el progrmaa porque no tiene nada para sacar. Tambien no funcionaria.
+*/
+
+program{
+    /*
+    PROPOSITO A: Dibujar un cuadrado de color verde de 3x3 con centro en la
+    celda inicial. El cabezal finaliza en la celda inicial.
+    */
+    
+    Mover(Sur)
+    Mover(Oeste)
+    Poner(Verde)
+    Mover(Este)
+    Poner(Verde)
+    Mover(Este)
+    Poner(Verde)
+    Mover(Norte)
+    Poner(Verde)
+    Mover(Oeste)
+    Poner(Verde)
+    Mover(Oeste)
+    Poner(Verde)
+    Mover(Norte)
+    Poner(Verde)
+    Mover(Este)
+    Poner(Verde)
+    Mover(Este)
+    Poner(Verde)
+    Mover(Sur)
+    Mover(Oeste)
+}
+
+program{
+    /*
+    PROPOSITO B: Sacar un cuadrado de color verde de 3x3 con centro en la celda actual.
+    */
+    
+    Mover(Sur)
+    Mover(Oeste)
+    Sacar(Verde)
+    Mover(Este)
+    Sacar(Verde)
+    Mover(Este)
+    Sacar(Verde)
+    Mover(Norte)
+    Sacar(Verde)
+    Mover(Oeste)
+    Sacar(Verde)
+    Mover(Oeste)
+    Sacar(Verde)
+    Mover(Norte)
+    Sacar(Verde)
+    Mover(Este)
+    Sacar(Verde)
+    Mover(Este)
+    Sacar(Verde)
+    Mover(Sur)
+    Mover(Oeste)
+}
+
+/*
+                                        7. ¿Y cuándo funciona?
+EN PAPEL Discutir en clase cuáles serían las precondiciones para programas cuyo propósito sea:
+a. Poner 1000 bolitas color Azul en la celda actual.
+No hay ninguna precondicion para este proposito.
+
+b. Poner una bolita color Rojo en la celda lindante al Este de la celda actual y sacar una bolita Azul
+de la celda lindante al Oeste de la celda actual.
+Debe exitir al menos una celda lindante al Este y Oeste de la celda actual. Tambien debe exitir al
+menos una bolita Azul en la celda lindante al Oeste de la celda actual.
+
+c. Poner un rectángulo de bolitas Negras cuyo tamaño sea 3 filas y 5 columnas, centrado en la
+celda actual.
+Debe exitir al menos una celda lindante Sur y Norte de la celda actual. Debe exitir al menos dos
+celdas lindantes al Este y Oeste de la celda actual.
+*/
+
+/*
+10.                                     Arcoiris
+Escribir un programa que ponga un “arco iris”, poniendo una bolita Azul en la celda actual,
+una Negra en la celda siguiente al Este, una Roja en la siguiente al Este, y una Verde en la siguiente al
+Este, dejando el cabezal en la celda inicial.
+
+Luego contestar las siguientes preguntas
+a. ¿Qué sucedería en otros tableros iniciales?
+Se ejecutaria si puede cumplir con las precondiciones del contrato.
+
+b. ¿Cuál es la precondición de este programa?
+Debe exitir al menos tres celdas lindantes al Este de la celda actual.
+
+c. ¿Puede darse otro programa diferente que cumpla el mismo contrato?
+Si mientras cumpla el contrato.
+
+PISTA: en lugar de poner las bolitas en la ida, considere sí no lo puede hacer a la vuelta.
+d. Pruebe ahora sus programas en la máquina para verificar que funcionan, detectar y errores y
+corregir.
+*/
+
+program{
+    /*
+    PROPOSITO: Dibujar un arcoiris poniendo una bolita azul en la celda actual, una Negra en la celda 
+    siguiente al Este, una Roja en la siguiente al Este, y una Verde en la siguiente al Este.
+    **correccion del proposito: Dibujar un arcoiris de 4 celdas lindantes al Este de la celda actual
+    colocando en cada celda una bolita de color en orden: azul, negro, rojo y verde
+    PRECONDICION: Debe existir al menos 3 celdas lindantes al Este de la celda actual.
+    */
+    
+    Poner(Azul)
+    Mover(Este)
+    Poner(Negro)
+    Mover(Este)
+    Poner(Rojo)
+    Mover(Este)
+    Poner(Verde)
+    Mover(Oeste)
+    Mover(Oeste)
+    Mover(Oeste)
+}
+
+/*
+11.                                     Sacando un cuadrado
+Escriba un programa que saque del tablero un cuadrado multicolor de dos celdas de lado, donde la
+celda actual representa el vértice inferior izquierdo del mismo.
+Recuerde escribir primero el contrato del programa, y luego el código.
+Considere las siguientes preguntas como guía para escribir su programa:
+a. ¿Que hace el programa? (Determina el propósito del programa)
+b. ¿Cuándo funciona tal cual se espera? (Determina la precondición del programa)
+c. ¿Cómo lo hace? (Determina el código del programa)
+*/
+
+program{
+    /*
+    PROPOSITO: Borrar un cuadrado multicolor de tamaño 2x2
+    PRECONDICION: Debe exitir al menos un cuadrado de 2x2 desde la celda actual.
+    Debe exitiar al menosuna bolita Azul, negra, roja y verde en cada una de las celdas del cuadrado de tamaño 2.
+    */
+    Sacar(Azul)
+    Sacar(Negro)
+    Sacar(Rojo)
+    Sacar(Verde)
+        Mover(Este)
+    Sacar(Azul)
+    Sacar(Negro)
+    Sacar(Rojo)
+    Sacar(Verde)
+        Mover(Norte)
+    Sacar(Azul)
+    Sacar(Negro)
+    Sacar(Rojo)
+    Sacar(Verde)
+        Mover(Oeste)
+    Sacar(Azul)
+    Sacar(Negro)
+    Sacar(Rojo)
+    Sacar(Verde)
+}
+
+
+
+

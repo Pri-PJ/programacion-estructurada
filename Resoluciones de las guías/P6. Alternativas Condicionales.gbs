@@ -1,0 +1,299 @@
+//Punto 3
+/*
+SacarUnaFicha_SiSePuede(colorDeLaFicha) que, dado el colorDeLaFicha que debe
+sacarse, saque una ficha siempre y cuando la misma esté en la celda. Si no hubiera fichas del
+color dado, el procedimiento no hace nada. Si hubiera varias fichas, solo debe sacar una.
+OBSERVACIÓN: cada ficha se representa con una bolita del color correspondiente.
+*/
+
+procedure SacarUnaFicha_SiSePuede(colorDeLaFicha){
+    /*
+    PROPOSITO: Saca una ficha de color **colorDeLaFicha** de la celda actual, si hubiera al menos una.
+    PARAMETRO: *colorDeLaFicha: Color - El color de la ficha a sacar.
+    PRECONDICIONES: Ninguna.
+    */
+    if(hayBolitas(colorDeLaFicha)){
+        SacarUnaFicha_(colorDeLaFicha)  //no sería Sacar(color) por temas de abstraccion y al poner sacar 
+                                        //directamente ya hablamos de bolitas y no de fichas
+    }
+}
+
+procedure SacarUnaFicha_(colorDeLaFicha){
+    /*
+    PROPOSITO: Saca una ficha de color **colorDeLaFicha** de la celda actual.
+    PARAMETRO: *colorDeLaFicha: Color - El color de la ficha a sacar.
+    PRECONDICIONES: Debe haber al menos una ficha color **colorDeLaFicha**.
+    */
+    Sacar(colorDeLaFicha)
+}
+
+/*
+b. DesempatarParaElLocal_Contra_(colorDelLocal,colorDelVisitante) que, dados
+los colores de dos jugadores, cuyos puntos se representan mediante la cantidad de bolitas del
+color del jugador,, otorgue un punto al jugador con color colorDelLocal solamente en el caso
+en que la celda actual contiene la misma cantidad de bolitas de ambos colores.
+*/
+
+procedure DesempatarParaElLocal_Contra_(colorDelLocal,colorDelVisitante){
+    /*
+    PROPOSITO: Otorga un punto al jugador con color *colorDelLocal* en caso de que haya empate.
+    PARAMETRO: *colorDelLocal: Color - El color del jugador local.
+                *colorDelVisitante
+    PRECONDICIONES: Ninguna.
+    */
+    if (nroBolitas(colorDelLocal)==nroBolitas(colorDelVisitante)){
+        OtorgarUnPuntoAl_(colorDelLocal)
+    }
+}
+
+procedure OtorgarUnPuntoAl_(colorDeEquipo){
+    Poner(colorDeEquipo)
+}
+
+/*
+c.ExpandirBacteriaDeLaColonia(), que siempre que en la celda actual haya un cultivo de
+bacterias y haya suficientes nutrientes, agregue exactamente una bacteria más y consuma
+nutrientes, a razón de dos nutrientes por bacteria expandida; si no hay bacterias o no hay
+suficientes nutrientes, no hace nada. Las bacterias se representan con bolitas Verdes y los
+nutrientes con bolitas Rojas.
+*/
+
+procedure ExpandirBacteriaDeLaColonia(){
+    /*
+    PROPOSITO: Expandir bacteria de la colonia en caso que haya bacterias y nutrientes suficientes
+    PRECONDICIONES: Ninguna.
+    */
+    if(hayBolitas(Verde) && nroBolitas(Rojo)>=2){
+        ExpandirBacteria()
+    }
+}
+
+procedure ExpandirBacteria(){
+    /*
+    PROPOSITO: Expandir bacteria de la colonia.
+    PRECONDICIONES: *Debe haber al menos una bacteria y suficientes nutrientes (a razon de 2 nutrientes por bacteria)
+    */
+    Sacar_Nutrientes(2)
+    PonerBacteria()
+}
+
+procedure Sacar_Nutrientes(cantidadASacar){
+    /*
+    PROPOSITO: Sacar **cantidadASacar** de nutrientes en la celda actual
+    PRECONDICIONES: Debe haber al menos **cantidadASacar** en la celda actual
+    */
+    Sacar_DeColor_(cantidadASacar, Rojo)
+}
+
+procedure PonerBacteria(){
+    /*
+    PROPOSITO: Pone una bacteria en la celda actual.
+    PRECONDICIONES: Ninguna.
+    */
+    Poner(Verde)
+    
+}
+
+/*
+d. PonerFlecha_AlNorteSiCorresponde(colorDeLaFlecha), que dado un color para
+representar flechas, ponga una flecha al Norte si existe espacio para moverse en esa dirección.
+Las flechas serán representadas con una bolita del color dado.
+*/
+
+procedure PonerFlecha_AlNorteSiCorresponde(colorDeLaFlecha){
+    /*
+    PROPOSITO: Poner una flecha de color **colorDeLaFlecha** al Norte, si hubiera espacio en dicha direccion
+    PRECONDICIONES: Ninguna.
+    */
+    if (puedeMover(Norte)) {
+        PonerFlecha_(colorDeLaFlecha)
+    }
+}
+
+procedure PonerFlecha_(colorDeLaFlecha){
+    /*
+    PROPOSITO: Poner una flecha de color **colorDeLaFlecha** al Norte.
+    PRECONDICIONES: *Debe haber al menos una celda en direccion al norte
+    */
+    Mover(Norte)
+    PonerFlecha_(colorDeLaFlecha)
+    Mover(Sur)
+}
+
+procedure PonerFlecha_(colorDeLaFlecha){
+    /*
+    PROPOSITO: Poner una flecha de color **colorDeLaFlecha** en la celda actual.
+    PRECONDICIONES: Ninguna.
+    */
+    Poner(colorDeLaFlecha)
+}
+
+//punto 4
+/* a)
+BIBLIOTECA Escribir un procedimiento Poner_Si_(color, condición) que dado un color
+y un valor de verdad llamado condición, ponga en la celda actual una bolita del color dado si el
+valor de verdad de la condición es verdadero, y no lo ponga si no.
+EJEMPLO: Poner_Si_(Rojo, nroBolitas(Rojo) == 2) solamente pone una bolita roja cuando
+hay exactamente dos rojas en la celda actual.
+*/
+
+procedure Poner_Si_(color, condición){ //BIBLIOTECA
+    /*
+    PROPOSITO: Pone una bolita de color *color* en la celda actual si se cumple la condicion *condicion*    
+    PRECONDICIONES: Ninguna.
+    PARAMETROS: 
+        *color: Color - El color de la bolita a poner.
+        *condicion: Booleano - La condicion que se debe cumplir para poner una bolita
+    */
+    if(condicion){
+        Poner(color)
+    }
+}
+
+/* b)
+BIBLIOTECA Escribir el procedimiento Sacar_Si_(color, condición) que actúa de forma
+similar al anterior, pero ahora sacando bolitas si la condición se cumple.
+*/
+
+procedure Sacar_Si_(color, condición){ //BIBLIOTECA
+    /*
+    PROPOSITO: Saca una bolita de color *color* en la celda actual si se cumple la condicion *condicion*    
+    PRECONDICIONES: Debe haber al menos una bolita de **color** si se cumple la condicion **condicion**
+    PARAMETROS: 
+        *color: Color - El color de la bolita a poner.
+        *condicion: Booleano - La condicion que se debe cumplir para poner una bolita
+    */
+    if(condicion){
+        Sacar(color)
+    }
+}
+
+/* c)
+BIBLIOTECA Escribir el procedimiento Mover_Si_(dirección, condición) que actúa de
+forma similar a los anteriores, pero ahora moviendo solo sí se cumple la condición dada.
+*/
+
+procedure Mover_Si_(dirección, condición){
+    /*
+    PROPOSITO: Se mueve el cabezal en direccion **direccion** si se cumple la
+    condicion **condicion**.
+    PARAMETROS: *dirección: Direccion - La direccion a la que se movera el cabezal.
+                *condición: Booleano - La condicion que se debe cumplir para mover el cabezal.
+    PRECONDICIONES: 
+        *Debe haber al menos una celda en direccion **direccion** si se cumple la condicion
+        **condicion**.
+    */
+    if(condición){
+        Mover(dirección)
+    }
+}
+
+//punto 5
+
+/* a)
+a. EN PAPEL Como Nova sigue confundido con las buenas prácticas de programación, nos
+consultó sobre cuál de las siguientes dos soluciones que se le ocurrieron es la correcta. El
+problema es sacar exactamente 8 bolitas de color Azul y la precondición, como es de esperar,
+es que haya al menos 8 bolitas azules en la celda actual. Explicarle a Nova cuál es la correcta, y
+por qué la otra no es una buena opción.
+*/
+
+//primera solucion
+procedure SacarExactamente8BolitasAzulesOpciónA() {
+    /*
+    PROPÓSITO: Sacar exactamente 8 bolitas de color Azul
+    PRECONDCIONES: Hay al menos 8 bolitas de color azul
+    */
+    repeat (8) {
+        Sacar(Azul)
+    }
+}
+
+//segunda solucion
+procedure SacarExactamente8BolitasAzulesOpciónB() {
+    /*
+    PROPÓSITO: Sacar exactamente 8 bolitas de color Azul
+    PRECONDICIONES: Hay al menos 8 bolitas de color azul
+    */
+    repeat (8) {
+        Sacar_Si_(Azul, hayBolitas(Azul))
+    }
+}
+
+//En este caso, la solucion A sería la correcta porque ya en las precondiciones aclaramos
+//que debe haber al menos 8 bolitas para poder ejecutar el programa.
+
+/* b)
+EN PAPEL Ayudar a Nova a generalizar este procedimiento, escribiendo
+SacarExactamente_BolitasDeColor_(cantidadASacar, colorASAcar)
+*/
+
+procedure SacarExactamente_BolitasDeColor_(cantidadASacar, colorASAcar){
+    /*
+    PROPOSITO: Saca exactamente **cantidadASacar** bolitas de color **colorASAcar**
+    de la celda actual.
+    PARAMETROS: *cantidadASacar: Numerico - Cantidad a sacar de bolitas
+                *colorASAcar: Color - El color de bolitas a sacar
+    PRECONDICIONES:
+        *Debe haber al menos **cantidadASacar** bolitas de color **colorASacar**
+        de la celda actual.
+    */
+    repeat (cantidadASacar) {
+        Sacar(colorASAcar)
+    }
+}
+
+//punto 6
+/*
+En este ejercicio utilizaremos el tablero de Gobstones para representar cuentas bancarias. Cada celda
+representará a una cuenta bancaria, y en cada una de ellas puede haber dinero en distintas monedas,
+que representaremos con distintos colores:
+● bolitas negras para pesos argentinos.
+● bolitas verdes para dólares estadounidenses.
+● bolitas azules para euros.
+● bolitas rojas para yuanes chinos.
+Se pueden hacer tres operaciones: depósitos, extracciones y conversiones a divisa extranjera. Las
+extracciones pueden hacerse en cualquier moneda, pero los depósitos siempre serán en pesos.
+En el caso en que se quiera depositar un monto en una moneda extranjera, se aplicará
+automáticamente la conversión a pesos según el precio de venta dado en la siguiente tabla:
+
+Realizar los siguientes procedimientos para poder manipular la cuenta:
+a. Depositar_EnMoneda_ComoPesos(cantidadADepositar, moneda), que dada una
+cantidad de dinero a depositar y un color que representa la moneda en la que está representado
+ese monto, agrega a la cuenta la cantidad de pesos equivalente a lo indicado para depositar. En
+este procedimiento hay que aplicar la conversión indicada para el precio de venta.
+*/
+
+procedure Depositar_EnMoneda_ComoPesos(cantidadADepositar, moneda){
+    /*
+    PROPOSITO: Deposita una cantidad de dinero equivalente a **cantidadADepositar** en moneda
+    **moneda** cuenta bancaria actual
+    PARAMETROS: *cantidadADepositar: Numero - Cantidad de dinero a depositar.
+                *moneda: Color - El color de la moneda.
+    PRECONDICIONES: 
+        * Moneda a recibir puede ser dolares, yuanes o euros.
+    */
+    if(moneda == Verde){
+        Depositar_EnMoneda_(cantidadADepositar * 80, Negro)
+    }
+    elseif(moneda == Azul){
+        Depositar_EnMoneda_(cantidadADepositar * 80, Negro)
+    }
+    elseif(moneda == Rojo){
+        Depositar_EnMoneda_(cantidadADepositar * 80, Negro)
+    }
+    else(moneda==Negro){
+        Depositar_EnMoneda_(cantidadADepositar, Negro)
+    }
+}
+
+procedure Depositar_EnMoneda_(cantidadADepositar, moneda){
+    /*
+    PROPOSITO: Deposita una cantidad de **cantidadADepositar** en moneda **moneda** en la cuenta
+    bancaria actual.
+    PARAMETROS: *cantidadADepositar: Numerico - Cantidad de dinero a depositar.
+                *moneda: Color - El color de la moneda.
+    PRECONDICIONES: Ninguna.
+    */
+    Poner_DeColor_(cantidadADepositar, moneda)
+}

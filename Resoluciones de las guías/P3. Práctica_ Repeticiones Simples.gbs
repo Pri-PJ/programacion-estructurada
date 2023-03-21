@@ -1,0 +1,156 @@
+//                                        REPETICIÓN SIMPLE BÁSICA:
+
+/*
+                                        1. Moviendo tres veces al Norte
+Escribir un procedimiento Mover3VecesAlNorte() que mueva el cabezal tres posiciones al Norte de
+la actual.
+*/
+
+procedure Mover3VecesAlNorte(){
+    /*
+    PROPOSITO: Mueve el cabezal a 3 celdas lindantes al Norte de la celda actual. El cabezal termina en dicha celda.
+    PRECONDICIONES: Debe haber al menos 3 celdas lindantes al Norte de la celda actual.
+    */
+    repeat(3){
+        Mover(Norte)
+    }
+}
+
+/*
+2.                                      Moviendo tres veces al Este
+Escribir un procedimiento Mover3VecesAlEste() que mueva el cabezal tres posiciones al Este de la
+actual.
+a. ¿Qué similitudes encuentra entre este procedimiento y el anterior?
+b. ¿Qué cambiaría si quisiera hacer un procedimiento que mueva tres veces al Oeste, o tres al
+Sur?
+*/
+
+procedure Mover3VecesAlEste(){
+    /*
+    PROPOSITO: Mueve el cabezal a 3 celdas lindantes al Este de la celda actual. El cabezal termina en dicha celda.
+    PRECONDICIONES: Debe haber al menos 3 celdas lindantes al Este de la celda actual.
+    */
+    repeat(3){
+        Mover(Este)
+    }
+}
+
+/*
+3. Y Ahora para algo completamente distinto
+Escribir un procedimiento Poner6DeColorNegro() que ponga 6 bolitas de color Negro en la celda
+actual.
+*/
+
+procedure Poner6DeColorNegro(){
+    /*
+    PROPOSITO:
+    PRECONDICIONES:
+    */
+    
+}
+
+/*
+4. Y 6 Verdes
+Escribir un procedimiento Poner6DeColorVerde() que ponga 6 bolitas de color Verde en la celda
+actual
+*/
+
+
+
+//REPETICIÓN SIMPLE EN SUBTAREAS:
+/*
+5. Dibujando un rectangulo con repeticiones
+Escribir un procedimiento DibujarRectánguloRojoYNegroDe5x3() que dibuje un rectangulo
+sólido de 5 celdas de largo por 3 de alto, símilar al realizado en “P2. 2. Por Arriba”, pero esta vez, utilice
+repetición para solucionar el problema.
+*/
+procedure DibujarRectanguloRojoYNegroDe5x3(){
+    /*
+    PROPOSITO: Dibuja un rectangulo solido de 5 celdas de largo por 3 de alto.
+    PRECONDICIONES: Hay al menos 4 celdas al Este y 2 celdas al Norte de la celda actual.
+    */
+    repeat(2){
+        DibujarUYnaLineaRojoYNegro()
+        MoverASiguienteLinea()
+    }
+    DibujarUnaLineaRojoYNegro()
+}
+
+procedure DibujarUYnaLineaRojoYNegro(){
+    /*
+    PROPOSITO: Dibuja una linea DE 5 CELDAS DE LARGO DE COLOR ROJO Y NEGRO.
+    PRECONDICIONES: Hay al menos 4 celdas al Este
+    */
+    repeat(4){
+        PonerUnaRojoYUnaNegra()
+        Mover(Este)
+    }
+    PonerUnaRojoYUNaNegra()
+    Mover4VecesAlOeste()
+}
+
+procedure PonerUnaRojoYUnaNegra(){
+    /*
+    PROPOSITO: Poner una bolita de color negro y rojo.
+    PRECONDICIONES: Ninguna.
+    */
+    Poner(Rojo)
+    Poner(Negro)
+}
+
+
+/*
+6.                                      Pintando el tablero
+Escribir un procedimiento PintarElTableroDeAzul() que, asumiendo que el tablero tiene 10
+celdas de largo y 7 celdas de alto, pinte absolutamente todo el tablero con bolitas azules, dejando
+exactamente una bolita azul en cada celda.
+a. ¿Cuál es la precondición del procedimiento?
+b. ¿Se le ocurre otra estrategia para resolver el problema?
+*/
+
+procedure PintarElTableroDeAzul(){
+    /*
+    PROPOSITO: Pinta todo un tablero de 10 celdas de largo y 7 de alto con una bolita
+    azul en cada una de las celdas. El cabezal termina en la celda Noreste
+    PRECONDICIONES: *Debe haber al menos 10 celdas de largo y 7 celdas de alto
+                    *El tablero no debe tener bolitas de ningun color.
+    */
+    
+    repeat(6){
+        PintarLineaHorizontalDeColorAzul()
+        PosicionarASiguienteFila()
+    }
+    PintarLineaHorizontalDeColorAzul()
+}
+
+procedure PintarLineaHorizontalDeColorAzul(){
+    /*
+    PROPOSITO: Pinta una linea horizontal de color azul.
+    PRECONDICIONES: Debe haber al menos 9 celdas hacia al Este de la celda actual.
+    */
+    repeat(9){
+        Poner(Azul)
+        Mover(Este)
+    }
+    Poner(Azul)
+}
+
+procedure PosicionarASiguienteFila(){
+    /*
+    PROPOSITO: Mueve el cabezal hacia la siguiente fila.
+    PRECONDICIONES: *Debe haber al menos 9 celdas hacia al Oeste de la celda actual.
+                    *Debe haber al menos una fila al Norte.
+    */
+    PosicionarAlInicioDeLaFila()
+    Mover(Norte)
+}
+
+procedure PosionarAlInicioDeLaFila(){
+    /*
+    PROPOSITO: Mueve el cabezal desde la celda actaul al inicio de la fila de forma horizontal.
+    PRECONDICIONES: *Debe haber al menos 9 celdas hacia el Oeste de la celda actual.
+    */
+    repeat(9){
+        Mover(Oeste)
+    }
+}

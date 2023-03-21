@@ -1,0 +1,1416 @@
+---------------------------------------Guia Practica en clase----------------------------------------
+/*
+1) Se pide escriba el procedimiento CambiarEstadoDeLuz que, asumiendo que LightBot 
+está en la celda actual, cambia el estado de la luz en la celda actual. 
+Es decir, si está apagada, la prende, y si está prendida, la apaga.
+*/
+
+procedure CambiarEstadoDeLuz(){
+    /*
+    PROPOSITO: Cambia el estado de la luz en la celda actual.
+    PRECONDICION:
+        * Debe estar LightBot en la celda actual.
+        * Debe exitir una luz en la celda actual.
+    */
+    if(hayLuzEncendida()){
+        CambiarEstadoActualA_(LuzApagada)
+    }
+    else{
+        CambiarEstadoActualA_(LuzEncendida)
+    }
+}
+
+function hayLuzEncendida(){
+    /*
+    PROPOSITO: Cambia el estado de la luz en la celda actual.
+    PRECONDICION:
+        * Debe estar LightBot en la celda actual.
+        * Debe exitir una luz en la celda actual.
+    TIPO: Booleano.
+    */
+    return(estado(infoDeUbicacion() == LuzEncendida)
+}
+
+/*
+2) Se pide escriba el procedimiento PrenderTodasLasLuces que asumiendo que el cabezal 
+está sobre Lightbot, que todas las luces del mapa están apagadas, y que todas las 
+ubicaciones del piso tienen la misma altura, prende todas las luces del tablero.
+*/
+
+procedure PrenderTodasLasLuces(){
+    /*
+    PROPOSITO: Prende todas las luces del mapa.
+    PRECONDICION:
+        * Debe estar LightBot en la celda actual.
+        * Todas las luces del tablero deben estar apagadas.
+        * Todas las ubicaciones del tablero deben tener la misma altura.
+    */
+    LlevarALightbotALaPrimerCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(haySiguienteUbicacionEnUnRecorridoAl_Y_(Este, Norte)){
+        PrenderLuzSiHayAca()
+        LlevarALightbotALaSiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    PrenderLuzSiHayAca()
+}
+
+procedure PrenderLuzSiHayAca(){
+    /*
+    PROPOSITO: Prende luz si hay en la celda actual.
+    PRECONDICION:
+        * Debe estar LightBot en la celda actual.
+        * Si hay luz en la celda actual debe estar apagada.
+    */
+    if(hayLuzApagada){
+        CambiarEstadoActualA_(LuzEncendida)
+    }
+}
+
+function hayLuzApagada(){
+    /*
+    PROPOSITO: Cambia el estado de la luz en la celda actual.
+    PRECONDICION:
+        * Debe estar LightBot en la celda actual.
+        * Debe exitir una luz en la celda actual.
+    TIPO: Booleano.
+    */
+    return(estado(infoDeUbicacion() == LuzApagada)
+}
+
+/*
+3) Se pide que escriba la función cantidadDeUbicacionesConEstado_, que dado un 
+estado de suelo, describe la cantidad de ubicaciones que tienen dicho estado en el mapa.
+*/
+
+function cantidadDeUbicacionesConEstado_(estadoDeSuelo){
+    /*
+    PROPOSITO: Describe cuantas ubicaciones del tablero tienen el estado.
+    **estadoDeSuelo**.
+    PARAMETRO: 
+        *estadoDeSuelo: EstadoDeSuelo - El estado de suelo a contar de todas las celda del tablero.
+    PRECONDICION: Ninguna.
+    TIPO: Numero.
+    */
+    LlevarALightbotALaPrimerCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    cantidadDeUbicacionesConEstado := 0
+    while(haySiguienteUbicacionEnUnRecorridoAl_Y_(Este, Norte)){
+        cantidadDeUbicaciones := cantidadDeUbicaciones + unoSi_CeroSino(estadoDelSueloEs_(estadoDeSuelo))
+        LlevarALightbotALaSiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    return(cantidadDeUbicaciones + unoSi_CeroSino(esEstadoDelSueloEs_()))
+}
+
+function estadoDelSueloEs_(estado){
+    /*
+    PROPOSITO: Indica si el estado del suelo de la celda actual es 
+    **estadoDeSuelo**.
+    PRECONDICION: Ninguna.
+    TIPO: Booleano.
+    */
+    return(estado(infoDeUbicacion()) == estado)
+}
+
+/*
+4) Se pide que escriba la función hayUbicaciónConLuzDeMasDe_DeAltura, que dado un número,
+indica si hay en el tablero alguna ubicación que tenga una luz (ya sea prendida o apagada)
+y que tenga una altura mayor que el número dado.
+*/
+
+function hayUbicaciónConLuzDeMasDe_DeAltura(numero){
+    /*
+    PROPOSITO: Indica si hay en el tablero una ubicacion con altura **numero**
+    y con una luz.
+    PARAMETRO:
+        *numero: Numero - Es la altura de las ubicaciones a evaluar.
+    PRECONDICION: Ninguna.
+    TIPO: Booleano.
+    */
+    LlevarALightbotALaPrimerCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(not hayUbicacionConAltura_YLuz(numero) && haySiguienteUbicacionEnUnRecorridoAl_Y_(Este, Norte)){
+        LlevarALightbotALaSiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    return(hayUbicacionConAltura_YLuz(numero))
+}
+
+function hayUbicacionConAltura_YLuz(numero){
+    /*
+    PROPOSITO: Indica si en la celda actual hay ubicacion con altura **numero**
+    y con una luz.
+    PARAMETRO:
+        *numero: Numero - Es la altura de las ubicaciones a evaluar.
+    PRECONDICION: Ninguna.
+    TIPO: Booleano.
+    */
+    return(hayUbicacionConMasAlturaQue_(numero) && hayLuz())
+}
+
+function hayUbicacionConAltura_(numero){
+    /*
+    PROPOSITO: Indica si en la celda actual hay ubicacion con altura **numero**
+    y con una luz.
+    PARAMETRO:
+        *numero: Numero - Es la altura de las ubicaciones a evaluar.
+    PRECONDICION: Ninguna.
+    TIPO: Booleano.
+    */
+    return(altura(infoDeUbicacion() < numero)
+}
+
+function hayLuz(){
+    /* ARREGLAR CONTRATO
+    PROPOSITO: Indica si en la celda actual hay ubicacion con altura **numero**
+    y con una luz.
+    PARAMETRO:
+        *numero: Numero - Es la altura de las ubicaciones a evaluar.
+    PRECONDICION: Ninguna.
+    TIPO: Booleano.
+    */
+    return(hayLuzApagada() || hayLuzEncendida())
+}
+
+/*
+5) Se desea poder recuperar el estado del juego como un dato que se pueda manipular y 
+analizar. Para esto, los desarrolladores definieron el siguiente tipo:
+Se pide programe la función estadoActualDelJuego que describe el estado actual del juego. 
+Para esto, se considera que un nivel está ganado cuando ya no quedan luces prendidas 
+y se considera “alto” a un nivel cuando hay ubicaciones con altura mayor a 1. 
+*/
+
+type EstadoDelJuego is record {
+    // PROPÓSITO: Modela el estado del juego de LightBot.
+    field estáGanado         // Booleano
+    field esNivelAlto        // Booleano
+}
+
+function estadoActualDelJuego(){
+    /*
+    PROPOSITO: Describe el estado actual del juego,
+    PRECONDICIONES: Ninguna.
+    TIPO: EstadoDelJuego
+    */
+    return(EstadoDelJuego(
+                            estaGanado  <- cantidadDeUbicacionesConEstado_(LuzEncendida) == 0,
+                            esNivelAlto <- hayUbicacionDeMasDe_DeAltura(1)
+        ))
+}
+
+function hayUbicacionDeMasDe_DeAltura(altura){
+    /*
+    PROPOSITO: Indica si hay en el tablero alguna ubicacion que tenga
+    una altura mayor a **altura**.
+    PARAMETRO:
+        *altura: Numero - La altura a evaluar.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    LlevarALightbotALaPrimerCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(not laAlturaDeLaUbicacionActualSupera_(altura) && haySiguienteUbicacionEnUnRecorridoAl_Y_(Este, Norte)){
+        LlevarALightbotALaSiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    return(laAlturaDeLaUbicacionActualSupera_(altura))
+}
+
+function laAlturaDeLaUbicacionActualSupera_(alturaActual){
+    /*
+    PROPOSITO: Indica si en la ubicacion actual la altura es mayor a **alturaActual**.
+    PARAMETRO:
+        *alturaActual: Numero - La altura a evaluar.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(altura(infoDeUbicacion() > alturaActual)
+}
+
+----------------------------------------QUELL(castillo final)----------------------------------------
+//tipos 
+type ElementoSimple is record {
+    /*  
+    PROPÓSITO: Modela los datos de un elemento simple.
+    INV. REP.
+        * elemento es Burbuja, Gema o Multiespinas.
+    */
+    field tipoDeElemento      // TipoDeElemento
+}
+
+type ElementoDireccionable is record {
+    /* 
+    PROPÓSITO: Modela los datos de un elemento direccionable.
+    INV. REP.
+    * elemento es Límite, Ángulo, Esquina, Espina, EspinaRotable o Interruptor.
+    */
+    field tipoDeElemento          // Elemento
+    field direcciónALaQueApunta   // Dirección
+}
+
+type ElementoCerrable is record {
+    /* 
+    PROPÓSITO: Modela los datos de un elemento cerrable.
+    INV. REP.* elemento es Compuerta
+    */
+    field tipoDeElemento // TipoDeElemento
+    field abierto        // Booleano (Verdadero = abierto, Falso = cerrado)
+}
+
+type TipoDeElemento is variant {
+    /* PROPÓSITO: Modela los posibles tipos de elemento */
+    case Burbuja         {}
+    case Gema            {}
+    case Multiespinas    {}
+    case Esquina         {}
+    case Ángulo          {}
+    case Límite          {}
+    case Espinas         {}
+    case EspinasRotables {}
+    case Interruptor     {}
+    case Compuerta       {}
+}
+
+type FormaDeElemento is variant {
+    /* PROPÓSITO: Modela las diferentes formas de un elemento */
+    case Simple          {}
+    case Direccionable   {}
+    case Cerrable        {}
+}
+
+//primitivas
+function hayElemento(){
+    /*
+    PROPÓSITO: Indica sí hay un elemento cualquiera en la celda actual.
+    TIPO: Booleano.
+    PRECONDICIONES: Ninguna.
+    */
+}
+
+function formaDelElemento(){
+    /*
+    PROPÓSITO: Describe la forma del elemento en la celda actual.
+    TIPO: FormaDeElemento.
+    PRECONDICIONES: Hay un elemento en la celda actual.
+    */
+}
+
+function elementoSimple(){
+    /*
+    PROPÓSITO: Describe el elemento simple en la celda actual.
+    TIPO: ElementoSimple.
+    PRECONDICIONES: Hay un elemento simple en la celda actual.
+    */
+}
+
+function elementoDireccionable(){
+    /*
+    PROPÓSITO: Describe el elemento direccionable en la celda actual.
+    TIPO: ElementoDireccionable.
+    PRECONDICIONES: Hay un elemento direccionable en la celda actual.
+    */
+}
+
+function elementoCerrable(){
+    /*
+    PROPÓSITO: Describe el elemento cerrable en la celda actual.
+    TIPO: ElementoCerrable.
+    PRECONDICIONES: Hay un elemento cerrable en la celda actual.
+    */
+}
+
+procedure LimpiarCelda(){
+    /*
+    PROPÓSITO: Quita cualquier elemento de la celda actual, dejando la celda vacía.
+    PRECONDICIONES: Ninguna.
+    */
+}
+
+procedure ColocarElementoSimple_(elementoSimple){
+    /*
+    PROPÓSITO: Pone en la celda actual el elemento simple dado.
+    PARÁMETROS: ElementoSimple - El elemento a poner
+    PRECONDICIONES: La celda actual está vacía.
+    */
+}
+
+procedure ColocarElementoDireccionable_(elementoDireccionable){
+    /*
+    PROPÓSITO: Pone en la celda actual el elemento direccionable dado.
+    PARÁMETROS: ElementoDireccionable - El elemento a poner.
+    PRECONDICIONES: La celda actual está vacía.
+    */
+}
+
+procedure ColocarElementoCerrable_(elementoCerrable){
+    /*
+    PROPÓSITO: Pone en la celda actual el elemento cerrable dado.
+    PARÁMETROS: ElementoCerrable - El elemento a poner.
+    PRECONDICIONES: La celda actual está vacía.
+    */
+}
+
+/*
+1) Escribir el procedimiento GirarEnSentidoHorario que gira el elemento direccionable 
+en la celda actual en sentido horario. Se asume que existe un elemento direccionable 
+en la celda actual.
+*/
+
+procedure GirarEnSentidoHorario(){
+    /*
+    PROPOSITO: Gira el elemento direccionable en la celda actual en sentido horario.
+    PRECONDICIONES:
+        *Debe exitir un elemento direccionable en la celda actual.
+    */
+    elementoDireccionableGiradoEnSentidoHorario := elementoDireccionableYaGirado()
+    LimpiarCelda()
+    ColocarElementoDireccionable_(elementoDireccionableGiradoEnSentidoHorario)
+}
+
+function elementoDireccionableYaGirado(){
+    /*
+    PROPOSITO: Describe el elemento direccionable en la celda actual en sentido horario.
+    PRECONDICIONES:
+        *Debe exitir un elemento direccionable en la celda actual.
+    TIPO: ElementoDireccionable.
+    */
+    return(ElementoDireccionable(elementoDireccionable | 
+    direcciónALaQueApunta <- siguiente(direcciónALaQueApunta(elementoDireccionable))))
+}
+
+/*
+2) En ocasiones, por ejemplo, cuando se presiona un interruptor, se deben girar todas 
+las espinas rotables que hayan en el juego. Se pide que realice el procedimiento 
+GirarTodasLasEspinasRotables que gira en sentido horario todas las espinas rotables 
+que haya en el juego.
+*/
+
+procedure GirarTodasLasEspinasRotables(){
+    /*
+    PROPOSITO: Gira todas las espinas rotables del tablero.
+    PRECONDICIONES: Ninguna.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        GirarEspinaRotableSiHayAca()
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    GirarEspinaRotableSiHayAca()
+}
+
+procedure GirarEspinaRotableSiHayAca(){
+    /*
+    PROPOSITO: Gira la espina rotable si hay en la celda actual.
+    PRECONDICIONES: Ninguna.
+    */
+    if(hayEspinaRotableAca()){
+        GirarEspinaRotable()
+    }
+}
+
+function hayEspinaRotableAca(){
+    /*
+    PROPOSITO: Indica si hay espina rotable en la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(hayElementoDireccional() && esEspinaRotable())
+}
+
+function hayElementoDireccional(){
+    /*
+    PROPOSITO: Indica si hay un elemento direccional en la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(hayElemento() && formaDelElemento() == Direccionable)
+}
+
+function esEspinaRotable(){
+    /*
+    PROPOSITO: Indica si el elemento en la celda actual es espina rotable.
+    PRECONDICIONES: 
+        *Debe exitir un elemento direccional en la celda actual.
+    TIPO: Booleano.
+    */
+    return(tipoDeElemento(elementoDireccionable()) == EspinasRotables)
+}
+
+procedure GirarEspinaRotable(){
+    /*
+    PROPOSITO: Indica si el elemento en la celda actual es espina rotable.
+    PRECONDICIONES: Ninguna.
+    */
+    GirarEnSentidoHorario()
+}
+
+/*
+3) También es necesario poder determinar sí en algún lugar del juego se encuentra 
+la burbuja. Así, se pide que escriba la función hayBurbujaEnElJuego que indica sí 
+hay una burbuja en algún lugar del juego.
+*/
+
+function hayBurbujaEnElJuego(){
+    /*
+    PROPOSITO: Indica si hay una burbuja en el juego.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(not hayBurbujaAca() && haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    return(hayBurbujaAca())
+}
+
+function hayBurbujaAca(){
+    /*
+    PROPOSITO: Indica si en la celda actual hay una burbuja.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(hayElementoSimple() && esBurbuja())
+}
+
+function hayElementoSimple(){
+    /*
+    PROPOSITO: Indica si el elemento de tipo simple en la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(hayElemento() && formaDelElemento() == Simple)
+}
+
+function esBurbuja(){
+    /*
+    PROPOSITO: Indica si el elemento en la celda actual es una burbuja.
+    PRECONDICIONES:
+        *Debe exitir un elemento en la celda actual.
+    TIPO: Booleano.
+    */
+    return(tipoDeElemento(elementoSimple()) == Burbuja)
+}
+
+
+/*
+4) Otra de las cosas que se desea analizar es saber sí hay la misma cantidad de espinas 
+rotables que de interruptores en el juego. Para ello se desea realizar la función 
+hayMismaCantidadDeEspinasRotablesQueDeInterruptores.
+
+Además, se pide que estructure su solución realizando la subtarea 
+hayElementoDireccionableDeTipo_ que dado un tipo de elemento indique sí en la celda 
+actual hay un elemento direccionable con el tipo dado. 
+*/
+
+function hayMismaCantidadDeEspinasRotablesQueDeInterruptores(){
+    /*
+    PROPOSITO: Indica si hay la misma cantidad de espinas rotables como de 
+    interruptores en el juego.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(cantidadDeElementosDeTipo_(espinasRotables) == cantidadDeElementosDeTipo_(interruptores))
+}
+
+function cantidadDeElementosDeTipo_(tipoDeElemento){
+    /*
+    PROPOSITO: Describe la cantidad de elementos de tipo **tipoDeElemento** que hay en el juego.
+    PARAMETRO:
+        *tipoDeElemento: tipoDeElemento - El elemento a contar en el juego.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numero.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    contadorDeElementos := 0
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        contadorDeElementos := contadorDeElementos + unoSi_CeroSino(hayElementoDireccionableDeTipo_(tipoDeElemento))
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    return(contadorDeElementos)
+}
+
+function hayElementoDireccionableDeTipo_(tipoDeElemento){
+    /*
+    PROPOSITO: Indica si hay un elemento direccionable de tipo **tipoDeElemento** 
+    en la celda actual.
+    PARAMETRO:
+        *tipoDeElemento: tipoDeElemento - El elemento a evaluar en la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(hayElementoDireccional() && esDeTipo_(tipoDeElemento))
+}
+
+function esDeTipo_(tipoDeElemento){
+    /*
+    PROPOSITO: Indica si el elemento direccionable es de tipo **tipoDeElemento** 
+    en la celda actual.
+    PARAMETRO:
+        *tipoDeElemento: tipoDeElemento - El elemento a evaluar en la celda actual.
+    PRECONDICIONES: 
+        *Debe exitir un elemento direccional en la celda actual.
+    TIPO: Booleano.
+    */
+    return(tipoDeElemento(elementoDireccional()) == tipoDeElemento)
+}
+
+-------------------------------------------Sharikistones-------------------------------------------
+//tipos
+type TipoDeElemento is variant {
+    // PROPÓSITO: Modela el tipo de un elemento posible en una ubicación.
+    case Libre      {}
+    case Obstáculo  {}
+    case Ficha      {}
+}
+
+type FormaDeFicha is variant {
+    // PROPÓSITO: Modela el tipo de una ficha
+    case Círculo    {}
+    case Triángulo  {}
+    case Rombo      {}
+    case Estrella   {}
+}
+
+//primitivas
+function elementoAcá(){
+    /*
+    PROPÓSITO: Describe el elemento en la ubicación actual.
+    TIPO: TipoDeElemento
+    PRECONDICIONES: Ninguna
+    */
+}
+
+function fichaAcá(){
+    /*
+    PROPÓSITO: Describe la forma de la ficha en la ubicación actual.
+    TIPO: FormaDeFicha
+    PRECONDICIONES:
+    * El elemento en la ubicación actual debe ser una Ficha.
+    */
+}
+
+procedure SacarObstáculo(){
+    /*
+    PROPÓSITO: Saca el obstáculo de la ubicación actual.
+    PRECONDICIONES:
+    * Hay un obstáculo en la ubicación actual.
+    */
+}
+
+procedure QuemarFicha(){
+    /*
+    PROPÓSITO: Quema la ficha en la ubicación actual.
+    PRECONDICIONES:
+    * Hay una ficha en la ubicación actual.
+    */
+}
+
+procedure PonerFicha_(formaAPoner){
+    /*
+    PROPÓSITO: Pone la ficha con la forma dada en la ubicación actual.
+    PARÁMETROS:
+    * formaAPoner: FormaDeFicha - La forma de ficha a poner
+    PRECONDICIONES:
+    * La ubicación actual está libre.
+    */
+}
+
+
+//Modelo 1
+/*
+1) Realice la función fichaAleatoria que describe la forma de ficha con la cual reponer 
+un espacio vacío según un procesopseudo-aleatorio, basado en las fichas alrededor 
+(en direcciones ortogonales, es decir, línea recta) con las reglas que siguen:
+● Si la ubicación a reponer tiene al menos 2 fichas estrella alrededor y está sobre 
+un borde, se rellena con un círculo.
+● Si la ubicación a reponer tiene 3 fichas iguales alrededor, se rellena con una ficha rombo.
+● Si la ubicación a reponer tiene un obstáculo alrededor, se rellena con una estrella.
+● Cualquier otro caso se rellena con un triángulo.
+*/
+
+
+
+/*
+2) Realice la función cantidadDe_EnGrilla que dado tipo de elemento 
+describe la cantidad total de elementos del tipo dado en la grilla.
+*/
+
+
+
+/*
+3) Realice el procedimiento ReponerEspaciosLibresEnGrilla que repone mediante una 
+ficha aleatoria todos los espacios libres que haya en la grilla. Para resolver el 
+problema puede hacer uso de la función total fichaAleatoria, que describe
+una forma de ficha aleatoria.
+*/
+
+
+
+/*
+4) Se desea poder recuperar el estado del juego como un dato que se pueda manipular y 
+analizar. Recordar que el nivel está dado por la cantidad de obstáculos. Para esto, 
+los desarrolladores definieron el siguiente tipo:
+
+Se pide programe la función estadoActualDelJuego que, asumiendo que hay una forma de 
+ficha de la cual hay más cantidad que las otras, describe el estado actual del juego.
+*/
+
+type EstadoDelJuego is record {
+    /*
+    PROPÓSITO: Modela el estado del juego de Sharikistones.
+    INVARIANTE DE REPRESENTACIÓN: El nivel es >= 0.
+    */
+    field nivel                         // Número
+    field hayMásTriángulosQueCírculos   // Booleano
+    field quedanRombos                  // Booleano
+    field fichaDeLaCualHayMás           // FormaDeFicha
+}
+
+
+
+//Modelo 2
+/*
+1) Realice la función fichaAleatoria que describe la forma de ficha con la cual reponer 
+un espacio vacío según un proceso pseudo-aleatorio, basado en las fichas alrededor 
+(en direcciones ortogonales, es decir, línea recta) con las reglas que siguen:
+● Si la ubicación a reponer tiene 2 fichas círculo, pero no un triángulo alrededor y 
+está sobre un borde, se rellena con un triángulo.
+● Si la ubicación a reponer tiene 3 fichas iguales alrededor, se rellena con una ficha estrella.
+● Si la ubicación a reponer tiene al menos dos obstáculos alrededor, se rellena con un rombo.
+● Cualquier otro caso se rellena con un círculo.
+*/
+
+
+
+/*
+2) Realice la función hayFichasConForma_EnGrilla que dada una forma de ficha indica si 
+hay alguna ficha con la forma dada en la grilla.
+*/
+
+
+
+/*
+3) Sí se queman una hilera de 5 o más fichas de la misma forma, el juego aplica un bonus 
+especial, quemando absolutamente todas las fichas con la misma forma en la grilla.
+
+Realice el procedimiento QuemarTodasLasFichasDe_DeLaGrilla que dada una forma de ficha 
+quema todas las fichas con la forma dada de la grilla, dejando la grilla libre. 
+Notar que no se espera compruebe sí se quemaron 5 o más fichas, sino que simplemente 
+realice el efecto posterior, dado por el bonus.
+*/
+
+
+
+/*
+4) Se desea poder recuperar el estado del juego como un dato que se pueda manipular y analizar. Para esto, los
+desarrolladores definieron el siguiente tipo:
+Se pide programe la función estadoActualDelJuego que, asumiendo que hay una forma 
+de ficha de la cual hay menos cantidad que las otras, describe el estado actual del juego.
+*/
+
+type EstadoDelJuego is record {
+    /*
+    PROPÓSITO: Modela el estado del juego de Sharikistones.
+    INVARIANTE DE REPRESENTACIÓN: Las fichas restantes son >= 0.
+    */
+    field fichasRestantes               // Número
+    field hayMásEstrellasQueTriángulos  // Booleano
+    field quedanCírculos                // Booleano
+    field fichaDeLaCualHayMenos         // FormaDeFicha
+}
+
+
+
+
+//Modelo 3
+/*
+1) Realice la función fichaAleatoria que describe la forma de ficha con la cual reponer un 
+espacio vacío según un proceso pseudo-aleatorio, basado en las fichas alrededor (en 
+direcciones ortogonales, es decir, línea recta) con las reglas que siguen:
+● Si la ubicación a reponer tiene 2 fichas triángulo pero no círculo alrededor y no está 
+sobre un borde, se rellena con un rombo.
+● Si la ubicación a reponer tiene 3 fichas iguales alrededor, se rellena con una ficha triángulo.
+● Si la ubicación a reponer tiene a lo sumo dos obstáculos alrededor, se rellena con un círculo.
+● Cualquier otro caso se rellena con una estrella.
+*/
+
+
+
+/*
+2) Realice la función cantidadDeFichasConForma_EnGrilla que dada una forma de ficha 
+describe la cantidad de fichas con la forma dada en la grilla.
+*/
+
+
+
+/*
+3) Sí se queman una hilera de 6 o más fichas de la misma forma, el juego aplica un 
+bonus especial, quemando la totalidad de los obstáculos del tablero.
+
+Realice el procedimiento QuitarLosObstáculosDeLaGrilla que quema la totalidad de 
+obstáculos en el tablero. Notar que no se espera compruebe sí se quemaron 6 o 
+más fichas, sino que simplemente realice el efecto posterior, dado por el bonus.
+*/
+
+
+
+/*
+4) Se desea poder recuperar el estado del juego como un dato que se pueda manipular y analizar. 
+Para esto, los desarrolladores definieron el siguiente tipo:
+Se pide programe la función estadoActualDelJuego que, asumiendo que hay una forma de ficha de 
+la cual hay menos cantidad que las otras, describe el estado actual del juego.
+*/
+
+type EstadoDelJuego is record {
+    /*
+    PROPÓSITO: Modela el estado del juego de Sharikistones.
+    INVARIANTE DE REPRESENTACIÓN: La cantidad de triangulos es >= 0.
+    */
+    field cantidadDeEspaciosLibres  // Número
+    field hayMásRombosQueCírculos   // Booleano
+    field quedanEstrellas           // Booleano
+    field fichaDeLaCualHayMenos     // FormaDeFicha
+}
+
+---------------------------------------------GobHermano---------------------------------------------
+/*
+1) Realizar el procedimiento AplicarVotos que realiza la gala de nominacion, sumando los votos
+a cada uno de los participantes.
+*/
+
+procedure AplicarVotos(){
+    /*
+    PROPOSITO: Aplica los votos a cada uno de los participantes de la casa.
+    PRECONDICIONES: 
+        *El estado del juego debe ser "gala de nominacion"
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        AplicarVotosDelParticipanteSiHayAca()
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    AplicarVotosDelParticipanteSiHayAca()
+}
+
+procedure AplicarVotosDelParticipanteSiHayAca(){
+    /*
+    PROPOSITO: Aplica los votos del participante de la celda actual si hay.
+    PRECONDICIONES: 
+        *El estado del juego debe ser "gala de nominacion"
+    */
+    if(hayParticipante()){
+        AplicarVotosDelParticipante()
+    }
+}
+
+procedure AplicarVotosDelParticipante(){
+    /*
+    PROPOSITO: Aplica los votos del participante de la celda actual.
+    PRECONDICIONES: 
+        *El estado del juego debe ser "gala de nominacion".
+        *Debe haber un participante en la celda actual.
+    */
+    idDelParticipanteAVotarConVotoDoble := idDeParticipanteVotoDoble(participanteAca())
+    idDelParticipanteAVotarConVotoSimple := idDeParticipanteVotoSimple(participanteAca())
+    
+    AplicarVoto_AlParticipante_(2, idDelParticipanteAVotarConVotoDoble)
+    AplicarVoto_AlParticipante_(1, idDelParticipanteAVotarConVotoSimple)
+}
+
+procedure AplicarVoto_AlParticipante_(cantidadDeVotos, idDelParticipanteAVotar){
+    /*
+    PROPOSITO: Aplica **cantidadDeVotos** votos al participante con id **idDelParticipanteAVotar**.
+    PARAMETROS:
+        *cantidadDeVotos: Numero - La cantidad de votos a aplicar
+        *idDelParticipanteAVotar: Numero - El id del participante a votar.
+    PRECONDICIONES: 
+        *El estado del juego debe ser "gala de nominacion".
+        *Debe exitir en el tablero el participante con id **idDelParticipanteAVotar**
+    */
+    IrAlParticipanteConId_(idDelParticipanteAVotar)
+    Aplicar_VotosAca(cantidadDeVotos)
+}
+
+/*
+2) Se pide elaborar la funcion cantidadDeVotosDe_ que dado un grupo, describe cual fue la
+cantidad de votos que recibieron los participantes de dicho grupo en la gala de nominacion.
+*/
+
+function cantidadDeVotosDe_(unGrupo){
+    /*
+    PROPOSITO: Describe la cantidad de votos que recibieron los participantes 
+    del grupo **unGrupo** en la gala de nominacion.
+    PARAMETRO:
+        *unGrupo: GrupoDePertenencia - El grupo a contar la cantidad de votos recibidos.
+    PRECONDICIONES: 
+        *Debe exitir el grupo **unGrupo** en el tablero.
+        *El estado del tablero debe ser de "placa de votos"
+    TIPO: Numero.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    cantidadDeVotosDelGrupo := 0
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        cantidadDeVotosDelGrupo := cantidadDeVotosDelGrupo + cantidadDeVotosSiHayParticipanteDelGrupo_(unGrupo)
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    return(cantidadDeVotosDelGrupo + cantidadDeVotosSiHayParticipanteDelGrupo_(unGrupo))
+}
+
+function cantidadDeVotosSiHayParticipanteDelGrupo_(unGrupo){
+    /*
+    PROPOSITO: Describe la cantidad de votos recibidos si hay un participante en la celda actual
+    perteneciente al grupo **unGrupo** en la gala de nominacion, sino describe 0.
+    PARAMETRO:
+        *unGrupo: GrupoDePertenencia - El grupo a evaluar la pertenencia del participante si hay en
+        la celda actual.
+    PRECONDICIONES: 
+        *El estado del tablero debe ser de "placa de votos"
+    TIPO: Numero.
+    */
+    return(
+        choose  votosRecibidos(participanteAca())   when    (hayParticipanteAcaYEsParteDelGrupo_(unGrupo))
+                0                                   otherwise
+        )
+}
+
+function hayParticipanteAcaYEsParteDelGrupo_(unGrupo){
+    /*
+    PROPOSITO: Indica si hay un participante en la celda actual y este pertenece al 
+    grupo **unGrupo**.
+    PARAMETRO:
+        *unGrupo: GrupoDePertenencia - El grupo a evaluar la pertenencia del participante si hay en
+        la celda actual.
+    PRECONDICIONES: 
+        *El estado del tablero debe ser de "placa de votos"
+    TIPO: Booleano.
+    */
+    return(hayParticipante() && perteneceAlGrupo(unGrupo))
+}
+
+function perteneceAlGrupo(unGrupo){
+    /*
+    PROPOSITO: Indica si el participante de la celda actual pertenece al grupo **unGrupo**.
+    PARAMETRO:
+        *unGrupo: GrupoDePertenencia - El grupo a evaluar la pertenencia del participante en la
+        celda actual.
+    PRECONDICIONES: 
+        *El estado del tablero debe ser de "placa de votos"
+    TIPO: Booleano.
+    */
+    return(grupoDePertenencia(participanteAca()) == unGrupo)
+}
+
+/*
+3) Se pide elaborar la funcion elGrupoMasVotado que describe cual fue el grupo que mayor cantidad
+de votos recibio en la gala de nominacion.
+*/
+
+function elGrupoMasVotado(){
+    /*
+    PROPOSITO: Describe el grupo con mas votos recibidos en la gala de nominacion del tablero.
+    PRECONDICIONES:
+        *El estado del tablero debe ser "placa de votos"
+    TIPO: GrupoDePertenencia.
+    */
+    return(
+        choose  Monitos     when    (tieneMasVotos_Que__Y_(Monitos, Frodoneta, Toritos, Otros))
+                Frodoneta   when    (tieneMasVotos_Que__Y_(Frodoneta, Monitos, Toritos, Otros))
+                Toritos     when    (tieneMasVotos_Que__Y_(Toritos, Monitos, Frodoneta, Otros))
+                Otros       otherwise
+        )
+}
+
+function tieneMasVotos_Que__Y_(primerGrupo, segundoGrupo, tercerGrupo, cuartoGrupo){
+    /*
+    PROPOSITO: Indica si el grupo **primerGrupo** tiene mas votos que los grupos **segundoGrupo**,
+    **tercerGrupo** y **cuartoGrupo**.
+    PARAMETROS:
+        *primerGrupo: GrupoDePertenencia - El grupo a evaluar si tiene mas votos.
+        *segundoGrupo: GrupoDePertenencia - El grupo a evaluar la cantidad de votos.
+        *tercerGrupo: GrupoDePertenencia - El grupo a evaluar la cantidad de votos.
+        *cuartoGrupo: GrupoDePertenencia - El grupo a evaluar la cantidad de votos.
+    PRECONDICIONES:
+        *El estado del tablero debe ser "placa de votos"
+    TIPO: Booleano.
+    */
+    return(
+        cantidadDeVotos_(primerGrupo) > cantidadDeVotos_(primerGrupo)   &&
+        cantidadDeVotos_(primerGrupo) > cantidadDeVotos_(segundoGrupo)  &&
+        cantidadDeVotos_(primerGrupo) > cantidadDeVotos_(tercerGrupo)   &&
+        cantidadDeVotos_(primerGrupo) > cantidadDeVotos_(cuartoGrupo)
+        )
+}
+
+//tipos
+type Participante is record{
+    /*
+    PROPOSITO: Modela un participante posible en la casa de GH.
+    INV. DE REPRESENTACION:
+        * **id**, **idDeParticipanteVotoDoble** y **idDeParticipanteVotoSimple**
+        son mayor a cero y no son los tres iguales.
+        * **votosRecibidos** es mayor o igual a cero.
+    */
+    field id                            //Numero
+    field idDeParticipanteVotoDoble     //Numero
+    field idDeParticipanteVotoSimple    //Numero
+    field quiereEspontanea              //Booleano
+    field esLider                       //Booleano
+    field votosRecibidos                //Numero
+    field grupoDePertenencia            //GrupoDePertenencia
+}
+
+type GrupoDePertenencia is variant {
+    /*
+    PROPOSITO: Modela los grupos de pertenencia dentro de la casa.
+    */
+    case Monitos    {}
+    case Frodoneta  {}
+    case Toritos    {}
+    case Otros      {}
+    
+}
+
+//primitivas
+function hayParticipanteAca(){
+    /*
+    PROPOSITO: Indica si hay un participante en la celda actual.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+}
+
+function participanteAca(){
+    /*
+    PROPOSITO: Describe al participante de la celda actual.
+    PRECONDICIONES:
+        *Debe haber un participante en la celda actual.
+    TIPO: Participante.
+    */
+}
+
+procedure IrAlParticipanteConId_(idDeParticipante){
+    /*
+    PROPOSITO: Posiciona el cabezal sobre el participante con id
+    **idDeParticipante**
+    PARAMETRO:
+        *idDeParticipante: Numero - El id del participante a posicionar el cabezal.
+    PRECONDICIONES:
+        *El participante con id **idDeParticipante** debe estar en el tablero.
+    */
+}
+
+procedure Aplicar_VotosAca(cantidadDeVotos){
+    /*
+    PROPOSITO: Aplica **cantidadDeVotos** al participante de la celda actual.
+    PARAMETRO:
+        *cantidadDeVotos: Numero - La cantidad de votos a aplicar.
+    PRECONDICIONES:
+        *Debe haber un participante en la celda actual.
+    */
+}
+
+/*
+4) Se pide elaborar la funcion idDelMasVotadoDelGrupo_ que dado un grupo, describe el id del
+participante que fue el que mayor cantidad de votos recibio. Asumiendo que hay un unico
+participante con que recibio mas votos en el grupo.
+*/
+function idDelMásVotadoDelGrupo_(unGrupo) {
+    /*
+    PROPOSITO: Describe el id del participante mas votado del grupo **
+    PARAMETRO:
+        *unGrupo: GrupoDePertenencia - El grupo al que pertenece el participante a averiguar.
+    PRECONDICIONES: Debe exitir solo un participante con mas votos
+    TIPO: Numero.
+    */
+    IrALaPrimerCeldaEnUnRecorridoAl_Y_(Norte, Este)
+    idDelMásVotado := idDelParticipanteActualSiHayYPerteneceAlGrupo_(unGrupo)
+    while (haySiguienteCeldaEnUnRecorridoAl_Y_(Norte, Este)) {
+        idDelMásVotado := idDelParticipanteActualSiPerteneceAlGrupo_YSiTieneMásVotosQue_(unGrupo, idDelMásVotado)
+        IrALaSiguienteCeldaEnUnRecorridoAl_Y_(Norte, Este)
+    }
+    return (idDelParticipanteActualSiPerteneceAlGrupo_YSiTieneMásVotosQue_(unGrupo, idDelMásVotado))
+}
+
+function idDelParticipanteActualSiHayYPerteneceAlGrupo_(unGrupo){
+    /*
+    PROPOSITO: Describe el id si hay un participante en la celda actual
+    perteneciente al grupo *unGrupo* en la gala de nominacion, sino describe 0.
+    PARAMETRO:
+        *unGrupo: GrupoDePertenencia - El grupo a evaluar la pertenencia del participante si hay en
+        la celda actual.
+    PRECONDICIONES: 
+        *El estado del tablero debe ser de "placa de votos"
+    TIPO: Numero.
+    */
+    return(
+        choose  id(participanteAca())   when    (hayParticipanteAcaYEsParteDelGrupo_(unGrupo))
+                0                       otherwise
+        )
+}
+
+function hayParticipanteAcaYEsParteDelGrupo_(unGrupo){
+    /*
+    PROPOSITO: Indica si hay un participante en la celda actual y este pertenece al 
+    grupo *unGrupo*.
+    PARAMETRO:
+        *unGrupo: GrupoDePertenencia - El grupo a evaluar la pertenencia del participante si hay en
+        la celda actual.
+    PRECONDICIONES: 
+        *El estado del tablero debe ser de "placa de votos"
+    TIPO: Booleano.
+    */
+    return(hayParticipante() && perteneceAlGrupo(unGrupo))
+}
+
+function perteneceAlGrupo(unGrupo){
+    /*
+    PROPOSITO: Indica si el participante de la celda actual pertenece al grupo *unGrupo*.
+    PARAMETRO:
+        *unGrupo: GrupoDePertenencia - El grupo a evaluar la pertenencia del participante en la
+        celda actual.
+    PRECONDICIONES: 
+        *El estado del tablero debe ser de "placa de votos"
+    TIPO: Booleano.
+    */
+    return(grupoDePertenencia(participanteAca()) == unGrupo)
+}
+
+function idDelParticipanteActualSiPerteneceAlGrupo_YSiTieneMásVotosQue_(unGrupo, idDeParticipanteAnterior) {
+    /*
+    PROPOSITO: Describe el id del participante con mas votos.
+    PRECONDICIONES: Ninguna.
+    TIPO: Numero.
+    */
+    return (
+        choose id(participanteAcá())    when (hayParticipanteAcaYEsParteDelGrupo_(unGrupo) && tieneMasVotosQue_(idDeParticipanteAnterior))
+               idDeParticipanteAnterior otherwise
+    )
+}
+
+function tieneMasVotosQue_(idDePArticipante){
+    /*
+    PROPOSITO: Indica si el participante de la celda actual tiene mas votos que el
+    participante con id *idDePArticipante*
+    PARAMETRO:
+        *idDePArticipante: Numero - El id del particpante a comparar los votos
+    PRECONDICIONES:
+        *Debe exitir un participante en la celda actual perteneciente al mismo grupo
+        del participante con id *idDePArticipante*
+    TIPO: Booleano.
+    */
+    return(votosRecibidos(participanteAcá()) > votosRecibidos(idDeParticipanteAnterior))
+}
+
+/*
+5) Realizar la funcion elMasVotadoEsDelGrupoMasVotado que indica si la persona que mas votos
+recibio pertenece al grupo mas votado. Se puede asumir que hay un unico participante que
+recibio mas votos.
+*/
+
+
+
+---------------------------------------------Bomberman---------------------------------------------
+type Objeto is variant {
+    //PROP.: Modela un objeto posible en una ubicacion.
+    case Libre      {}
+    case Obstaculo  {}
+    case Personaje  {}
+}
+
+type TipoDePersonaje is variant {
+    //PROP.: Modela el tipo de un personaje.
+    case Bomberman  {}
+    case Enemigo    {}
+}
+
+type Bomba is record {
+    //PROP.: Modela una bomba.
+    //INV. DE REP.: *potencia* debe ser mayor a 0
+    field potencia  //numero
+}
+
+type Bomberman is record {
+    /*
+    
+    */
+    field direccionDondeMira    //direccion
+    field fuerza                //numero
+}
+
+type tipoDeObstaculo is variant {
+    /*
+    PROP.: Modela el tipo de un obstaculo.
+    */
+    case BloqueDeConcreto   {}
+    case ParedDeLadrillo    {}
+    case Bomba              {}
+}
+
+type Enemigo is record {
+    /*
+    PROP.: Modela un enemigo.
+    INV. DE REP.: cantidad debe ser ... 0
+    */
+    field cantidad  //numero
+}
+
+type Ubicacion is record {
+    /*
+    PROP.: Modela una ubicacion de la grilla.
+    INV. DE REP.: Puntaje debe ser ... si la ubicacion esta
+    libre o hay una pared o concreto o una bomba
+    */
+    field objeto //objeto
+    field puntaje //numero
+}
+
+function obstaculoAca(){
+    
+}
+
+function enemigoAca(){
+    
+}
+
+function bombermanAca(){
+    
+}
+
+function hayObstaculoOEnemigoDondeMiraBomberman(){
+    
+}
+
+function BombaAca(){
+    /*
+    precondiciones: debe haber una bomba en la celda actual
+    tipo: Bomba
+    */
+}
+
+function personajeAca(){
+    
+}
+
+function ubicacionAca(){
+    
+}
+
+/*
+1) Se pide realizar la funcion mejorPotenciaDeBombasEnLaGrilla que describe la mayor potencia de
+todas las bombas que se encuentran en la grilla.
+*/
+
+function mejorPotenciaDeBombasEnLaGrilla(){
+    /*
+    PROPOSITO: Describe la mayor potencia de todas las bombas de la grilla. 
+    PRECONDICIONES: 
+        *Los bordes del tablero son de concreto.
+    TIPO: Numero.
+    */
+    IrAPrimeraCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    mejorPotenciaDeBombaVista := 0
+    while(haySiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)){
+        mejorPotenciaDeBombaVista := maximoEntre_Y_(mejorPotenciaDeBombaVista, potenciaDeLaBombaSiHay())
+        IrASiguienteCeldaEnUnRecorridoAl_Y_(Este, Norte)
+    }
+    return(mejorPotenciaDeBombaVista)
+}
+
+function potenciaDeLaBombaSiHay(){
+    /*
+    PROPOSITO: Describe la potencia de una bomba si hay una en la celda actual
+    sino que describa 0. 
+    PRECONDICIONES: Ninguna.
+    TIPO: Numero.
+    */
+    return(
+        choose  potencia(BombaAca())   when (hayUnObstaculoYEsDeTipoBomba())
+                0                   otherwise
+        )
+}
+
+function hayUnObstaculoYEsDeTipoBomba(){
+    /*
+    PROPOSITO: Indica si hay un obstaculo y es de tipo Bomba.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(objeto(ubicacionAca()) == Obstaculo && hayBombaAca())
+}
+
+function hayBombaAca(){
+    /*
+    PROPOSITO: Indica si el obstaculo de la celda actual es de tipo Bomba.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(obstaculoAca() == Bomba)
+}
+
+/*
+2) Queremeos simular la explosion de las mejores bombas, para ellos se pide realizar el 
+procedimiento ExplotarBombasAvanzando() que hace explotar la bomba de mayor potencia 
+que se encuentren en la direccion hacia donde mira Bomberman, de tal forma que el tablero 
+quede sin los personajes u obstaculos alcanzados por la onda expansiva de la bomba, 
+respetando las reglas del juego (es decir, los ladrillos deben ser afectados, pero el 
+concreto y otras bombas no, etc). Cuando una bomba explota, desaparece del tablero. 
+Para ello contamos con el procedimiento PropagarExplosionAl_ConPotencia_
+que dada una direccion y un numero que representa la potencia de una bomba en la celda actual,
+aplica la onda expansiva de una bomba hacia la direccion dada.
+*/
+
+procedure ExplotarBombasAvanzando(){
+    /*
+    PROPOSITO: Explota la bomba con mayor potencia que haya en direccion donde mira Bomberman.
+    PRECONDICIONES:
+        *Las paredes del tablero son de concreto
+        *Hay al menos una bomba en la direccion donde mira Bomberman.
+        *El cabezal debe estar sobre Bomberman
+    */
+    direccionAMover := direccionDondeMira(bombermanAca())
+    mayorPotenciaDeBombaVistas := mejorPotenciaDEeBombaAl_(direccionAMover)
+    MoverHacia_HastaEncontrarBombaConPotencia_(direccionAMover, mayorPotenciaDeBombaVistas)
+    ExplotarBombaAca()
+}
+
+procedure MoverHacia_EncontrarBombaConPotencia_(direccionAMover, potencia){
+    /*
+    PROPOSITO: Mueve el cabezal hacia el **direccionAMover** hasta encontrar la 
+    bomba con potencia **potencia**.
+    PARAMETRO:
+        *direccionAMover: Direccion - La direccion a la que se buscara la bomba.
+        *potencia: Numero - Es la potencia a buscar.
+    PRECONDICIONES:
+        *Las paredes del tablero son de concreto
+        *El cabezal debe estar sobre Bomberman
+    */
+    while(puedeMover(direccionAMover) && potenciaDeLaBombaSiHay() /= potencia){
+        Mover(direccionAMover)
+    }
+}
+
+function mejorPotenciaDeBombaAl_(direccionAMover){
+    /*
+    PROPOSITO: Describe la potencia de la bomba con mas potencia en direccion
+    **direccionAMover**.
+    PARAMETRO:
+        *direccionAMover: Direccion - La direccion a la que se evaluara las bombas.
+    PRECONDICIONES:
+        *Las paredes del tablero son de concreto
+        *El cabezal debe estar sobre Bomberman
+    TIPO: Numero.
+    */
+    mejorPotenciaDeBombaVista := 0
+    while(puedeMover(direccionAMover)){
+        Mover(direccionAMover)
+        mejorPotenciaVista := maximoEntre_Y_(mejorPotenciaDeBombaVista, potenciaDeLaBombaSiHay())
+    }
+    return(mejorPotenciaVista)
+}
+
+procedure ExplotarBombaAca(){
+    /*
+    PROPOSITO: Explota la bomba de la celda actual.
+    PRECONDICIONES:
+        *Todas las paredes del tablero son de concreto
+        *Debe exitir una bomba en la celda actual.
+    */
+    direccionActual := minDir()
+    ondaExpansivaDeLaBomba := potencia(bombaAca())
+    while(direccionActual /= maxDir()){
+        PropagarExplosionAl_ConPotencia_(direccionActual, ondaExpansivaDeLaBomba)
+        direccionActual := siguiente(direccionActual)
+    }
+    PropagarExplosionAl_ConPotencia_(direccionActual, ondaExpansivaDeLaBomba)
+}
+
+/*
+3) Y ahora vamos a controlar a Bomberman. Para ello, se pide realizar el procedimiento 
+AlejarABombermanDeOndaExpansiva(), que asumiendo que Bomberman coloco una bomba con cierta potencia
+en una ubicacion lindante hacia la direccion donde mira, debe alejarse en direccion opuesta si 
+puede tantas ubicaiones para evitar ser alcanzado por la onda expansiva que generaria la 
+explosion de dicha bomba siempre y cuando tenga la fuerza suficiente para hacerlo y no se 
+encuentre con un obstaculo o enemigo en una ubicaion lindante hacia donde se esta moviendo. 
+Aclaracion: Cada vez que Bomberman se mueve una ubicacion pierde 1 de fuerza.
+
+Para ello se cuenta con los siguientes procedimientos SacarPersonaje(), que saca el personaje 
+que hay en la celda actual y PonerPersonaje_ que pone al personaje dado en la ubicacion actual.
+*/
+
+procedure AlejarABombermanDeOndaExpansiva(){
+    /*
+    PROPOSITO: Aleja a Bomberman de la bomba en la celda lindante hacia la que mira
+    en direccion opuesta.
+    PRECONDICIONES:
+        *Las paredes del tablero son de concreto
+        *Hay al menos una bomba en la direccion lindante donde mira Bomberman.
+        *El cabezal debe estar sobre Bomberman.
+    */
+    potenciaDeLaOndaExpansiva := potenciaDeBombaAl_(direccionDondeMira(bombermanAca()))
+    cantidadDeCeldasQueSeMovio := 0
+    CambiarDireccionDondeMiraBomberman()
+    while(puedeMoverBombermanAl_(direccionDondeMira(bombermanAca()) && cantidadDeCeldasQueSeMovio >= potenciaDeLaOndaExpansiva){
+        MoverBombermanAl_(direccionDondeMira)
+        cantidadDeCeldasQueSeMovio := cantidadDeCeldasQueSeMovio + 1
+    }
+}
+
+function potenciaDeBombaAl_(direccionAEvaluar){
+    /*
+    PROPOSITO: Describe la potencia de la bomba que hay en la celda lindante al **direccionAEvaluar**
+    PARAMETRO:
+        *direccionAEvaluar: Direccion - La direccion de la celda lindante en la que esta la
+        bomba a evaluar.
+    PRECONDICIONES:
+        *Debe exitir una celda lindante en direccion **direccionAEvaluar**
+        *Debe haber una bomba en la celda lindante.
+    TIPO: Numero.
+    */
+    Mover(direccionAEvaluar)
+    return(potencia(BombaAca())
+}
+
+procedure CambiarDireccionDondeMiraBomberman(){
+    /*
+    PROPOSITO: Gira a Bomberman en la direccion opuesta a la que esta mirando.
+    PRECONDICIONES:
+        *Debe exitir Bomberman en la celda actual.
+    */
+    bomberman := Bomberman(bombermanAcá() | direcciónDondeMira <- opuesto(direcciónDondeMira(bombermanAcá())))
+    SacarPersonaje()
+    PonerPersonajeAl_(bomberman)
+}
+
+function puedeMoverBombermanAl_(direccion){
+    /*
+    PROPOSITO: Indica si Bomberman se puede mover en direccion al **direccionAEvaluar**.
+    PARAMETRO:
+        *direccionAEvaluar: Direccion - La direccion a evaluar.
+    PRECONDICIONES:
+        *El cabezal esta sobre Bomberman.
+        *Los bordes del tablero son de concreto.
+    TIPO: Booleano.
+    */
+    fuerzaDeBomberman := fuerza(bombermanAca())
+    Mover(direccion)
+    return( fuerzaDeBomberman > 0   && 
+            puedeMover(direccion))  &&
+            esUbicacionLibre()
+}
+
+function esUbicacionLibre(){
+    /*
+    PROPOSITO: Indica si la celda actual es ubicacion libre.
+    PRECONDICIONES: Ninguna.
+    TIPO: Booleano.
+    */
+    return(objeto(ubicacionAca() == Libre)
+}
+
+procedure MoverBombermanAl_(direccion){
+    /*
+    PROPOSITO: Mueve el bomberman en direccion **direccion**
+    PRECONDICIONES: 
+        *El cabezal debe estar sobre Bomberman.
+        *Las paredes del tablero son de concreto.
+    PARAMETROS:
+        *direccion: Direccion - La direccion a mover del Bomberman
+    */
+    bomberman := bombermanAca()
+    SacarPersonaje()
+    Mover(direccion)
+    PonerPersonaje_(Bomberman(bomberman | fuerza <- fuerza(bomberman) - 1)
+}
